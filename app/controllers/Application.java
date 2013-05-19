@@ -28,7 +28,7 @@ public class Application extends Controller {
 	}
 
 	public static Result events() {
-		String MY_ACCESS_TOKEN = "CAADw2gpVHk4BACSRNR9s5S4GAHII343CVvI1Vm06SLw3pFwGsxalFGcJh96PmZA1LqiamklvhjMlBaeSEKsMGhUD0z1laAbbiI0xgERZB9tm3BUIPceu9OZAIGMuWwBRqYanc7Afc9NyEv0pvkKDYZBLZCEVSBYYZD";
+		String MY_ACCESS_TOKEN = "CAADw2gpVHk4BAGIPo2nlEZCZCt6z7kBrhkZA1v3WuUh8wpIHL8v6fjbHeUFO9yKEHDrsbAdYEDmjFQCXqp9o8PWbcYDLl7VMgq0BtpwhH9xjWGq8rZBzzNkWBLAdK7nPU22Qr8J7fbGXwlDVEeichBPKaaTiAfwZD";
 		FacebookClient facebookClient = new DefaultFacebookClient(MY_ACCESS_TOKEN);
 
 		// Loop through connection object : https://groups.google.com/d/msg/restfb/eHMSgUxEXi4/gemE6_meNyAJ
