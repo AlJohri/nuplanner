@@ -13,7 +13,8 @@ object ApplicationBuild extends Build {
     javaJdbc,
     javaEbean,
     jdbc,
-    "postgresql" % "postgresql" % "9.1-901.jdbc4"
+    "postgresql" % "postgresql" % "9.1-901.jdbc4",
+    "com.restfb" % "restfb" % "1.6.12"
   )
 
   val main = play.Project(appName, appVersion, appDependencies).settings(

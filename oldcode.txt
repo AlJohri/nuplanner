@@ -1,0 +1,31 @@
+// Old Code
+
+// Method 1 (fetchConnection using Event.class):
+
+Connection<Event> events = facebookClient.fetchConnection( 
+	"search", Event.class, 
+	Parameter.with("q", "*"), 
+	Parameter.with("center", "42.052925,-87.665834"), 
+	Parameter.with("type", "event"),
+	Parameter.with("distance", 1000)
+);
+
+do {
+
+	Iterator itr = events.getData().iterator();
+	while(itr.hasNext()) {
+		Object element = itr.next();
+		Event event = (Event) element;
+		System.out.print(event.getName() + ": " + event.getStartTime() + " - " + event.getEndTime() + "\n");
+	}
+
+	events = facebookClient.fetchConnectionPage(events.getNextPageUrl(), Event.class);
+
+} while (events.hasNext());
+
+
+// Method 2 (fetchObject using JsonObject.class):
+
+JsonObject result = facebookClient.fetchObject( "search", JsonObject.class, Parameter.with("q", "*"), Parameter.with("center", "42.052925,-87.665834"), Parameter.with("type", "event"), Parameter.with("distance", 1000) );
+JsonArray events = result.getJsonArray("data");
+result = facebookClient.fetchConnectionPage(result.getNextPageUrl(), JsonObject.class);

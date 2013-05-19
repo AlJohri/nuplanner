@@ -1,0 +1,4 @@
+Roles
+
+Person - abstract class for an individual with fields such as ID and name.
+Student - base user of the application who views events 

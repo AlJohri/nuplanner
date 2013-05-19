@@ -31,8 +31,8 @@ public class IntegrationTest {
     public void createAndRetrieveUser() {
         running(testServer(3333, fakeApplication(inMemoryDatabase())), HTMLUNIT, new Callback<TestBrowser>() {
             public void invoke(TestBrowser browser) {
-                new Person("Bob The Builder").save();
-                Person bob = Person.find.where().eq("name", "Bob The Builder").findUnique(); //.first();
+                new Student("Bob The Builder").save();
+                Student bob = Student.find.where().eq("name", "Bob The Builder").findUnique(); //.first();
                 System.out.println(bob.name);
                 assertThat(bob).isNotNull();
                 assertThat(bob.name).contains("Bob The Builder");

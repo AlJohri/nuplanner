@@ -3,20 +3,20 @@
 
 # --- !Ups
 
-create table person (
+create table student (
   id                        bigint not null,
   name                      varchar(255),
-  constraint pk_person primary key (id))
+  constraint pk_student primary key (id))
 ;
 
-create sequence person_seq;
+create sequence student_seq;
 
 
 
 
 # --- !Downs
 
-drop table if exists person cascade;
+drop table if exists student cascade;
 
-drop sequence if exists person_seq;
+drop sequence if exists student_seq;
 

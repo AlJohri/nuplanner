@@ -1,0 +1,6 @@
+https://github.com/joscha/play-authenticate
+http://zhumour.com/blog/2013/01/10/boostrapping-angularjs-with-play-2/
+Check out the samples in the play folder. There is one handling authentification/authorization : zentasks if I remember right.
+
+https://github.com/andrewconner/play-angularjs
+http://briantford.com/blog/angular-phonegap.html
