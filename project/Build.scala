@@ -15,7 +15,8 @@ object ApplicationBuild extends Build {
     jdbc,
     "postgresql" % "postgresql" % "9.1-901.jdbc4",
     "com.restfb" % "restfb" % "1.6.12",
-    "com.gistlabs" % "mechanize" % "0.11.0"
+    "com.gistlabs" % "mechanize" % "0.11.0",
+    "commons-io" % "commons-io" % "2.3"
   )
 
   val main = play.Project(appName, appVersion, appDependencies).settings(

@@ -3,6 +3,10 @@ package controllers;
 import play.*;
 import play.mvc.*;
 
+import java.io.File;
+import java.io.IOException;
+import org.apache.commons.io.FileUtils;
+
 import views.html.*;
 
 import models.*;
@@ -27,8 +31,18 @@ public class Application extends Controller {
 	  return ok( "lala" /* views.html.index.render(User.all()) */ );
 	}
 
+   public static Result phones(String phoneId) throws IOException {
+    File jsonFile = Play.application().getFile("public/phones/"+phoneId);
+    String json = FileUtils.readFileToString(jsonFile);
+    return ok(json).as("application/json");
+  }
+
+
+  // Change something to use a LinkedList
+	// http://www.daniweb.com/software-development/java/threads/379327/how-to-use-linkedlist
+	
 	public static Result events() {
-		String MY_ACCESS_TOKEN = "CAADw2gpVHk4BAGIPo2nlEZCZCt6z7kBrhkZA1v3WuUh8wpIHL8v6fjbHeUFO9yKEHDrsbAdYEDmjFQCXqp9o8PWbcYDLl7VMgq0BtpwhH9xjWGq8rZBzzNkWBLAdK7nPU22Qr8J7fbGXwlDVEeichBPKaaTiAfwZD";
+		String MY_ACCESS_TOKEN = "CAACEdEose0cBAGOZCa7mJoEZCSPZBNn6geHlruiZAiwmv2BAYZB553DEMW7g5ZCJfjkZC3P1JxmI9HpT9GbiXIcQilCIOGb8fFDJYeZC53F0YxCtTpFLCwdLoF8jlQBE65xt8hccWKhJ0v9nrfSKaVOe60ZAImQ6YK5IZD";
 		FacebookClient facebookClient = new DefaultFacebookClient(MY_ACCESS_TOKEN);
 
 		// Loop through connection object : https://groups.google.com/d/msg/restfb/eHMSgUxEXi4/gemE6_meNyAJ
@@ -45,7 +59,7 @@ public class Application extends Controller {
 			// Parameter.with("limit", 100)
 		);
 
-		JsonArray events = new JsonArray();
+		JsonArray events = new JsonArray();  // Change THIS variable to a LinkedList
 
 		JsonArray method1_events = new JsonArray();
 		do {
@@ -62,7 +76,7 @@ public class Application extends Controller {
 
 		// FQL Query (Method 2)
 		
-		String fql_query = "SELECT eid, name, start_time, end_time, description, location, venue, pic, pic_big, pic_cover, parent_group_id FROM event WHERE eid IN (SELECT eid FROM event_member WHERE uid IN (SELECT page_id FROM place WHERE distance(latitude, longitude, '42.054774', '-87.67654') < 5000 LIMIT 51000) LIMIT 51000) AND venue.id IN (SELECT page_id FROM place WHERE distance(latitude,longitude, '42.054774', '-87.67654') < 5000 LIMIT 51000) ORDER BY start_time ASC LIMIT 51000";
+		String fql_query = "SELECT eid, name, creator, start_time, end_time, description, location, venue, pic, pic_big, pic_cover, parent_group_id FROM event WHERE eid IN (SELECT eid FROM event_member WHERE uid IN (SELECT page_id FROM place WHERE distance(latitude, longitude, '42.054774', '-87.67654') < 5000 LIMIT 51000) LIMIT 51000) AND venue.id IN (SELECT page_id FROM place WHERE distance(latitude,longitude, '42.054774', '-87.67654') < 5000 LIMIT 51000) ORDER BY start_time ASC LIMIT 51000";
 		List<JsonObject> list_events2 = facebookClient.executeFqlQuery(fql_query, JsonObject.class);
 
 		JsonArray method2_events = new JsonArray();
