@@ -3,7 +3,7 @@
 
 # --- !Ups
 
-create table event (
+create table my_event (
   id                        bigint not null,
   name                      varchar(255),
   creator                   varchar(255),
@@ -12,7 +12,7 @@ create table event (
   start_time                timestamp,
   end_time                  timestamp,
   description               TEXT,
-  constraint pk_event primary key (id))
+  constraint pk_my_event primary key (id))
 ;
 
 create table student (
@@ -21,7 +21,7 @@ create table student (
   constraint pk_student primary key (id))
 ;
 
-create sequence event_seq;
+create sequence my_event_seq;
 
 create sequence student_seq;
 
@@ -30,11 +30,11 @@ create sequence student_seq;
 
 # --- !Downs
 
-drop table if exists event cascade;
+drop table if exists my_event cascade;
 
 drop table if exists student cascade;
 
-drop sequence if exists event_seq;
+drop sequence if exists my_event_seq;
 
 drop sequence if exists student_seq;
 
