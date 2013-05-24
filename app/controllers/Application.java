@@ -18,8 +18,10 @@ import com.restfb.json.JsonArray;
 import com.restfb.json.JsonTokener;
 import com.restfb.FacebookClient.*;
 import com.restfb.types.Event;
-
 import java.util.*;
+
+import org.joda.time.format.*; // DateTimeFormatter
+import org.joda.time.DateTime;
 
 public class Application extends Controller {
   
@@ -42,7 +44,7 @@ public class Application extends Controller {
 	// http://www.daniweb.com/software-development/java/threads/379327/how-to-use-linkedlist
 	
 	public static Result events() {
-		String MY_ACCESS_TOKEN = "CAACEdEose0cBAOAj8v4rfLN2MEhdw8nxXISTaBzrRVzHmnMBc98ZC6N4UPiZATH75ZBFytCUHexSo1DdMft2ren0UsnbovCZChpZAr8u8PynP8wJwrzkf2GEokERdoR85hgdJvVsNrL17oC9mI8a16AbbPNXi3pvrqLW5AjmcBQZDZD";
+		String MY_ACCESS_TOKEN = "CAACEdEose0cBAGWBO9WDZC1DCa9P6Df4OyL0KMbWwgmSZASFvRE5NwaR0F5KqKsGXTl2GPbfIheVcLnMp1iKRwGAFf3Cpe9rqQuOeUqFUD2mmE8X8gnWzzX394mZA7BwXQiNIgbwuPzASnhpsPmxutkjHTHE35exhcGvrgwrgZDZD";
 		FacebookClient facebookClient = new DefaultFacebookClient(MY_ACCESS_TOKEN);
 
 		// Loop through connection object : https://groups.google.com/d/msg/restfb/eHMSgUxEXi4/gemE6_meNyAJ
@@ -62,7 +64,7 @@ public class Application extends Controller {
 		// JsonArray method1_events = new JsonArray();
 		// do {
 		// 	//events.put(connection.getData());
-  // 			for (JsonObject jsonObject : connection.getData()) { 
+   // 			for (JsonObject jsonObject : connection.getData()) { 
   // 				events.put(jsonObject);
   // 				method1_events.put(jsonObject);
   // 			}
@@ -78,25 +80,44 @@ public class Application extends Controller {
 		
 		String fql_query = "SELECT eid, name, creator, start_time, end_time, description, location, venue, pic, pic_big, pic_cover, parent_group_id FROM event WHERE eid IN (SELECT eid FROM event_member WHERE uid IN (SELECT page_id FROM place WHERE distance(latitude, longitude, '42.054774', '-87.67654') < 5000 LIMIT 51000) LIMIT 51000) AND venue.id IN (SELECT page_id FROM place WHERE distance(latitude,longitude, '42.054774', '-87.67654') < 5000 LIMIT 51000) ORDER BY start_time ASC LIMIT 51000";
 		List<JsonObject> list_events2 = facebookClient.executeFqlQuery(fql_query, JsonObject.class);
-
+  		Event[] javaEvents;
+  		javaEvents=new Event[500];
+  		int number=0;
 		JsonArray method2_events = new JsonArray();
+
 		for (JsonObject jsonObject : list_events2) {
 			events.put(jsonObject);
 			method2_events.put(jsonObject);
+
+			DateTimeFormatter formatter;
+			//parseDateTime start_time
+			if (jsonObject.getString("start_time").length()>19) 
+			  formatter= DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ssZ");
+			else if (jsonObject.getString("start_time").length()>10)
+			  formatter= DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss");
+			else 
+			  formatter= DateTimeFormat.forPattern("yyyy-MM-dd");
+			DateTime start_dt=formatter.parseDateTime(jsonObject.getString("start_time"));
+  			//parseDateTime end_time;
+			if (jsonObject.getString("end_time").length()>19) 
+			  formatter= DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ssZ");
+			else if (jsonObject.getString("end_time").length()>10)
+			  formatter= DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss");
+			else 
+			  formatter= DateTimeFormat.forPattern("yyyy-MM-dd");
+			DateTime end_dt=formatter.parseDateTime(jsonObject.getString("end_time"));
+			//create event class objects
+			DateTime n;
+			String str;
+			//javaEvents[number]=new Event(str, str, n, n, str, str, str);
+		    number++;
 		}
 
-		System.out.println("Method 2:");
-		System.out.println(method2_events.toString());		
+		//System.out.println("Method 2:");
+		//System.out.println(method2_events.toString());		
 
-		// Method 3
-		
-		// lalala
-		// lalalla
-		
 
-		// Remove Duplicates
-
-		System.out.println(events.toString());
+		//System.out.println(events.toString());
 
 		return ok( events.toString() );
 	}
