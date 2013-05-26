@@ -4,7 +4,7 @@
 # --- !Ups
 
 create table my_event (
-  id                        bigint not null,
+  eid                       bigint not null,
   name                      varchar(255),
   creator                   varchar(255),
   location                  varchar(255),
@@ -12,7 +12,7 @@ create table my_event (
   start_time                timestamp,
   end_time                  timestamp,
   description               TEXT,
-  constraint pk_my_event primary key (id))
+  constraint pk_my_event primary key (eid))
 ;
 
 create table student (

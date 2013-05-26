@@ -16,9 +16,5 @@ public class Person extends Model {
         this.name = name;
         System.out.println("person constructor");
     }
-    
-    // public static Finder<String,Person> find = new Finder<String,Person>( String.class, Person.class );
-    // public static Person findByName(String name) { return find.where().eq("name", name); }
-    // List<Person> users = Person.find.all();
  
 }

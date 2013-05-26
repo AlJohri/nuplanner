@@ -3,6 +3,7 @@ package models;
 import java.util.*;
 import javax.persistence.*;
 
+// http://www.avaje.org/static/javadoc/pub/
 import play.db.ebean.*;
 import play.data.format.*;
 import play.data.validation.*;
@@ -11,7 +12,7 @@ import org.joda.time.DateTime;
 
 @Entity
 public class MyEvent extends Model {
-    @Id public Long id;
+    @Id public Long eid;
     @Constraints.Required public String name;
     @Constraints.Required public String creator;
     
@@ -24,9 +25,8 @@ public class MyEvent extends Model {
     @Column(columnDefinition = "TEXT")
     @Constraints.Required public String description;
 
-
-
-    public MyEvent(String name,String creator, DateTime start_time, DateTime end_time, String location, String venue, String description) { 
+    public MyEvent(Long eid, String name,String creator, DateTime start_time, DateTime end_time, String location, String venue, String description) { 
+        this.eid = eid;
         this.name = name;
         this.creator = creator;
         this.start_time = start_time;
@@ -37,6 +37,7 @@ public class MyEvent extends Model {
     }
 
     public static Finder<String,MyEvent> find = new Finder<String,MyEvent>( String.class, MyEvent.class );
+    public static Finder<Long,MyEvent> find2 = new Finder<Long,MyEvent>( Long.class, MyEvent.class );
 }
 
 /*
