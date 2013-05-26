@@ -44,7 +44,7 @@ public class Application extends Controller {
 	// http://www.daniweb.com/software-development/java/thrads/379327/how-to-use-linkedlist
 	
 	public static Result events() {
-		String MY_ACCESS_TOKEN = "CAACEdEose0cBAGCbZCsk3ejqaoAjEPx8CpyKazxQbNROKASo3owpGNaXbG6Sj4OZB1ruMR7ZCQ4nG1oZA57DSU3LXcjWJIpfX73T0vZAfjK6T7m3KlbKXUqpz08de6YWRmcWvny5FCjIbWgtW4ZCHQ4ZCnTJOjJqVJnmZBJRSjyQfAZDZD";
+		String MY_ACCESS_TOKEN = "CAAHcpEMZB8DEBAJ7sl4fcG1b7LWzJPyAuMjbTKew29zsn3GMFHY9pSnMmHT1MifsAiVQyWi18Yi819bd7fBFJ77BVrVH05v0DbRqeynwqbMrLvZAUUdlMH6PSi9ZCgh8vIUXaHudeZAkDBSD3itcrGLCy3osckuRwrxXNSBIOwZDZD";
 		FacebookClient facebookClient = new DefaultFacebookClient(MY_ACCESS_TOKEN);
 		JsonArray events = new JsonArray();  // Change THIS variable to a LinkedList	
 		String fql_query = "SELECT eid, name, creator, start_time, end_time, description, location, venue, pic, pic_big, pic_cover, parent_group_id FROM event WHERE eid IN (SELECT eid FROM event_member WHERE uid IN (SELECT page_id FROM place WHERE distance(latitude, longitude, '42.054774', '-87.67654') < 5000 LIMIT 51000) LIMIT 51000) AND venue.id IN (SELECT page_id FROM place WHERE distance(latitude,longitude, '42.054774', '-87.67654') < 5000 LIMIT 51000) ORDER BY start_time ASC LIMIT 51000";
