@@ -25,8 +25,11 @@ import com.restfb.types.Event;
 
 // http://jsoup.org/apidocs/
 import org.jsoup.*;
+import org.jsoup.Connection.Method;
 import org.jsoup.nodes.*; // Document, Element
 import org.jsoup.select.Elements;	
+
+import com.google.gson.*;
 
 // http://www.avaje.org/ebean/introquery.html
 
@@ -35,15 +38,15 @@ public class Scrape extends Controller {
 // https://developers.facebook.com/docs/facebook-login/access-tokens/#generating
 // https://graph.facebook.com/oauth/access_token?client_id=524073037656113&client_secret=7e9db2e6869c8ae6e7bc60d09686d54a&grant_type=client_credentials
 
-	public static Result scrape_fast() {
+	public static Result scrape_events() {
 		String MY_ACCESS_TOKEN = "524073037656113|l1aTC3FhsPHJEeRZfWB9vk70nAk";
 		FacebookClient facebookClient = new DefaultFacebookClient(MY_ACCESS_TOKEN);
-		JsonArray events = new JsonArray();  // Change THIS variable to a LinkedList	
+		com.restfb.json.JsonArray events = new com.restfb.json.JsonArray();  // Change THIS variable to a LinkedList	
 		String fql_query = "SELECT eid, name, creator, start_time, end_time, description, location, venue, pic, pic_big, pic_cover, parent_group_id FROM event WHERE eid IN (SELECT eid FROM event_member WHERE uid IN (SELECT page_id FROM place WHERE distance(latitude, longitude, '42.054774', '-87.67654') < 5000 LIMIT 51000) LIMIT 51000) AND venue.id IN (SELECT page_id FROM place WHERE distance(latitude,longitude, '42.054774', '-87.67654') < 5000 LIMIT 51000) ORDER BY start_time ASC LIMIT 51000";
-		List<JsonObject> list_events2 = facebookClient.executeFqlQuery(fql_query, JsonObject.class);
-		JsonArray method2_events = new JsonArray();
+		List<com.restfb.json.JsonObject> list_events2 = facebookClient.executeFqlQuery(fql_query, com.restfb.json.JsonObject.class);
+		com.restfb.json.JsonArray method2_events = new com.restfb.json.JsonArray();
 
-		for (JsonObject jsonObject : list_events2) {
+		for (com.restfb.json.JsonObject jsonObject : list_events2) {
 			events.put(jsonObject);
 			method2_events.put(jsonObject);
 
@@ -74,7 +77,7 @@ public class Scrape extends Controller {
 		return ok( events.toString() );
 	}
 
-	public static Result scrape_slow() {
+	public static Result scrape_organizations() {
 
 		List<String> name = new ArrayList<String>(509);
 
@@ -104,4 +107,29 @@ public class Scrape extends Controller {
 		return ok("lala scrape");
 	}
 
+	public static Result scrape_wildcatconnection() {
+		String json = "{}";
+		try {
+			org.jsoup.Connection conn; org.jsoup.Connection.Response res;
+
+			conn = Jsoup.connect("https://northwestern.collegiatelink.net/events");
+			conn = conn.data("view", "calendar", "CurrentMonth", "5", "CurrentYear", "2013", "CurrentPage", "1");
+			res = conn.method(Method.POST).ignoreContentType(true).execute();
+		 	json = res.body();
+
+		 	com.google.gson.JsonElement jelement = new JsonParser().parse(json);
+		 	com.google.gson.JsonObject  jobject = jelement.getAsJsonObject();
+		 	com.google.gson.JsonArray jarray = jobject.getAsJsonArray("Events");
+
+		 	for (com.google.gson.JsonElement object : jarray) {
+		 		com.google.gson.JsonObject element = object.getAsJsonObject();
+    			String result = element.get("Name").toString();
+    			System.out.println(result);		 		
+		 	}
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}		
+   		return ok(json);
+	}
 }

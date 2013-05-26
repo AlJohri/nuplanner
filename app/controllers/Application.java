@@ -27,7 +27,7 @@ import play.mvc.BodyParser;
 public class Application extends Controller {
   
     public static Result index() {
-		return redirect(routes.Scrape.scrape_fast());
+		return redirect(routes.Scrape.scrape_events());
     }
 
 	public static Result students() {
