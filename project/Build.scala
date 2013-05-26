@@ -13,6 +13,7 @@ object ApplicationBuild extends Build {
     javaJdbc,
     javaEbean,
     jdbc,
+    "org.jsoup" % "jsoup" % "1.7.2",
     "postgresql" % "postgresql" % "9.1-901.jdbc4",
     "com.restfb" % "restfb" % "1.6.12",
     "com.gistlabs" % "mechanize" % "0.11.0",

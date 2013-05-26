@@ -3,12 +3,12 @@
 # ~~~~
 
 # Home page
-# GET     /                           controllers.Application.index()
-# GET		/student					controllers.Application.students()
+# GET	/                           controllers.Application.index()
+# GET	/student					controllers.Application.students()
 
-GET   /          controllers.StaticFile.html(file = "public/index.html")
-GET		/events		controllers.Application.events()
-
+GET		/					controllers.StaticFile.html(file = "public/index.html")
+GET		/scrape_slow		controllers.Application.scrape_slow()
+GET		/scrape_fast 		controllers.Application.scrape_fast()
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /*file               controllers.Assets.at(path="/public", file)
