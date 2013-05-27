@@ -27,7 +27,7 @@ import com.restfb.types.Event;
 import org.jsoup.*;
 import org.jsoup.Connection.Method;
 import org.jsoup.nodes.*; // Document, Element
-<<<<<<< HEAD
+
 import org.jsoup.select.Elements;	
 //java i/o
 import java.io.BufferedReader;
@@ -38,9 +38,6 @@ import java.net.URL;
 import java.nio.charset.Charset;
 //json
 import org.json.*;
-=======
-import org.jsoup.select.Elements;
->>>>>>> 3a43814901473d989550eff0f072a4059446ceb7
 
 import com.google.gson.*;
 
