@@ -16,13 +16,13 @@ create table my_event (
 ;
 
 create table my_organization (
-  eid                       bigint not null,
+  fbid                      bigint not null,
   name                      varchar(255),
   creator                   varchar(255),
-  fbid                      bigint,
   url                       varchar(255),
+  location                  varchar(255),
   description               TEXT,
-  constraint pk_my_organization primary key (eid))
+  constraint pk_my_organization primary key (fbid))
 ;
 
 create table student (

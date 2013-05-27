@@ -139,10 +139,14 @@ public class Scrape extends Controller {
 							json = new JSONObject(jsontext);
 							//System.out.println(json.toString());
 							 a=json.get("id").toString();
+							 Long fbid = Long.valueOf(a).longValue();
+							 if (MyOrganization.findLong.byId(fbid) == null) new MyOrganization(fbid, json.get("name").toString(), json.get("location").toString(), json.get("link").toString(), json.get("description").toString()).save();
+
 						} catch (JSONException e1) {
 							// TODO Auto-generated catch block
 							e1.printStackTrace();
 						}
+
 						}
 						finally
 						{

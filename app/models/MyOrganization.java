@@ -27,10 +27,10 @@ public class MyOrganization extends Model {
     @Column(columnDefinition = "TEXT")
     @Constraints.Required public String description;
 
-    public MyOrganization(Long fbid, String name,String creator, String url, String description) { 
+    public MyOrganization(Long fbid, String name,String location, String url, String description) { 
         this.fbid = fbid;
         this.name = name;
-        this.creator = creator;
+        this.location=location;
         this.url = url;
         this.description = description;
     }
