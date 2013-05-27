@@ -15,7 +15,7 @@ public class MyEvent extends Model {
     @Id public Long eid;
     @Constraints.Required public String name;
     @Constraints.Required public String creator;
-    
+
     public String location;
     public String venue;
 
@@ -36,8 +36,10 @@ public class MyEvent extends Model {
         this.description = description;
     }
 
+    // http://www.avaje.org/static/javadoc/pub/com/avaje/ebean/ExpressionList.html
     public static Finder<String,MyEvent> find = new Finder<String,MyEvent>( String.class, MyEvent.class );
-    public static Finder<Long,MyEvent> find2 = new Finder<Long,MyEvent>( Long.class, MyEvent.class );
+    public static Finder<Long,MyEvent> findLong = new Finder<Long,MyEvent>( Long.class, MyEvent.class );
+    public static Finder<DateTime,MyEvent> findDate = new Finder<DateTime,MyEvent>( DateTime.class, MyEvent.class );
 }
 
 /*

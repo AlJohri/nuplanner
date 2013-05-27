@@ -11,11 +11,6 @@ import play.api.libs.oauth._
 import play.api.mvc._
 import play.api.libs._
 
-
-
-
-
-
 object StaticFile extends Controller {
 
     def html(file: String) = Action {

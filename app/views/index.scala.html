@@ -3,16 +3,16 @@
 @import helper._
 
 @main("User List") {
-    
+
     <h1>@students.size() student(s)</h1>
-    
+
     <ul>
         @for(student <- students) {
             <li>
                 @student.name
             </li>
         }
-    </ul>    
+    </ul>
 
-    
+
 }
