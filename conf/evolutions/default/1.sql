@@ -15,6 +15,16 @@ create table my_event (
   constraint pk_my_event primary key (eid))
 ;
 
+create table my_organization (
+  fbid                      bigint not null,
+  name                      varchar(255),
+  creator                   varchar(255),
+  url                       varchar(255),
+  location                  varchar(255),
+  description               TEXT,
+  constraint pk_my_organization primary key (fbid))
+;
+
 create table student (
   id                        bigint not null,
   name                      varchar(255),
@@ -22,6 +32,8 @@ create table student (
 ;
 
 create sequence my_event_seq;
+
+create sequence my_organization_seq;
 
 create sequence student_seq;
 
@@ -32,9 +44,13 @@ create sequence student_seq;
 
 drop table if exists my_event cascade;
 
+drop table if exists my_organization cascade;
+
 drop table if exists student cascade;
 
 drop sequence if exists my_event_seq;
+
+drop sequence if exists my_organization_seq;
 
 drop sequence if exists student_seq;
 
