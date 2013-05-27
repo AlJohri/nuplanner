@@ -45,3 +45,14 @@ return ok("You sent: " + name + ", " + desg);
 
 System.out.println(request().getQueryString("start"));
 System.out.println(Form.form().bindFromRequest().get("start"));
+
+
+
+
+SELECT eid, name, description, pic_big, start_time, end_time, location 
+FROM event
+WHERE 
+creator = 44837067390 OR 
+creator = 10288601762 OR
+creator = 104279497365 OR
+ORDER BY start_time
