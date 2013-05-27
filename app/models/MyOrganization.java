@@ -18,12 +18,11 @@ import org.joda.time.DateTime;
 
 @Entity
 public class MyOrganization extends Model {
-    @Id public Long eid;
+    @Id public Long fbid;
     @Constraints.Required public String name;
-    @Constraints.Required public String creator;
-
-    public Long fbid;
+    public String creator;
     public String url;
+    public String location;
 
     @Column(columnDefinition = "TEXT")
     @Constraints.Required public String description;
