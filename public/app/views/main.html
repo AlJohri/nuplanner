@@ -1,0 +1,26 @@
+<div class="main">
+<!--   <h1>'Allo, 'Allo!</h1>
+  <p>You now have</p>
+  <ul>
+      <li ng-repeat="thing in awesomeThings">{{thing}}</li>
+  </ul>
+  <p>instaled.</p>
+  <h3>Enjoy coding! - Yeoman</h3>
+ -->
+    <section id="directives-calendar" ng-controller="CalendarCtrl">
+        <div class="page-header" style="color:white;">
+            <h1>Calendar</h1>
+        </div>
+        <div class="alert-success calAlert"><h4>{{window_width}} {{alertMessage}}</h4></div>
+
+
+        <div class="well">
+            <div class="row-fluid">
+                <div class="span12">
+        			<div class="calendar" id="myCalendar" ng-model="eventSources" calendar="myCalendar" config="uiConfig.calendar" ui-calendar="uiConfig.calendar"></div>
+                </div>
+            </div>
+        </div>
+    </section>  
+
+</div>
