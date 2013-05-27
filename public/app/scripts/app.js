@@ -8,7 +8,9 @@ angular.module('nuPlannerApp', ['ui.calendar']).
         templateUrl: 'views/main.html',
         controller: 'CalendarCtrl'
       })
-      .otherwise({
-        redirectTo: '/'
-      });
+      .when('/list',{
+        templateUrl: 'views/list.html',
+        controller: 'ListCtrl'
+      })
+      .otherwise({ redirectTo: '/' });
   });
