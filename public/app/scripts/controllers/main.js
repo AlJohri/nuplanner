@@ -97,6 +97,6 @@ angular.module('nuPlannerApp').controller('CalendarCtrl', function ($scope, $roo
     };
     /* event sources array*/
 	$scope.eventSources = [$scope.events, $scope.eventSource, $scope.eventsF];
- 
+
 
 });
