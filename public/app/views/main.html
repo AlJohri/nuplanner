@@ -11,13 +11,24 @@
         <div class="page-header" style="color:white;">
             <h1>Calendar</h1>
         </div>
-        <div class="alert-success calAlert"><h4>{{window_width}} {{alertMessage}}</h4></div>
+        <div class="alert-success calAlert"><h4>{{alertMessage}}</h4></div>
 
 
         <div class="well">
             <div class="row-fluid">
-                <div class="span12">
-        			<div class="calendar" id="myCalendar" ng-model="eventSources" calendar="myCalendar" config="uiConfig.calendar" ui-calendar="uiConfig.calendar"></div>
+              <div class="span12">
+
+                <div class="btn-toolbar">
+                    <p class="pull-right lead">You can drag events below</p>
+                    <div class="btn-group">
+                        <button class="btn btn-info" ng-click="addRemoveEventSource(eventSources,eventSource)">Toggle an event source</button>
+                        <button class="btn btn-success" ng-click="changeView('agendaDay')">AgendaDay</button>
+                        <button class="btn btn-success" ng-click="changeView('agendaWeek')">AgendaWeek</button>
+                        <button class="btn btn-success" ng-click="changeView('month')">Month</button>
+                    </div>
+                </div>
+
+                <div class="calendar" id="myCalendar" ng-model="eventSources" calendar="myCalendar" config="uiConfig.calendar" ui-calendar="uiConfig.calendar"></div>
                 </div>
             </div>
         </div>
