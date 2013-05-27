@@ -74,7 +74,7 @@ public class Scrape extends Controller {
 
 			//create event class objects
 
-			if (MyEvent.find2.byId(eid) == null) new MyEvent(eid, jsonObject.getString("name"), jsonObject.getString("creator"), start_dt, end_dt, jsonObject.getString("location"), jsonObject.getString("venue"), jsonObject.getString("description")).save();
+			if (MyEvent.findLong.byId(eid) == null) new MyEvent(eid, jsonObject.getString("name"), jsonObject.getString("creator"), start_dt, end_dt, jsonObject.getString("location"), jsonObject.getString("venue"), jsonObject.getString("description")).save();
 		}
 
 		return ok( events.toString() );
