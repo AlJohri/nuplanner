@@ -8,41 +8,41 @@ import play.*;
 import play.mvc.*;
 import play.data.*;
 import play.libs.Json;
+import play.data.Form;
+// http://www.playframework.com/documentation/api/2.0/java/index.html
 
 import models.*;
-// import views.html.*;
 
 import org.apache.commons.io.FileUtils;
+
+import org.joda.time.DateTime;
 
 // http://www.playframework.com/documentation/2.1.1/JavaJsonRequests
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.node.ObjectNode;
 import play.mvc.BodyParser;
 
-// TODO: change something to use a LinkedList
-// http://www.daniweb.com/software-development/java/thrads/379327/how-to-use-linkedlist
-
-// TODO: split into multiple files
 // http://www.playframework.com/documentation/2.1.1/JavaActions
+// http://stackoverflow.com/questions/14843365/get-request-parameter-with-play-framework
+// http://stackoverflow.com/questions/9808348/request-params-is-gone-in-play-framework-2-0
 public class Application extends Controller {
-  
-    public static Result index() {
-		return redirect(routes.Scrape.scrape_events());
-    }
 
-	public static Result students() {
-		return ok( "lala" );
-		// views.html.index.render(User.all())
-	}
-
-	public static Result phones(String phoneId) throws IOException {
-    	File jsonFile = Play.application().getFile("public/phones/"+phoneId);
-    	String json = FileUtils.readFileToString(jsonFile);
-    	return ok(json).as("application/json");
-	}
-
+	// http://arshaw.com/fullcalendar/docs/event_data/events_json_feed/
 	public static Result events() {
-		List<MyEvent> events = MyEvent.find.all();
+
+		String start = request().getQueryString("start");
+		String end = request().getQueryString("end");
+
+		if (start != null && end != null) {
+			DateTime start_time = DateTime.parse(start);
+			DateTime end_time = DateTime.parse(end);
+		}
+
+		List<MyEvent> events;
+
+		// events = MyEvent.find.where().gt("start_time", start_time).lt("end_time", end_time);
+		events = MyEvent.find.all();
+
 		Iterator<MyEvent> iterator = events.iterator();
 		while (iterator.hasNext()) {
 			System.out.println(iterator.next().name);

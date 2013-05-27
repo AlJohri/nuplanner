@@ -15,7 +15,7 @@ import views.html.*;
 
 // http://joda-time.sourceforge.net/apidocs/
 import org.joda.time.format.*; // DateTimeFormatter
-import org.joda.time.DateTime;
+import org.joda.time.DateTime; // http://joda-time.sourceforge.net/api-release/index.html
 
 // http://restfb.com/javadoc/
 import com.restfb.*; // FacebookClient
@@ -27,13 +27,16 @@ import com.restfb.types.Event;
 import org.jsoup.*;
 import org.jsoup.Connection.Method;
 import org.jsoup.nodes.*; // Document, Element
-import org.jsoup.select.Elements;	
+import org.jsoup.select.Elements;
 
 import com.google.gson.*;
 
 // http://www.avaje.org/ebean/introquery.html
 
 public class Scrape extends Controller {
+
+// TODO: change something to use a LinkedList
+// http://www.daniweb.com/software-development/java/thrads/379327/how-to-use-linkedlist
 
 // https://developers.facebook.com/docs/facebook-login/access-tokens/#generating
 // https://graph.facebook.com/oauth/access_token?client_id=524073037656113&client_secret=7e9db2e6869c8ae6e7bc60d09686d54a&grant_type=client_credentials
@@ -58,7 +61,7 @@ public class Scrape extends Controller {
 			DateTime start_dt;
 			if (jsonObject.getString("start_time").length()!=4) start_dt=formatter.parseDateTime(jsonObject.getString("start_time"));
 			else start_dt=null;
-			
+
 			if (jsonObject.getString("end_time").length()>19)  formatter= DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ssZ");
 			else if (jsonObject.getString("end_time").length()>10) formatter= DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss");
 			else formatter= DateTimeFormat.forPattern("yyyy-MM-dd");
@@ -70,7 +73,7 @@ public class Scrape extends Controller {
 			Long eid = Long.valueOf(jsonObject.getString("eid")).longValue();
 
 			//create event class objects
-			
+
 			if (MyEvent.find2.byId(eid) == null) new MyEvent(eid, jsonObject.getString("name"), jsonObject.getString("creator"), start_dt, end_dt, jsonObject.getString("location"), jsonObject.getString("venue"), jsonObject.getString("description")).save();
 		}
 
@@ -118,18 +121,18 @@ public class Scrape extends Controller {
 		 	json = res.body();
 
 		 	com.google.gson.JsonElement jelement = new JsonParser().parse(json);
-		 	com.google.gson.JsonObject  jobject = jelement.getAsJsonObject();
+		 	com.google.gson.JsonObject jobject = jelement.getAsJsonObject();
 		 	com.google.gson.JsonArray jarray = jobject.getAsJsonArray("Events");
 
 		 	for (com.google.gson.JsonElement object : jarray) {
 		 		com.google.gson.JsonObject element = object.getAsJsonObject();
     			String result = element.get("Name").toString();
-    			System.out.println(result);		 		
+    			System.out.println(result);
 		 	}
 
 		} catch (IOException e) {
 			e.printStackTrace();
-		}		
+		}
    		return ok(json);
 	}
 }

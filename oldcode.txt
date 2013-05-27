@@ -29,3 +29,19 @@ do {
 JsonObject result = facebookClient.fetchObject( "search", JsonObject.class, Parameter.with("q", "*"), Parameter.with("center", "42.052925,-87.665834"), Parameter.with("type", "event"), Parameter.with("distance", 1000) );
 JsonArray events = result.getJsonArray("data");
 result = facebookClient.fetchConnectionPage(result.getNextPageUrl(), JsonObject.class);
+
+
+/*
+
+DynamicForm requestData = form().bindFromRequest();
+
+String name = requestData.get("name");
+String desg = requestData.get("desg");
+// etc
+
+return ok("You sent: " + name + ", " + desg);
+
+ */
+
+System.out.println(request().getQueryString("start"));
+System.out.println(Form.form().bindFromRequest().get("start"));
