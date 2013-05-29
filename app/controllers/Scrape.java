@@ -28,7 +28,7 @@ import org.jsoup.*;
 import org.jsoup.Connection.Method;
 import org.jsoup.nodes.*; // Document, Element
 
-import org.jsoup.select.Elements;	
+import org.jsoup.select.Elements;
 //java i/o
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -54,7 +54,7 @@ public class Scrape extends Controller {
 	public static Result scrape_events() {
 		String MY_ACCESS_TOKEN = "524073037656113|l1aTC3FhsPHJEeRZfWB9vk70nAk";
 		FacebookClient facebookClient = new DefaultFacebookClient(MY_ACCESS_TOKEN);
-		com.restfb.json.JsonArray events = new com.restfb.json.JsonArray();  // Change THIS variable to a LinkedList	
+		com.restfb.json.JsonArray events = new com.restfb.json.JsonArray();  // Change THIS variable to a LinkedList
 		String fql_query = "SELECT eid, name, creator, start_time, end_time, description, location, venue, pic, pic_big, pic_cover, parent_group_id FROM event WHERE eid IN (SELECT eid FROM event_member WHERE uid IN (SELECT page_id FROM place WHERE distance(latitude, longitude, '42.054774', '-87.67654') < 5000 LIMIT 51000) LIMIT 51000) AND venue.id IN (SELECT page_id FROM place WHERE distance(latitude,longitude, '42.054774', '-87.67654') < 5000 LIMIT 51000) ORDER BY start_time ASC LIMIT 51000";
 		List<com.restfb.json.JsonObject> list_events2 = facebookClient.executeFqlQuery(fql_query, com.restfb.json.JsonObject.class);
 		com.restfb.json.JsonArray method2_events = new com.restfb.json.JsonArray();
@@ -156,7 +156,7 @@ public class Scrape extends Controller {
 					j++;}
 				}
 			}
-				
+
 			}} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
