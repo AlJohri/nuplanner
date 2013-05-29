@@ -38,7 +38,7 @@ angular.module('nuPlannerApp').controller('MainCtrl', function ($scope) {
     // };
 
     $scope.eventSource = {
-            url: "http://localhost:9000/events",
+            url: "/events",
             // className: 'gcal-event',           // an option!
             currentTimezone: 'America/Chicago' // an option!
     };
