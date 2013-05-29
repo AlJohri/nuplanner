@@ -16,10 +16,10 @@ angular.module('nuPlannerApp').controller('MainCtrl', function ($scope) {
 
     ////////////////////////////////////////////////////*/
 
-    var date = new Date();
-    var d = date.getDate();
-    var m = date.getMonth();
-    var y = date.getFullYear();
+    // var date = new Date();
+    // var d = date.getDate();
+    // var m = date.getMonth();
+    // var y = date.getFullYear();
     /* event source that pulls from google.com */
     // $scope.eventSource = {
     //         url: "http://www.google.com/calendar/feeds/usa__en%40holiday.calendar.google.com/public/basic",
@@ -44,9 +44,16 @@ angular.module('nuPlannerApp').controller('MainCtrl', function ($scope) {
     };
 
     /* alert on eventClick */
-    $scope.alertEventOnClick = function( date, allDay, jsEvent, view ){
+    $scope.alertOnEventClick = function( event, jsEvent, view ){
+        $scope.$apply(function() {
+          if (event.url) { window.open(event.url); }
+        });
+        return false;
+    };
+    /* alert on dayClick */
+    $scope.alertOnDayClick = function( date, allDay, jsEvent, view ){
         $scope.$apply(function(){
-          $scope.alertMessage = ('Day Clicked ' + date);
+          // $scope.alertMessage = ('Day Clicked ' + date);
         });
     };
     /* alert on Drop */
@@ -99,14 +106,15 @@ angular.module('nuPlannerApp').controller('MainCtrl', function ($scope) {
         theme: false,
         header: {
           left: '', // month basicWeek basicDay agendaWeek agendaDay
-          center: '', // title
-          right: 'prev,next' // today prev,next
+          center: 'title', // title
+          right: 'today prev,next' // today prev,next
         },
-        defaultView: 'agendaWeek',
+        defaultView: 'month',
         aspectRatio: 1,
-        dayClick: $scope.alertEventOnClick,
+        dayClick: $scope.alertOnDayClick,
         eventDrop: $scope.alertOnDrop,
-        eventResize: $scope.alertOnResize
+        eventResize: $scope.alertOnResize,
+        eventClick: $scope.alertOnEventClick
       }
     };
     /* event sources array*/

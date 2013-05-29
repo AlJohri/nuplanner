@@ -86,7 +86,7 @@ public class MyEvent extends Model implements JSONAware {
 
         sb.append("\"" + JSONObject.escape("url") + "\"");
         sb.append(":");
-        sb.append("\"" + JSONObject.escape("") + "\"");
+        sb.append("\"" + JSONObject.escape("http://www.facebook.com/events/") + String.valueOf(eid) + "\"");
 
         sb.append(",");
 
