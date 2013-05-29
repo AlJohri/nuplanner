@@ -50,7 +50,32 @@ public class Scrape extends Controller {
 
 // https://developers.facebook.com/docs/facebook-login/access-tokens/#generating
 // https://graph.facebook.com/oauth/access_token?client_id=524073037656113&client_secret=7e9db2e6869c8ae6e7bc60d09686d54a&grant_type=client_credentials
-
+	public static Result scrape_temp(){
+			//String query="SELECT eid, name, description, pic_big, start_time, end_time, location FROM event WHERE ";
+			String MY_ACCESS_TOKEN = "524073037656113|l1aTC3FhsPHJEeRZfWB9vk70nAk";
+			FacebookClient facebookClient = new DefaultFacebookClient(MY_ACCESS_TOKEN);
+			List<MyOrganization> organizations=MyOrganization.find.all();
+			System.out.println("b");
+			for(MyOrganization a:organizations){
+				String query = "SELECT eid, name, description, pic_big, start_time, end_time, location FROM event WHERE creator = "+a.fbid;
+				List<FqlEvent> events = facebookClient.executeFqlQuery(query, FqlEvent.class);
+				//Long eid = Long.valueOf(com.restfb.json.jsonObject.getString("eid")).longValue();
+				for(FqlEvent event:events){
+				//create event class objects
+				DateTime starttime = new DateTime();
+				DateTime endtime = new DateTime();
+				starttime.parse(event.start_time);
+				if (event.end_time!=null && !event.end_time.isEmpty()) endtime.parse(event.end_time);
+				else endtime=null;
+				
+				if(MyEvent.findLong.byId(event.eid)==null) new MyEvent(event.eid,event.name,a.creator,starttime,endtime,event.location,event.pic_big,event.description).save();
+				//if (MyEvent.findLong.byId(eid) == null) new MyEvent(eid, jsonObject.getString("name"), jsonObject.getString("creator"), start_dt, end_dt, jsonObject.getString("location"), jsonObject.getString("venue"), jsonObject.getString("description")).save();
+				System.out.println("Users: " + events);
+				//System.out.println(query);
+				}
+				}
+			return ok("yes");
+			}
 	public static Result scrape_events() {
 		String MY_ACCESS_TOKEN = "524073037656113|l1aTC3FhsPHJEeRZfWB9vk70nAk";
 		FacebookClient facebookClient = new DefaultFacebookClient(MY_ACCESS_TOKEN);

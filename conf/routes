@@ -1,5 +1,6 @@
 GET		/							controllers.StaticFile.html(file = "public/app/index.html")
 GET		/events						controllers.Application.events()
+GET		/scrape_temp				controllers.Scrape.scrape_temp()
 GET		/scrape_organizations		controllers.Scrape.scrape_organizations()
 GET		/scrape_events				controllers.Scrape.scrape_events()
 GET		/scrape_wildcatconnection	controllers.Scrape.scrape_wildcatconnection()
