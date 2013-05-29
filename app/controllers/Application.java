@@ -31,19 +31,23 @@ public class Application extends Controller {
 
 	// http://arshaw.com/fullcalendar/docs/event_data/events_json_feed/
 	public static Result events() {
-		String start = request().getQueryString("start"); String end = request().getQueryString("end");
-
+		// String start = request().getQueryString("start");
+		// String end = request().getQueryString("end");
+	    DateTime start= new DateTime(Long.parseLong("1357484400000"));
+		DateTime end = new DateTime(Long.parseLong("1371306630000"));
+		System.out.println(start.toString());
+		
 		// these parameters don't work right now
 		ExpressionList<MyEvent> events = MyEvent.findDate.where();
-		events = (start != null) ? events.gt("start_time", DateTime.parse(start)) : events;
-		events = (end != null) ? events.lt("end_time", DateTime.parse(end)) : events;
+		events = (start != null) ? events.gt("start_time", start) : events;
+		events = (end != null) ? events.lt("end_time", end) : events;
 
 		List<MyEvent> eventList = events.findList();
 		eventList = (start == null && end == null) ? MyEvent.find.all() : eventList;
-
+        //System.out.println(eventList.toString());
 		Iterator<MyEvent> itr = eventList.iterator();
 		while (itr.hasNext()) {
-			itr.next(); // System.out.println(itr.next().name);
+			System.out.println(itr.next().name); // itr.next()
 		}
 		return ok( eventList.toString() );
 	}
