@@ -39,6 +39,9 @@ import java.nio.charset.Charset;
 //json
 import org.json.*;
 
+import org.json.*;
+import org.json.simple.JSONValue;
+
 import com.google.gson.*;
 
 // http://www.avaje.org/ebean/introquery.html
@@ -64,8 +67,8 @@ public class Scrape extends Controller {
 				//create event class objects
 				DateTime starttime = new DateTime();
 				DateTime endtime = new DateTime();
-				starttime.parse(event.start_time);
-				if (event.end_time!=null && !event.end_time.isEmpty()) endtime.parse(event.end_time);
+				starttime = starttime.parse(event.start_time);
+				if (event.end_time!=null && !event.end_time.isEmpty()) endtime = endtime.parse(event.end_time);
 				else endtime=null;
 				
 				if(MyEvent.findLong.byId(event.eid)==null) {
@@ -73,10 +76,14 @@ public class Scrape extends Controller {
 					eventList.add(newEvent);
 					newEvent.save();
 				}
-				System.out.println("Users: " + events);
+				System.out.println(event);
 			}
+			// System.out.println("Users: " + events);
 		}
-		return ok(eventList.toString());
+
+		String jsonText = JSONValue.toJSONString(eventList);
+
+		return ok(jsonText);
 	}
 
 	public static Result scrape_events() {
