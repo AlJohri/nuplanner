@@ -50,17 +50,17 @@ public class Scrape extends Controller {
 
 // https://developers.facebook.com/docs/facebook-login/access-tokens/#generating
 // https://graph.facebook.com/oauth/access_token?client_id=524073037656113&client_secret=7e9db2e6869c8ae6e7bc60d09686d54a&grant_type=client_credentials
-	public static Result scrape_temp(){
-			//String query="SELECT eid, name, description, pic_big, start_time, end_time, location FROM event WHERE ";
-			String MY_ACCESS_TOKEN = "524073037656113|l1aTC3FhsPHJEeRZfWB9vk70nAk";
-			FacebookClient facebookClient = new DefaultFacebookClient(MY_ACCESS_TOKEN);
-			List<MyOrganization> organizations=MyOrganization.find.all();
-			System.out.println("b");
-			for(MyOrganization a:organizations){
-				String query = "SELECT eid, name, description, pic_big, start_time, end_time, location FROM event WHERE creator = "+a.fbid;
-				List<FqlEvent> events = facebookClient.executeFqlQuery(query, FqlEvent.class);
-				//Long eid = Long.valueOf(com.restfb.json.jsonObject.getString("eid")).longValue();
-				for(FqlEvent event:events){
+	public static Result scrape_temp() {
+		List <MyEvent> eventList = new ArrayList<MyEvent>();;
+
+		String MY_ACCESS_TOKEN = "524073037656113|l1aTC3FhsPHJEeRZfWB9vk70nAk";
+		FacebookClient facebookClient = new DefaultFacebookClient(MY_ACCESS_TOKEN);
+		List<MyOrganization> organizations=MyOrganization.find.all();
+		for(MyOrganization a:organizations) {
+			String query = "SELECT eid, name, description, pic_big, start_time, end_time, location FROM event WHERE creator = "+ a.fbid;
+			List<FqlEvent> events = facebookClient.executeFqlQuery(query, FqlEvent.class);
+			
+			for(FqlEvent event:events) {
 				//create event class objects
 				DateTime starttime = new DateTime();
 				DateTime endtime = new DateTime();
@@ -68,14 +68,17 @@ public class Scrape extends Controller {
 				if (event.end_time!=null && !event.end_time.isEmpty()) endtime.parse(event.end_time);
 				else endtime=null;
 				
-				if(MyEvent.findLong.byId(event.eid)==null) new MyEvent(event.eid,event.name,a.creator,starttime,endtime,event.location,event.pic_big,event.description).save();
-				//if (MyEvent.findLong.byId(eid) == null) new MyEvent(eid, jsonObject.getString("name"), jsonObject.getString("creator"), start_dt, end_dt, jsonObject.getString("location"), jsonObject.getString("venue"), jsonObject.getString("description")).save();
+				if(MyEvent.findLong.byId(event.eid)==null) {
+					MyEvent newEvent = new MyEvent(event.eid,event.name,a.creator,starttime,endtime,event.location,event.pic_big,event.description);
+					eventList.add(newEvent);
+					newEvent.save();
+				}
 				System.out.println("Users: " + events);
-				//System.out.println(query);
-				}
-				}
-			return ok("yes");
 			}
+		}
+		return ok(eventList.toString());
+	}
+
 	public static Result scrape_events() {
 		String MY_ACCESS_TOKEN = "524073037656113|l1aTC3FhsPHJEeRZfWB9vk70nAk";
 		FacebookClient facebookClient = new DefaultFacebookClient(MY_ACCESS_TOKEN);
@@ -128,19 +131,11 @@ public class Scrape extends Controller {
 			String[] name2 =new String[100];
 			int[] id =new int[100];
 			doc = Jsoup.connect("https://northwestern.collegiatelink.net/organizations?SearchType=None&SelectedCategoryId=0&CurrentPage="+ i).get();
-			//System.out.println(doc);
 			Element sa = doc.getElementById("results");
-			//System.out.println(sa);
 			Elements sai = sa.getElementsByTag("h5");
-			//System.out.println(sai);
 			int j=0;
 			for(Element e:sai){
-				//System.out.println(e);
 				Element f = e.child(0);
-				//name[j]=f.text();
-				//System.out.println(f);
-				//System.out.println(name[j]);
-				//System.out.println(f.attr("href"));
 				Document doc2=Jsoup.connect("https://northwestern.collegiatelink.net" + f.attr("href")).get();
 				Elements fb=doc2.select("a[class*=icon-social facebook]");
 				for (Element g:fb){
@@ -148,8 +143,7 @@ public class Scrape extends Controller {
 					name[j]=g.attr("href");//facebook link
 					id[j]=name[j].lastIndexOf("/");
 					name1[j]=name[j].substring(id[j]+1);//last string after / and groups end with a / in fb link
-					if (!name1[j].isEmpty()){
-						//System.out.println(name1[j]);
+					if (!name1[j].isEmpty()) {
 						name2[j]="https://graph.facebook.com/"+name1[j];//graph url
 						System.out.println(name2[j]);
 						InputStream is =new URL(name2[j]).openStream();
@@ -162,14 +156,17 @@ public class Scrape extends Controller {
 						String jsontext=sb.toString();
 						try {
 							json = new JSONObject(jsontext);
-							//System.out.println(json.toString());
 							 a=json.get("id").toString();
 							 Long fbid = Long.valueOf(a).longValue();
-							 if (MyOrganization.findLong.byId(fbid) == null) new MyOrganization(fbid, json.get("name").toString(), json.get("location").toString(), json.get("link").toString(), json.get("description").toString()).save();
-
+							 String fbname = json.has("name") ? json.get("name").toString() : "";
+							 String location = json.has("location") ? json.get("location").toString() : "";
+							 String link = json.has("link") ? json.get("link").toString() : "";
+							 String description = json.has("description") ? json.get("description").toString() : "";
+							 if (MyOrganization.findLong.byId(fbid) == null) new MyOrganization(fbid, fbname, location, link, description).save();
 						} catch (JSONException e1) {
 							// TODO Auto-generated catch block
-							e1.printStackTrace();
+							// e1.printStackTrace();
+							System.out.println(e1.getMessage());
 						}
 
 						}
@@ -184,7 +181,8 @@ public class Scrape extends Controller {
 
 			}} catch (IOException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			// e.printStackTrace();
+			System.out.println(e.getMessage());
 		}
 		}
 		return ok("done");
