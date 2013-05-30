@@ -27,7 +27,7 @@ public class FqlEvent {
 		  String location;
 		  
 		  @Facebook
-		  String pic_big;
+		  String venue;
 		  
 		  @Facebook
 		  String description;

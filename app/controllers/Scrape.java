@@ -60,7 +60,7 @@ public class Scrape extends Controller {
 		FacebookClient facebookClient = new DefaultFacebookClient(MY_ACCESS_TOKEN);
 		List<MyOrganization> organizations=MyOrganization.find.all();
 		for(MyOrganization a:organizations) {
-			String query = "SELECT eid, name, description, pic_big, start_time, end_time, location FROM event WHERE creator = "+ a.fbid;
+			String query = "SELECT eid, name, description, pic_big, start_time, end_time, location, venue FROM event WHERE creator = "+ a.fbid;
 			List<FqlEvent> events = facebookClient.executeFqlQuery(query, FqlEvent.class);
 			
 			for(FqlEvent event:events) {
@@ -70,15 +70,16 @@ public class Scrape extends Controller {
 				starttime = starttime.parse(event.start_time);
 				if (event.end_time!=null && !event.end_time.isEmpty()) endtime = endtime.parse(event.end_time);
 				else endtime=null;
+
+				String creator = String.valueOf(a.fbid);
 				
 				if(MyEvent.findLong.byId(event.eid)==null) {
-					MyEvent newEvent = new MyEvent(event.eid,event.name,a.creator,starttime,endtime,event.location,event.pic_big,event.description);
+					MyEvent newEvent = new MyEvent(event.eid,event.name,creator,starttime,endtime,event.location,event.venue,event.description);
 					eventList.add(newEvent);
 					newEvent.save();
 				}
 				System.out.println(event);
 			}
-			// System.out.println("Users: " + events);
 		}
 
 		String jsonText = JSONValue.toJSONString(eventList);

@@ -56,3 +56,14 @@ creator = 44837067390 OR
 creator = 10288601762 OR
 creator = 104279497365 OR
 ORDER BY start_time
+
+
+
+35420112130/events?start=0&until=now
+
+SELECT eid, name, start_time, end_time, location, venue, description 
+    FROM event WHERE eid IN ( SELECT eid FROM event_member WHERE uid = 35420112130 )
+    ORDER BY end_time asc
+
+
+SELECT eid, name, description, pic_big, start_time, end_time, location, venue FROM event WHERE creator = 35420112130
