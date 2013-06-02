@@ -67,3 +67,52 @@ SELECT eid, name, start_time, end_time, location, venue, description
 
 
 SELECT eid, name, description, pic_big, start_time, end_time, location, venue FROM event WHERE creator = 35420112130
+
+https://www.facebook.com/norriscenter/events
+https://graph.facebook.com/norriscenter
+
+127834807348606
+
+http://stackoverflow.com/questions/10812988/fql-search-events-from-their-venue-field
+
+
+App Access Token
+SELECT eid, name, creator, start_time, end_time, description, location, venue FROM event WHERE eid IN 
+     (SELECT eid FROM event_member WHERE uid IN
+          (SELECT page_id FROM place WHERE distance(latitude, longitude, '42.054774', '-87.67654') < 5000 LIMIT 51000) 
+     LIMIT 51000)
+ORDER BY start_time ASC LIMIT 51000
+
+
+User Access Token Required
+SELECT start_time, end_time, name, eid, pic,venue.id, location, creator, description FROM event WHERE eid IN  
+	(SELECT eid FROM event_member WHERE uid IN 
+		(SELECT uid2 FROM friend WHERE uid1=me() LIMIT 51000) 
+	OR uid = me()) 
+ORDER BY start_time ASC LIMIT 51000
+
+
+
+SELECT eid, creator, name, pic, timezone, start_time, end_time, location, description FROM event WHERE (eid IN 
+	(SELECT eid FROM event_member WHERE uid=me()))
+ORDER BY start_time asc;
+
+
+
+
+
+SELECT eid, name, pic_small, description, start_time,
+ end_time, location FROM event WHERE creator = 705194041 AND eid IN (SELECT eid
+ FROM event_member WHERE uid = 705194041);
+
+
+
+
+THE KEY TO THE PROBLEM IS TO USE GRAPH API AND FQL QUERY.
+FQL QUERY RESTRICT ME TO SEARCH FOR EVENTS WITH PAGES BUT GRAPH API ALLOWS ME TO SEARCH WITHIN A RADIUS WITHOUT A QUERY
+
+
+
+
+search?q=*&center="42.052925,-87.665834"&type=event&distance=1000&fields=name,start_time,end_time,location,id,venue
+search?q=""&center="42.052925,-87.665834"&type=event&limit=1000&fields=name,start_time,end_time,location,id,venue&distance=2000

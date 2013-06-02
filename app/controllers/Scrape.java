@@ -48,19 +48,71 @@ import com.google.gson.*;
 
 public class Scrape extends Controller {
 
+	/*
+		Many events hosted by an organization are AT the organization, thus the Venue ID of the vent
+	  	is the same as the Organization ID that created the event.
+	*/
+
+	private static final String[] BLOCKED_ORGANIZATIONS = new String[] {
+		"7268844551"
+	};
+
+	private static final String[] BLOCKED_VENUES = new String[] {
+		"17070917171",
+		"356690111071371",
+		"430645200319091",
+		"265779566799135",
+		"120569982856",
+		"155288914484855",
+		"161587597298994",
+		"132449680200187",
+		"253108394915",
+		"110184922344060",
+		"115288991957781",
+		"143834612313652",
+		"111268432255671",
+		"44661328399",
+		"442292685838282",
+		"110432202311659",
+		"115421351813697"
+	};
+
+
 // TODO: change something to use a LinkedList
 // http://www.daniweb.com/software-development/java/thrads/379327/how-to-use-linkedlist
 
 // https://developers.facebook.com/docs/facebook-login/access-tokens/#generating
 // https://graph.facebook.com/oauth/access_token?client_id=524073037656113&client_secret=7e9db2e6869c8ae6e7bc60d09686d54a&grant_type=client_credentials
+
+	static boolean filter_event(MyEvent event) {
+		String jsontext = event.venue;
+
+		try {
+			String creator = event.creator;
+			JSONObject json = new JSONObject(jsontext);
+			String venueID = json.has("id") ? json.get("id").toString() : "";
+
+			boolean blocked_venue = Arrays.asList(BLOCKED_VENUES).contains(venueID);
+			boolean blocked_organization = Arrays.asList(BLOCKED_ORGANIZATIONS).contains(creator);
+
+			if (blocked_venue || blocked_organization) return false;
+
+		} catch (JSONException e) {
+			System.out.println(e.getMessage());
+		}
+
+
+		return true;
+	}
+
 	public static Result scrape_temp() {
-		List <MyEvent> eventList = new ArrayList<MyEvent>();;
+		List <MyEvent> eventList = new ArrayList<MyEvent>();
 
 		String MY_ACCESS_TOKEN = "524073037656113|l1aTC3FhsPHJEeRZfWB9vk70nAk";
 		FacebookClient facebookClient = new DefaultFacebookClient(MY_ACCESS_TOKEN);
 		List<MyOrganization> organizations=MyOrganization.find.all();
 		for(MyOrganization a:organizations) {
-			String query = "SELECT eid, name, description, pic_big, start_time, end_time, location, venue FROM event WHERE creator = "+ a.fbid;
+			String query = "SELECT eid, name, description, pic_big, start_time, end_time, location, venue FROM event WHERE creator = " + a.fbid;
 			List<FqlEvent> events = facebookClient.executeFqlQuery(query, FqlEvent.class);
 			
 			for(FqlEvent event:events) {
@@ -75,8 +127,12 @@ public class Scrape extends Controller {
 				
 				if(MyEvent.findLong.byId(event.eid)==null) {
 					MyEvent newEvent = new MyEvent(event.eid,event.name,creator,starttime,endtime,event.location,event.venue,event.description);
-					eventList.add(newEvent);
-					newEvent.save();
+					
+					if (filter_event(newEvent)) {
+						eventList.add(newEvent);
+						newEvent.save();
+					}
+					
 				}
 				System.out.println(event);
 			}
@@ -87,16 +143,46 @@ public class Scrape extends Controller {
 		return ok(jsonText);
 	}
 
-	public static Result scrape_events() {
+	// search?q="lutkin hall"&type=event&fields=name,start_time,end_time,location,id,venue&locale=en_US
+
+	public static Result scrape_graph() {
+
+		String MY_ACCESS_TOKEN = "CAACEdEose0cBAKR4AEdv3JIHeZBysKV0YoW2n2WCes6WVZCrwIZCZApFdaRDw6kh31bVZBx9ZBqzq2QRpsAzrcY7w3Fta6jtYrMpsXkGjRhhT2klcJsPXtiET109WmyhgJuRq4ZC1Wzl7I9gZCbbD6d9VUhaH8lZAjYmTtZBIUemhXZBQZDZD";
+		FacebookClient facebookClient = new DefaultFacebookClient(MY_ACCESS_TOKEN);
+
+		// search?q=*&type=event&center="42.052925,-87.665834"&distance=10&fields=name,start_time,end_time,location,id,venue&locale=en_US
+		com.restfb.json.JsonObject result = facebookClient.fetchObject( "search", com.restfb.json.JsonObject.class, 
+			Parameter.with("q", "\"\""), 
+			Parameter.with("center", "42.052925,-87.665834"), 
+			Parameter.with("type", "event"), 
+			Parameter.with("distance", 1000),
+			Parameter.with("limit", 5000) 
+		);
+
+		com.restfb.json.JsonArray events = result.getJsonArray("data");
+		//result = facebookClient.fetchConnectionPage(result.getNextPageUrl(), JsonObject.class);
+		return ok(events.toString());
+	}
+
+	public static Result scrape_fql() {
+		List <MyEvent> eventList = new ArrayList<MyEvent>();
+
 		String MY_ACCESS_TOKEN = "524073037656113|l1aTC3FhsPHJEeRZfWB9vk70nAk";
 		FacebookClient facebookClient = new DefaultFacebookClient(MY_ACCESS_TOKEN);
-		com.restfb.json.JsonArray events = new com.restfb.json.JsonArray();  // Change THIS variable to a LinkedList
-		String fql_query = "SELECT eid, name, creator, start_time, end_time, description, location, venue, pic, pic_big, pic_cover, parent_group_id FROM event WHERE eid IN (SELECT eid FROM event_member WHERE uid IN (SELECT page_id FROM place WHERE distance(latitude, longitude, '42.054774', '-87.67654') < 5000 LIMIT 51000) LIMIT 51000) AND venue.id IN (SELECT page_id FROM place WHERE distance(latitude,longitude, '42.054774', '-87.67654') < 5000 LIMIT 51000) ORDER BY start_time ASC LIMIT 51000";
+		// com.restfb.json.JsonArray events = new com.restfb.json.JsonArray();  // Change THIS variable to a LinkedList
+
+		String fql_query = 
+			"SELECT eid, name, creator, start_time, end_time, description, location, venue FROM event WHERE eid IN\n" +
+     			"(SELECT eid FROM event_member WHERE uid IN\n" + 
+          			"(SELECT page_id FROM place WHERE distance(latitude, longitude, '42.054581', '-87.677192') < 1500 LIMIT 51000)\n" +
+     			"LIMIT 51000)\n" +
+			"ORDER BY start_time ASC LIMIT 51000\n";
+
 		List<com.restfb.json.JsonObject> list_events2 = facebookClient.executeFqlQuery(fql_query, com.restfb.json.JsonObject.class);
 		com.restfb.json.JsonArray method2_events = new com.restfb.json.JsonArray();
 
 		for (com.restfb.json.JsonObject jsonObject : list_events2) {
-			events.put(jsonObject);
+			// events.put(jsonObject);
 			method2_events.put(jsonObject);
 
 			DateTimeFormatter formatter;
@@ -120,10 +206,20 @@ public class Scrape extends Controller {
 
 			//create event class objects
 
-			if (MyEvent.findLong.byId(eid) == null) new MyEvent(eid, jsonObject.getString("name"), jsonObject.getString("creator"), start_dt, end_dt, jsonObject.getString("location"), jsonObject.getString("venue"), jsonObject.getString("description")).save();
+			MyEvent newEvent = new MyEvent(eid, jsonObject.getString("name"), jsonObject.getString("creator"), start_dt, end_dt, jsonObject.getString("location"), jsonObject.getString("venue"), jsonObject.getString("description"));
+
+			if (filter_event(newEvent)) {
+				if (MyEvent.findLong.byId(eid) == null) {
+					eventList.add(newEvent);
+					newEvent.save();
+				}
+			}
+
 		}
 
-		return ok( events.toString() );
+		String jsonText = JSONValue.toJSONString(eventList);
+
+		return ok( jsonText );
 	}
 
 	public static Result scrape_organizations() {
@@ -134,9 +230,9 @@ public class Scrape extends Controller {
 		Document doc1;
 		JSONObject json;
 		try {
-			String[] name =new String[100];
-			String[] name1 =new String[100];
-			String[] name2 =new String[100];
+			String[] name =  new String[100];
+			String[] name1 = new String[100];
+			String[] name2 = new String[100];
 			int[] id =new int[100];
 			doc = Jsoup.connect("https://northwestern.collegiatelink.net/organizations?SearchType=None&SelectedCategoryId=0&CurrentPage="+ i).get();
 			Element sa = doc.getElementById("results");

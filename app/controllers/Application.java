@@ -40,11 +40,11 @@ public class Application extends Controller {
 		ExpressionList<MyEvent> events = MyEvent.findDate.where();
 
 		if (start_string != null){
-			DateTime start= new DateTime(Long.parseLong(start_string) * 1000);//test: 1357484400000 * 1000
+			DateTime start= new DateTime(Long.parseLong(start_string) * 1000); //test: 1357484400000 * 1000
 			events = events.gt("start_time", start);
 		}
 		if (end_string != null){
-			DateTime end = new DateTime(Long.parseLong(end_string) * 1000);//test: 1371306630000 * 1357484400000
+			DateTime end = new DateTime(Long.parseLong(end_string) * 1000); //test: 1371306630000 * 1357484400000
 			events = events.lt("end_time", end);
 		}
 
