@@ -77,6 +77,19 @@ public class Scrape extends Controller {
 		"115421351813697"
 	};
 
+	private static final String[] LOCATIONS = new String[] {
+		"Lutkin Hall",
+		"Ayers CCI",
+		"Northwestern University",
+		"Buffett Center at Northwestern",
+		"Ethel M. Barber Theatre",
+		"Norbucks",
+		"Harris Hall",
+		"Rainbow Alliance",
+		"Ethel M. Barber Theatre"
+	};
+
+
 
 // TODO: change something to use a LinkedList
 // http://www.daniweb.com/software-development/java/thrads/379327/how-to-use-linkedlist
@@ -103,6 +116,31 @@ public class Scrape extends Controller {
 
 
 		return true;
+	}
+
+	public static Result scrape_locations() {
+
+		String blah = "";
+
+		for(int i =0; i < LOCATIONS.length; i++) {
+
+			String MY_ACCESS_TOKEN = "CAACEdEose0cBAAy7nvgBDxUJkSbcRepdec05oe8GzFr1EekvA3LvLRgkQXXipYMEsKidMNBqX6rMDYZBGOCjxAUTZCj2zikkzDtObCmLzTwGb8l7NK8FZCG3OloZCGB19mBFWiacEALIZAZCtq7ZCJXN2o567P9ZAzAhpoYmqERicAZDZD";
+			FacebookClient facebookClient = new DefaultFacebookClient(MY_ACCESS_TOKEN);
+
+			com.restfb.json.JsonObject result = facebookClient.fetchObject( "search", com.restfb.json.JsonObject.class, 
+				Parameter.with("q", LOCATIONS[i]), 
+				Parameter.with("type", "event")
+			);
+
+			com.restfb.json.JsonArray events = result.getJsonArray("data");
+			blah += events.toString();
+
+
+		}
+
+		return ok(blah);
+
+
 	}
 
 	public static Result scrape_temp() {
@@ -147,7 +185,7 @@ public class Scrape extends Controller {
 
 	public static Result scrape_graph() {
 
-		String MY_ACCESS_TOKEN = "CAACEdEose0cBAKR4AEdv3JIHeZBysKV0YoW2n2WCes6WVZCrwIZCZApFdaRDw6kh31bVZBx9ZBqzq2QRpsAzrcY7w3Fta6jtYrMpsXkGjRhhT2klcJsPXtiET109WmyhgJuRq4ZC1Wzl7I9gZCbbD6d9VUhaH8lZAjYmTtZBIUemhXZBQZDZD";
+		String MY_ACCESS_TOKEN = "CAACEdEose0cBAAy7nvgBDxUJkSbcRepdec05oe8GzFr1EekvA3LvLRgkQXXipYMEsKidMNBqX6rMDYZBGOCjxAUTZCj2zikkzDtObCmLzTwGb8l7NK8FZCG3OloZCGB19mBFWiacEALIZAZCtq7ZCJXN2o567P9ZAzAhpoYmqERicAZDZD";
 		FacebookClient facebookClient = new DefaultFacebookClient(MY_ACCESS_TOKEN);
 
 		// search?q=*&type=event&center="42.052925,-87.665834"&distance=10&fields=name,start_time,end_time,location,id,venue&locale=en_US
