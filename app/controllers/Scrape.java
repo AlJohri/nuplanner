@@ -120,11 +120,11 @@ public class Scrape extends Controller {
 
 	public static Result scrape_locations() {
 
-		String blah = "";
+		com.restfb.json.JsonArray events = new com.restfb.json.JsonArray();
 
 		for(int i =0; i < LOCATIONS.length; i++) {
 
-			String MY_ACCESS_TOKEN = "CAACEdEose0cBAAy7nvgBDxUJkSbcRepdec05oe8GzFr1EekvA3LvLRgkQXXipYMEsKidMNBqX6rMDYZBGOCjxAUTZCj2zikkzDtObCmLzTwGb8l7NK8FZCG3OloZCGB19mBFWiacEALIZAZCtq7ZCJXN2o567P9ZAzAhpoYmqERicAZDZD";
+			String MY_ACCESS_TOKEN = "CAACEdEose0cBAHsW0L5mgJMb68BRuXYdyn2gTprW0KbZBBP1F0eZBbzC41UqlqCsRQ9cZCDydBDPOHmhIq1ayKpQ1T8nNQbmOznZBZC2sZAvWpjjVC2S87HgOP50nU3Syj5vPUMhRvuMy6RBpwQ5f8yXKZCjyb5IYsnQbFyV9OMtQZDZD";
 			FacebookClient facebookClient = new DefaultFacebookClient(MY_ACCESS_TOKEN);
 
 			com.restfb.json.JsonObject result = facebookClient.fetchObject( "search", com.restfb.json.JsonObject.class, 
@@ -132,13 +132,17 @@ public class Scrape extends Controller {
 				Parameter.with("type", "event")
 			);
 
-			com.restfb.json.JsonArray events = result.getJsonArray("data");
-			blah += events.toString();
+			com.restfb.json.JsonArray single_location_events = result.getJsonArray("data");
 
+			System.out.println(single_location_events.toString());
+
+			for(int j = 0; j < single_location_events.length(); j++) {
+				events.put(single_location_events.get(j));
+			}
 
 		}
 
-		return ok(blah);
+		return ok(events.toString());
 
 
 	}
