@@ -51,7 +51,7 @@ public class Utilities extends Controller {
         String str_eid = event.has("id") ? event.getString("id") : (event.has("eid") ? event.getString("eid") : "");
         Long eid = Long.valueOf(str_eid).longValue();
         String name = event.has("name") ? event.getString("name") : "";
-        String creator = event.has("owner") ? event.getString("owner") : "";
+        String creator = event.has("owner") ? event.getString("owner") : (event.has("creator") ? event.getString("creator") : "");
         DateTime starttime = event.has("start_time") ? parse_start_time(event.getString("start_time")) : null;
         DateTime endtime = event.has("end_time") ? parse_end_time(event.getString("end_time")) : null;
         String location = event.has("location") ? event.getString("location") : "";
