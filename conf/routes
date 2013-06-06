@@ -1,9 +1,15 @@
 GET		/							controllers.StaticFile.html(file = "public/app/index.html")
 GET		/events						controllers.Application.events()
-GET		/scrape_temp				controllers.Scrape.scrape_temp()
-GET		/scrape_organizations		controllers.Scrape.scrape_organizations()
-GET		/scrape_graph				controllers.Scrape.scrape_graph()
-GET		/scrape_fql					controllers.Scrape.scrape_fql()
-GET		/scrape_wildcatconnection	controllers.Scrape.scrape_wildcatconnection()
-GET		/scrape_locations			controllers.Scrape.scrape_locations()
+
+
+GET		/scrape_facebook			controllers.ScrapeFacebook.scrape_facebook()
+
+GET		/scrape_fql					controllers.ScrapeFacebook.scrape_fql()
+GET		/scrape_graph				controllers.ScrapeFacebook.scrape_graph()
+
+
+GET		/scrape_locations			controllers.ScrapeFacebook.scrape_locations()
+GET		/scrape_organizations		controllers.ScrapeFacebook.scrape_organizations()
+
+GET		/scrape_wildcatconnection	controllers.ScrapeWildcatConnection.scrape_wildcatconnection()
 GET     /*file						controllers.Assets.at(path="/public/app", file)
