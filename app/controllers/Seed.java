@@ -33,7 +33,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public class Seed extends Controller {
 
-    private static Result seed_organizations() {
+    public static Result seed_organizations() {
         String a="";
         for (int i=1;i<52;i++) {
             Document doc;

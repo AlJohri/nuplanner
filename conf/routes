@@ -7,9 +7,10 @@ GET		/scrape_facebook			controllers.ScrapeFacebook.scrape_facebook()
 GET		/scrape_fql					controllers.ScrapeFacebook.scrape_fql()
 GET		/scrape_graph				controllers.ScrapeFacebook.scrape_graph()
 
-
 GET		/scrape_locations			controllers.ScrapeFacebook.scrape_locations()
 GET		/scrape_organizations		controllers.ScrapeFacebook.scrape_organizations()
+
+GET		/seed_organizations			controllers.Seed.seed_organizations()
 
 GET		/scrape_wildcatconnection	controllers.ScrapeWildcatConnection.scrape_wildcatconnection()
 GET     /*file						controllers.Assets.at(path="/public/app", file)

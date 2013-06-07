@@ -1,0 +1,85 @@
+search?q="Lutkin Hall"&type=event
+
+
+SELECT eid, name, pic_square, creator, start_time, end_time FROM event WHERE eid IN (SELECT eid FROM event_member WHERE uid=573771288)
+ORDER BY start_time ASC
+
+
+
+SELECT eid, creator, name, pic, timezone, start_time, end_time, location, description 
+FROM event
+WHERE 
+    ((eid IN (SELECT eid FROM event_member WHERE uid IN ($clubsstring)))
+    OR
+    (eid IN (SELECT eid FROM event_member WHERE uid IN (OWNERS_IDS_STRING)))
+    AND
+    venue.id IN (VENUE_IDS_STRING))
+ORDER BY start_time asc;
+
+
+
+SELECT eid, creator, name, pic, timezone, start_time, end_time, location, description FROM event WHERE (eid IN 
+	(SELECT eid FROM event_member WHERE uid="705194041"))
+ORDER BY start_time asc;
+
+
+GET PAGES THAT CREATED EVENT
+
+SELECT page_id,name FROM page WHERE page_id in (SELECT uid FROM event_member WHERE eid="250324015110302")
+
+
+GET USERS THAT ATTENDED EVENT
+
+SELECT uid,name FROM user WHERE uid in (SELECT uid FROM event_member WHERE eid="250324015110302")
+
+
+SELECT eid FROM event_member WHERE uid ='705194041'
+
+
+"eventos":"SELECT start_time, end_time, name, eid, pic,venue.id, location, creator, description 
+FROM event WHERE eid IN  (SELECT eid FROM event_member WHERE uid IN (  SELECT uid2 FROM friend WHERE uid1=me() LIMIT 150) 
+ OR uid = me() AND rsvp_status = 'attending') AND venue.id <>'' 
+ AND location <> '' AND location <> '#data'","lugares":"SELECT latitude,longitude  
+ FROM place WHERE page_id IN (SELECT venue.id FROM #eventos)"
+
+
+
+
+
+SELECT start_time, end_time, name, eid, pic,venue.id, location, creator, description FROM event WHERE eid IN  
+	(SELECT eid FROM event_member WHERE uid IN 
+		(SELECT uid2 FROM friend WHERE uid1=me() LIMIT 150) 
+	OR uid = me()) 
+AND venue.id <> '' AND location <> '' AND location <> '#data'
+
+SELECT latitude,longitude FROM place WHERE page_id IN (SELECT venue.id FROM #eventos)
+
+
+http://stackoverflow.com/questions/7357680/fql-query-error-geting-events-from-a-fan-page
+
+OK, this works fine, but I see in the FQL documentation that if I do not specify the start_time in table event_member it will just return the future events, but I need ALL events created by the fan page, and this includes when the event is in the past.
+
+
+
+
+Organizations/Venues
+
+https://www.facebook.com/nuifc
+https://www.facebook.com/SAIBeta
+
+
+
+
+
+Events
+https://www.facebook.com/events/658080814217908/
+https://www.facebook.com/events/530278753675556/
+https://www.facebook.com/events/425736407503326/
+https://www.facebook.com/events/171093269724339/
+https://www.facebook.com/events/465148603572007/
+https://www.facebook.com/events/554501554612708/
+
+
+
+
+SELECT eid, inviter, inviter_type, rsvp_status, start_time, uid FROM event_member WHERE eid = '658080814217908'

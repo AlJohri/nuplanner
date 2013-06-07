@@ -118,7 +118,7 @@ public class Utilities extends Controller {
         "110432202311659",
         "115421351813697",
         "143964878955940"
-    };    
+    };
 
     private static boolean filter_event(MyEvent event) {
         String jsontext = event.venue;
@@ -126,6 +126,13 @@ public class Utilities extends Controller {
             String creator = event.creator;
             JSONObject json = new JSONObject(jsontext);
             String venueID = json.has("id") ? json.get("id").toString() : "";
+
+            com.restfb.json.JsonObject location = ScrapeFacebook.venue_location(venueID);
+
+            System.out.println(location.toString());
+
+            // get lat/long etc. from location and filter
+
             boolean blocked_venue = Arrays.asList(BLOCKED_VENUES).contains(venueID);
             boolean blocked_organization = Arrays.asList(BLOCKED_ORGANIZATIONS).contains(creator);
             if (blocked_venue || blocked_organization) return false;

@@ -38,16 +38,16 @@ import java.util.concurrent.atomic.AtomicReference;
 public class ScrapeFacebook extends Controller {
 
     public static Result scrape_facebook() {
-        // scrape_fql();
+        scrape_fql();
         // scrape_graph();
-        // scrape_organizations();
-        // scrape_locations();
+        scrape_organizations();
+        scrape_locations();
 
         return ok("hi");
     }
 
     private static final String MY_ACCESS_TOKEN = "524073037656113|l1aTC3FhsPHJEeRZfWB9vk70nAk";
-    private static final String MY_OTHER_TOKEN = "CAACEdEose0cBAKIXn1mo3oEZCTwHr5IR8Uw8W3KWJYmJbIvNjdlB3wZCkY5ZCxrMCpfu7c99XrlqOZCdIhGYMxCMabDoEK6FRh4BtVnLmZCXY2aseENZAXriIvIGmfY3ulfyRyZBjRvdZCU8I9LpMRbPzZCmxaiTsM5ZCDzKghycMZChgZDZD";
+    private static final String MY_OTHER_TOKEN = "CAACEdEose0cBADc2w3hzaM8FJGAKhroZBH0VVSAinxQE5hZBMZBjDELpYD84qEcHqgcJkSoNoc3OwRcOTCmNflQjFK9b0gEjbnjqXBSBRZBTeYZAG09ZAORx6FeZCfa8ZC9a01WZAyhRoV0jzZAUsoc4m2ngTP5PrEKriRZBYZBm42o2zAZDZD";
 
     public static Result scrape_locations() {
         List <MyEvent> eventList = new ArrayList<MyEvent>();
@@ -64,7 +64,7 @@ public class ScrapeFacebook extends Controller {
             );
 
             com.restfb.json.JsonArray single_location_events = result.getJsonArray("data");
-            
+
             for(int j = 0; j < single_location_events.length(); j++) {
                 com.restfb.json.JsonObject event = (com.restfb.json.JsonObject) single_location_events.get(j);
 
@@ -92,7 +92,7 @@ public class ScrapeFacebook extends Controller {
         for(MyOrganization a:organizations) {
             String query = "SELECT eid, name, description, pic_big, start_time, end_time, location, venue FROM event WHERE creator = " + a.fbid;
             List<FqlEvent> events = facebookClient.executeFqlQuery(query, FqlEvent.class);
-            
+
             for(FqlEvent event:events) {
                 Long eid = Long.valueOf(event.eid).longValue();
                 MyEvent newEvent = Utilities.createEvent(event);
@@ -140,12 +140,24 @@ public class ScrapeFacebook extends Controller {
             Long eid = Long.valueOf(str_eid).longValue();
 
             MyEvent newEvent = Utilities.createEvent(event);
-            if (Utilities.saveOrUpdate(eid, newEvent)) { eventList.add(newEvent); }
+            if (Utilities.saveOrUpdate(eid, newEvent)) { 
+                eventList.add(newEvent); 
+            }
 
         }
 
         String jsonText = JSONValue.toJSONString(eventList);
         return ok( jsonText );
+    }
+
+    public static com.restfb.json.JsonObject venue_location(String venueID) {
+        FacebookClient facebookClient = new DefaultFacebookClient(MY_OTHER_TOKEN);
+        com.restfb.json.JsonObject result = facebookClient.fetchObject( venueID, com.restfb.json.JsonObject.class
+            //Parameter.with("q", "220438191333027")
+        );
+        com.restfb.json.JsonObject location = result.getJsonObject("location");
+
+        return location;
     }
 
 }
