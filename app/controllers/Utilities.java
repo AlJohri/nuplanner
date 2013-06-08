@@ -120,19 +120,21 @@ public class Utilities extends Controller {
         "143964878955940"
     };
 
-    private static boolean filter_event(MyEvent event) {
+    public static boolean filter_event(MyEvent event) {
         String jsontext = event.venue;
+        String Evanston = "evanston";
         try {
             String creator = event.creator;
             JSONObject json = new JSONObject(jsontext);
             String venueID = json.has("id") ? json.get("id").toString() : "";
-
+            if(venueID.equalsIgnoreCase(""))return false;  
             com.restfb.json.JsonObject location = ScrapeFacebook.venue_location(venueID);
-
-            System.out.println(location.toString());
+            if(!((location.get("city").toString().equalsIgnoreCase("evanston"))||(location.get("city").toString().equalsIgnoreCase("chicago"))))
+            	return false;
+           // System.out.println(location.get("city").toString());
 
             // get lat/long etc. from location and filter
-
+            //check for null locations
             boolean blocked_venue = Arrays.asList(BLOCKED_VENUES).contains(venueID);
             boolean blocked_organization = Arrays.asList(BLOCKED_ORGANIZATIONS).contains(creator);
             if (blocked_venue || blocked_organization) return false;

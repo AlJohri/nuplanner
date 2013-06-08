@@ -1,7 +1,18 @@
-@(message: String)
+@(students: List[Student])
 
-@main("Welcome to Play 2.1") {
-    
-    @play20.welcome(message, style = "Java")
-    
+@import helper._
+
+@main("User List") {
+
+    <h1>@students.size() student(s)</h1>
+
+    <ul>
+        @for(student <- students) {
+            <li>
+                @student.name
+            </li>
+        }
+    </ul>
+
+
 }
