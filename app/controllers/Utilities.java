@@ -43,7 +43,7 @@ public class Utilities extends Controller {
     public static MyEvent createEvent(FqlEvent event) {
         DateTime starttime = parse_start_time(event.start_time);
         DateTime endtime = parse_end_time(event.end_time);
-        return new MyEvent(event.eid,event.name,event.creator,starttime,endtime,event.location,event.venue,event.description);
+        return new MyEvent(event.eid,event.name,event.creator,starttime,endtime,event.location,event.venue,event.description,event.pic);
     }
 
     public static MyEvent createEvent(com.restfb.json.JsonObject event) {
@@ -57,6 +57,7 @@ public class Utilities extends Controller {
         String location = event.has("location") ? event.getString("location") : "";
         String venue = event.has("venue") ? event.getString("venue") : "";
         String description = event.has("description") ? event.getString("description") : "";
+		String pic = event.has("pic") ? event.getString("pic") : "";
 
         if (name.length() >=255 || creator.length() >= 255 || location.length() >= 255 || venue.length() >= 255) {
             System.out.println("error start");
@@ -67,7 +68,7 @@ public class Utilities extends Controller {
             System.out.println("error end");
         }
 
-        return new MyEvent(eid, name, creator, starttime, endtime, location, venue, description);
+        return new MyEvent(eid, name, creator, starttime, endtime, location, venue, description, pic);
     }
 
     public static ArrayList getLocations() {

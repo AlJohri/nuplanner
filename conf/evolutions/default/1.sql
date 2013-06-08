@@ -11,6 +11,7 @@ create table my_event (
   venue                     varchar(255),
   start_time                timestamp,
   end_time                  timestamp,
+  pic                       varchar(255),
   description               TEXT,
   constraint pk_my_event primary key (eid))
 ;

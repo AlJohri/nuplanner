@@ -47,7 +47,7 @@ public class ScrapeFacebook extends Controller {
     }
 
     private static final String MY_ACCESS_TOKEN = "524073037656113|l1aTC3FhsPHJEeRZfWB9vk70nAk";
-    private static final String MY_OTHER_TOKEN = "CAACEdEose0cBALtIQtHy5yBcru6OmbqwvehXM7reyBa24zeoZAKbr3rlY234MQeZBswmBpheEVy04HEqnepLq8p2EEjeck5HyBdtY48T9fRDNZCDAMfK3QDJpseHzogDsyvdS8rFzJKvBOD4IAoKbhZCsztbqp3aVLmUK1UNcAZDZD";
+    private static final String MY_OTHER_TOKEN = "CAACEdEose0cBAHYbnVM0BZAZB8cBnUJX1nmw3O553Pce6yTe1hVHfo1eML3o0wesZCcgWG9FfatQELSrJZAERZCrJZBiumJDY4Hh3Y8CLwCvsCTf6E8IwOqqUMENOyhsMQGv7ZAvmOfsTgq1eaWbiVKmKQArDVOuNEZD";
 
     public static Result scrape_locations() {
         List <MyEvent> eventList = new ArrayList<MyEvent>();
@@ -90,7 +90,7 @@ public class ScrapeFacebook extends Controller {
         FacebookClient facebookClient = new DefaultFacebookClient(MY_ACCESS_TOKEN);
         List<MyOrganization> organizations = MyOrganization.find.all();
         for(MyOrganization a:organizations) {
-            String query = "SELECT eid, name, description, pic_big, start_time, end_time, location, venue FROM event WHERE creator = " + a.fbid;
+            String query = "SELECT eid, name, description, start_time, end_time, location, venue ,pic FROM event WHERE creator = " + a.fbid;
             List<FqlEvent> events = facebookClient.executeFqlQuery(query, FqlEvent.class);
 
             for(FqlEvent event:events) {
@@ -126,7 +126,7 @@ public class ScrapeFacebook extends Controller {
         FacebookClient facebookClient = new DefaultFacebookClient(MY_ACCESS_TOKEN);
 
         String fql_query = 
-            "SELECT eid, name, creator, start_time, end_time, description, location, venue FROM event WHERE eid IN\n" +
+            "SELECT eid, name, creator, start_time, end_time, description, location, venue , pic FROM event WHERE eid IN\n" +
                 "(SELECT eid FROM event_member WHERE uid IN\n" + 
                     "(SELECT page_id FROM place WHERE distance(latitude, longitude, '42.054581', '-87.677192') < 1500 LIMIT 51000)\n" +
                 "LIMIT 51000)\n" +

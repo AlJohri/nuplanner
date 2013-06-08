@@ -26,11 +26,13 @@ public class MyEvent extends Model implements JSONAware {
 
     public DateTime start_time;
     public DateTime end_time;
-
+	
+	public String pic;
+	
     @Column(columnDefinition = "TEXT")
     @Constraints.Required public String description;
 
-    public MyEvent(Long eid, String name,String creator, DateTime start_time, DateTime end_time, String location, String venue, String description) {
+    public MyEvent(Long eid, String name,String creator, DateTime start_time, DateTime end_time, String location, String venue, String description, String pic) {
         this.eid = eid;
         this.name = name;
         this.creator = creator;
@@ -39,6 +41,7 @@ public class MyEvent extends Model implements JSONAware {
         this.location = location;
         this.venue = venue;
         this.description = description;
+		this.pic = pic;
     }
 
     public String toJSONString(){
@@ -81,6 +84,18 @@ public class MyEvent extends Model implements JSONAware {
         sb.append(":");
         String end = (end_time != null) ? String.valueOf(end_time.getMillis()/1000) : "";
         sb.append("\"" + end + "\"");
+		
+        sb.append(",");
+
+        sb.append("\"" + JSONObject.escape("description") + "\"");
+        sb.append(":");
+        sb.append("\"" + JSONObject.escape(description) + "\"");
+		
+        sb.append(",");
+
+        sb.append("\"" + JSONObject.escape("pic") + "\"");
+        sb.append(":");
+        sb.append("\"" + JSONObject.escape(pic) + "\"");
 
         sb.append(",");
 
