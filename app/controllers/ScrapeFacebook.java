@@ -47,7 +47,7 @@ public class ScrapeFacebook extends Controller {
     }
 
     private static final String MY_ACCESS_TOKEN = "524073037656113|l1aTC3FhsPHJEeRZfWB9vk70nAk";
-    private static final String MY_OTHER_TOKEN = "CAACEdEose0cBALtIQtHy5yBcru6OmbqwvehXM7reyBa24zeoZAKbr3rlY234MQeZBswmBpheEVy04HEqnepLq8p2EEjeck5HyBdtY48T9fRDNZCDAMfK3QDJpseHzogDsyvdS8rFzJKvBOD4IAoKbhZCsztbqp3aVLmUK1UNcAZDZD";
+    private static final String MY_OTHER_TOKEN = "CAAHcpEMZB8DEBANQkZAyhJCXEYnAn2UW9paEZC7VWGJCb9a1ouGismLu8xKfCZCZBdtAl3Ld4iVC6u2HaXHqmknogy4RMuMswUMqc17PKSwAt4UmQoqDT4RIHKQaeHpnoXjXkCWTFlx7fNKKvDLUaauyS3KIuFsvziJaCphDuCgZDZD";
 
     public static Result scrape_locations() {
         List <MyEvent> eventList = new ArrayList<MyEvent>();
