@@ -90,7 +90,7 @@ public class ScrapeFacebook extends Controller {
         FacebookClient facebookClient = new DefaultFacebookClient(MY_ACCESS_TOKEN);
         List<MyOrganization> organizations = MyOrganization.find.all();
         for(MyOrganization a:organizations) {
-            String query = "SELECT eid, name, description, pic_big, start_time, end_time, location, venue FROM event WHERE creator = " + a.fbid;
+            String query = "SELECT eid, name, description, start_time, end_time, location, venue ,pic FROM event WHERE creator = " + a.fbid;
             List<FqlEvent> events = facebookClient.executeFqlQuery(query, FqlEvent.class);
 
             for(FqlEvent event:events) {
@@ -126,7 +126,7 @@ public class ScrapeFacebook extends Controller {
         FacebookClient facebookClient = new DefaultFacebookClient(MY_ACCESS_TOKEN);
 
         String fql_query = 
-            "SELECT eid, name, creator, start_time, end_time, description, location, venue FROM event WHERE eid IN\n" +
+            "SELECT eid, name, creator, start_time, end_time, description, location, venue , pic FROM event WHERE eid IN\n" +
                 "(SELECT eid FROM event_member WHERE uid IN\n" + 
                     "(SELECT page_id FROM place WHERE distance(latitude, longitude, '42.054581', '-87.677192') < 1500 LIMIT 51000)\n" +
                 "LIMIT 51000)\n" +

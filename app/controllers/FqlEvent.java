@@ -13,6 +13,7 @@ public class FqlEvent {
 	@Facebook String location;
 	@Facebook String venue;
 	@Facebook String description;
+	@Facebook String pic;
 
 	@Override public String toString() {
 		return String.format("%s (%d)", name, eid);
