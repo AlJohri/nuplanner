@@ -3,25 +3,25 @@ package controllers;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
-import play.*; // Play Framework
+import play.*;
 import play.mvc.*;
 import play.data.*;
-import play.db.ebean.*; // http://www.avaje.org/ebean/introquery.html
+import play.db.ebean.*;
 import models.*;
 import views.html.*;
-import org.joda.time.format.*; // DateTimeFormatter http://joda-time.sourceforge.net/apidocs/
-import org.joda.time.DateTime; // http://joda-time.sourceforge.net/api-release/index.html
-import org.jsoup.*; // http://jsoup.org/apidocs/
+import org.joda.time.format.*;
+import org.joda.time.DateTime;
+import org.jsoup.*;
 import org.jsoup.Connection.Method;
-import org.jsoup.nodes.*; // Document, Element
+import org.jsoup.nodes.*;
 import org.jsoup.select.Elements;
-import java.io.BufferedReader; // java i/o
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.nio.charset.Charset;
-import org.json.*; // json
+import org.json.*;
 import org.json.simple.JSONValue;
 import com.google.gson.*;
 import java.util.concurrent.atomic.AtomicReference;
@@ -32,6 +32,11 @@ import java.util.concurrent.atomic.AtomicReference;
 */
 
 public class Seed extends Controller {
+
+    // seed_locations() {
+        // http://maps.northwestern.edu/dialog/building_list/Evanston/
+        // http://maps.northwestern.edu/dialog/building_list/Chicago/
+    // }
 
     public static Result seed_organizations() {
         String a="";
@@ -90,7 +95,7 @@ public class Seed extends Controller {
                     }
                 }
             } catch (IOException e) {
-                System.out.println(e.getMessage()); // e.printStackTrace();
+                System.out.println(e.getMessage());
             }
         }
         return ok("done");

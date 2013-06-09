@@ -50,11 +50,12 @@ public class Application extends Controller {
 
 		List<MyEvent> eventList = events.findList();
 		eventList = (start_string == null && end_string == null) ? MyEvent.find.all() : eventList;
+		
         //System.out.println(eventList.toString());
-		Iterator<MyEvent> itr = eventList.iterator();
-		while (itr.hasNext()) {
-			System.out.println(itr.next().name); // itr.next()
-		}
+		// Iterator<MyEvent> itr = eventList.iterator();
+		// while (itr.hasNext()) {
+			// System.out.println(itr.next().name); // itr.next()
+		// }
 
 		String jsonText = JSONValue.toJSONString(eventList);
 

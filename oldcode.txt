@@ -116,3 +116,82 @@ FQL QUERY RESTRICT ME TO SEARCH FOR EVENTS WITH PAGES BUT GRAPH API ALLOWS ME TO
 
 search?q=*&center="42.052925,-87.665834"&type=event&distance=1000&fields=name,start_time,end_time,location,id,venue
 search?q=""&center="42.052925,-87.665834"&type=event&limit=1000&fields=name,start_time,end_time,location,id,venue&distance=2000
+
+
+
+
+
+
+/** The ScrapeFacebook class scrapes Facebook for events using various different methods including
+  * fql, graph api, finding events created by specific organizations, and lastly querying based on location.
+*/
+
+// https://graph.facebook.com/search?q=b&type=event&fields=id,name,owner,description,start_time,end_time,location,venue,privacy,updated_time,picture,ticket_uri&access_token=524073037656113|l1aTC3FhsPHJEeRZfWB9vk70nAk
+// https://graph.facebook.com/search?q=b&type=event&limit=5000&fields=id,name,owner,description,start_time,end_time,location,venue,privacy,updated_time,picture,ticket_uri&access_token=524073037656113|l1aTC3FhsPHJEeRZfWB9vk70nAk
+
+// create event class objects
+
+// Parameter.with("limit", 5000)
+// result = facebookClient.fetchConnectionPage(result.getNextPageUrl(), JsonObject.class);
+
+// Long eid = Long.valueOf(event.get("id").toString());
+// System.out.println(eid);
+
+// create event class objects
+
+
+// TODO: change something to use a LinkedList
+// http://www.daniweb.com/software-development/java/thrads/379327/how-to-use-linkedlist
+
+// https://developers.facebook.com/docs/facebook-login/access-tokens/#generating
+// https://graph.facebook.com/oauth/access_token?client_id=524073037656113&client_secret=7e9db2e6869c8ae6e7bc60d09686d54a&grant_type=client_credentials
+
+// https://graph.facebook.com/search?q="lutkin hall"&type=event&fields=name,start_time,end_time,location,id,venue&locale=en_US&access_token=524073037656113|l1aTC3FhsPHJEeRZfWB9vk70nAk
+// https://graph.facebook.com/search?q=*&type=event&center="42.052925,-87.665834"&distance=10&fields=name,start_time,end_time,location,id,venue&locale=en_US&access_token=524073037656113|l1aTC3FhsPHJEeRZfWB9vk70nAk
+
+
+/**
+  * Many events hosted by an organization are AT the organization, thus the Venue ID of the event
+  * is the same as the Organization ID that created the event.
+*/
+
+// https://developers.facebook.com/docs/reference/api/event/
+
+// http://www.avaje.org/ebean/introquery.html
+// http://restfb.com/javadoc/
+// http://joda-time.sourceforge.net/apidocs/
+// http://joda-time.sourceforge.net/api-release/index.html
+
+// JsonObject, JsonArray, JsonTokener
+// http://jsoup.org/apidocs/
+
+
+
+// DateTimeFormatter formatter;
+
+// DateTime start_dt;
+// if (jsonObject.getString("start_time").length()>19) formatter= DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ssZ");
+// else if (jsonObject.getString("start_time").length()>10) formatter= DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss");
+// else formatter= DateTimeFormat.forPattern("yyyy-MM-dd");
+// if (jsonObject.getString("start_time").length()!=4) start_dt=formatter.parseDateTime(jsonObject.getString("start_time"));
+// else start_dt=null;
+
+// DateTime end_dt;
+// if (jsonObject.getString("end_time").length()>19)  formatter= DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ssZ");
+// else if (jsonObject.getString("end_time").length()>10) formatter= DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss");
+// else formatter= DateTimeFormat.forPattern("yyyy-MM-dd");
+// if (jsonObject.getString("end_time").length()!=4) end_dt=formatter.parseDateTime(jsonObject.getString("end_time"));
+// else end_dt=null;
+
+
+
+// DateTime starttime = new DateTime();
+// starttime = starttime.parse(start);
+// return starttime;
+
+
+
+// DateTime endtime = new DateTime();
+// if (end!=null && !end.isEmpty()) endtime = endtime.parse(event.end_time);
+// else endtime=null;
+// return endtime;
