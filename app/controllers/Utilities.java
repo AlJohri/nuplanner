@@ -1,30 +1,45 @@
 package controllers;
 
+/* General Java */
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
-import play.*;
-import play.mvc.*;
-import play.data.*;
-import play.db.ebean.*;
-import models.*;
-import views.html.*;
-import org.joda.time.format.*;
-import org.joda.time.DateTime;
-import org.jsoup.*;
-import org.jsoup.Connection.Method;
-import org.jsoup.nodes.*;
-import org.jsoup.select.Elements;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.nio.charset.Charset;
+
+/* Play Frameowork */
+import play.*;
+import play.mvc.*;
+import play.data.*;
+import play.db.ebean.*;
+import models.*;
+import views.html.*;
+
+/* DateTime */
+import org.joda.time.format.*;
+import org.joda.time.DateTime;
+
+/* JSOUP and JSON */
+import org.jsoup.*;
+import org.jsoup.Connection.Method;
+import org.jsoup.nodes.*;
+import org.jsoup.select.Elements;
 import org.json.*;
 import org.json.simple.JSONValue;
-import com.restfb.json.*;
 import com.google.gson.*;
+
+/* RestFB */
+import com.restfb.*;
+import com.restfb.FacebookClient.*;
+import com.restfb.json.*;
+import com.restfb.types.Event;
+
+/* Facebook Constants */
+import static controllers.FB.*;
 
 /**
  * The Seed class collects data from various sources on the web that will be saved to the database
@@ -32,32 +47,6 @@ import com.google.gson.*;
 */
 
 public class Utilities extends Controller {
-
-    private static final String[] BLOCKED_ORGANIZATIONS = new String[] {
-        "7268844551"
-    };
-
-    private static final String[] BLOCKED_VENUES = new String[] {
-        "17070917171",
-        "356690111071371",
-        "430645200319091",
-        "265779566799135",
-        "120569982856",
-        "155288914484855",
-        "161587597298994",
-        "132449680200187",
-        "253108394915",
-        "110184922344060",
-        "115288991957781",
-        "143834612313652",
-        "111268432255671",
-        "44661328399",
-        "442292685838282",
-        "110432202311659",
-        "115421351813697",
-        "143964878955940",
-        "252037288213690"
-    };    
 
     private static DateTime parse_start_time(String start) { 
         return (start!=null && !start.isEmpty() && start != "null") ? new DateTime().parse(start) : null; 
@@ -125,6 +114,13 @@ public class Utilities extends Controller {
         return false;
     }
 
+    private static com.restfb.json.JsonObject venue_location(String venueID) {
+        FacebookClient facebookClient = new DefaultFacebookClient(ACCESS_TOKEN);
+        com.restfb.json.JsonObject result = facebookClient.fetchObject( venueID, com.restfb.json.JsonObject.class);
+        com.restfb.json.JsonObject location = result.getJsonObject("location");
+        return location;
+    }    
+
     public static boolean filter_event(MyEvent event) {
 
         JSONObject venue;
@@ -160,7 +156,7 @@ public class Utilities extends Controller {
             venue_latitude = venue.has("longitude") ? venue.get("longitude").toString() : "";
             
             if (!venue_id.equals("")) {
-                com.restfb.json.JsonObject location = ScrapeFacebook.venue_location(venue_id);
+                com.restfb.json.JsonObject location = venue_location(venue_id);
                 location_street = location.has("street") ? location.get("street").toString() : "";
                 location_city = location.has("city") ? location.get("city").toString() : "";
                 location_state = location.has("state") ? location.get("state").toString() : "";
@@ -189,5 +185,49 @@ public class Utilities extends Controller {
 
         return false;
     }
+
+    public static List<MyEvent> save_events(List<com.restfb.json.JsonObject> events) {
+        List<MyEvent> eventList = new ArrayList<MyEvent>();
+
+        for (com.restfb.json.JsonObject event : events) {
+            MyEvent newEvent = Utilities.createEvent(event);
+            if (Utilities.filter_event(newEvent) && Utilities.saveOrUpdate(newEvent)) { 
+                eventList.add(newEvent); 
+            }
+        }
+
+        return eventList;
+    }
+
+    public static List<MyEvent> save_events(com.restfb.json.JsonArray events) {
+        List<MyEvent> eventList = new ArrayList<MyEvent>();
+
+        for(int i = 0; i < events.length(); i++) {
+            com.restfb.json.JsonObject event = (com.restfb.json.JsonObject) events.get(i);
+            MyEvent newEvent = Utilities.createEvent(event);
+            if (Utilities.filter_event(newEvent) && Utilities.saveOrUpdate(newEvent)) {
+                eventList.add(newEvent);
+            }
+        }
+
+        return eventList;
+    }
+
+    public static List<com.restfb.json.JsonObject> facebook_fql_query(String token, String query) {
+        FacebookClient facebookClient = new DefaultFacebookClient(token);
+        return facebookClient.executeFqlQuery(query, com.restfb.json.JsonObject.class);
+    }
+
+    public static com.restfb.json.JsonObject facebook_graph_query(String token, String q, String type, String fields, String center, String distance, String limit) {
+        FacebookClient facebookClient = new DefaultFacebookClient(token);
+        return facebookClient.fetchObject( "search", com.restfb.json.JsonObject.class,
+            Parameter.with("q", q),
+            Parameter.with("type", type),
+            Parameter.with("fields", fields),
+            Parameter.with("center", center),
+            Parameter.with("distance", distance),
+            Parameter.with("limit", limit)
+        );
+    }    
 
 }

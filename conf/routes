@@ -1,16 +1,20 @@
 GET		/							controllers.StaticFile.html(file = "public/app/index.html")
 GET		/events						controllers.Application.events()
+GET		/seed						controllers.Seed.seed()
+GET		/scrape						controllers.Scrape.scrape()
 
 
-GET		/scrape_facebook			controllers.ScrapeFacebook.scrape_facebook()
 
+# Scrape Facebook Private
 GET		/scrape_fql					controllers.ScrapeFacebook.scrape_fql()
 GET		/scrape_graph				controllers.ScrapeFacebook.scrape_graph()
-
 GET		/scrape_locations			controllers.ScrapeFacebook.scrape_locations()
 GET		/scrape_organizations		controllers.ScrapeFacebook.scrape_organizations()
 
+# Scrape Wildcat Connection Private
+GET		/scrape_wildcatconnection	controllers.ScrapeWildcatConnection.scrape_wildcatconnection()
+
+# Seed Organizations Private
 GET		/seed_organizations			controllers.Seed.seed_organizations()
 
-GET		/scrape_wildcatconnection	controllers.ScrapeWildcatConnection.scrape_wildcatconnection()
 GET     /*file						controllers.Assets.at(path="/public/app", file)

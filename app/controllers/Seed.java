@@ -33,6 +33,12 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public class Seed extends Controller {
 
+    public static Result seed() {
+        seed_organizations();
+        
+        return ok("Seed complete!");
+    }
+
     // seed_locations() {
         // http://maps.northwestern.edu/dialog/building_list/Evanston/
         // http://maps.northwestern.edu/dialog/building_list/Chicago/
