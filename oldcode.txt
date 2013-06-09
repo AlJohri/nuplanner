@@ -195,3 +195,27 @@ search?q=""&center="42.052925,-87.665834"&type=event&limit=1000&fields=name,star
 // if (end!=null && !end.isEmpty()) endtime = endtime.parse(event.end_time);
 // else endtime=null;
 // return endtime;
+
+
+
+package controllers;
+
+import com.restfb.types.*;
+
+import com.restfb.Facebook;
+
+public class FqlEvent {
+	@Facebook Long eid;
+	@Facebook String name;
+	@Facebook String creator;
+	@Facebook String start_time;
+	@Facebook String end_time;
+	@Facebook String location;
+	@Facebook String venue;
+	@Facebook String description;
+	@Facebook String pic;
+
+	@Override public String toString() {
+		return String.format("%s (%d)", name, eid);
+	}
+}

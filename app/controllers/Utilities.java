@@ -56,12 +56,6 @@ public class Utilities extends Controller {
         return (end!=null && !end.isEmpty() && end != "null") ? new DateTime().parse(end) : null; 
     }
 
-    public static MyEvent createEvent(FqlEvent event) {
-        DateTime starttime = parse_start_time(event.start_time);
-        DateTime endtime = parse_end_time(event.end_time);
-        return new MyEvent(event.eid,event.name,event.creator,starttime,endtime,event.location,event.venue,event.description,event.pic);
-    }
-
     public static MyEvent createEvent(com.restfb.json.JsonObject event) {
 
         String str_eid = event.has("id") ? event.getString("id") : (event.has("eid") ? event.getString("eid") : "");
