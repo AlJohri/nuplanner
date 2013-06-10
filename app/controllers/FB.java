@@ -1,5 +1,7 @@
 package controllers;
 
+import java.util.*;
+
 /* RestFB */
 import com.restfb.*;
 import com.restfb.FacebookClient.*;
