@@ -39,7 +39,7 @@ import com.restfb.json.*;
 import com.restfb.types.Event;
 
 /* Facebook Constants */
-import static controllers.FB.*;
+import static controllers.Facebook.*;
 
 /**
  * The Seed class collects data from various sources on the web that will be saved to the database
