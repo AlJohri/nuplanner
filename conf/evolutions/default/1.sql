@@ -12,6 +12,9 @@ create table my_event (
   start_time                timestamp,
   end_time                  timestamp,
   pic                       varchar(255),
+  pic_small                 varchar(255),
+  pic_big                   varchar(255),
+  pic_square                varchar(255),
   description               TEXT,
   constraint pk_my_event primary key (eid))
 ;

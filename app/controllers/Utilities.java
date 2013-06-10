@@ -67,6 +67,10 @@ public class Utilities extends Controller {
         String venue = event.has("venue") ? event.getString("venue") : "";
         String description = event.has("description") ? event.getString("description") : "";
         String pic = event.has("pic") ? event.getString("pic") : "";
+        String pic_small = event.has("pic_small") ? event.getString("pic_small") : "";
+        String pic_big = event.has("pic_big") ? event.getString("pic_big") : "";
+        String pic_square = event.has("pic_square") ? event.getString("pic_square") : "";
+		
 
         if (name.length() >=255 || creator.length() >= 255 || location.length() >= 255 || venue.length() >= 255) {
             System.out.println("error start");
@@ -77,7 +81,7 @@ public class Utilities extends Controller {
             System.out.println("error end");
         }
 
-        return new MyEvent(eid, name, creator, starttime, endtime, location, venue, description, pic);
+        return new MyEvent(eid, name, creator, starttime, endtime, location, venue, description, pic, pic_small, pic_big, pic_square);
     }
 
     public static boolean saveOrUpdate(MyEvent event) {

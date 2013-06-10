@@ -24,11 +24,15 @@ public class MyEvent extends Model implements JSONAware {
     public DateTime end_time;
     
     public String pic;
+    public String pic_small;
+    public String pic_big;
+    public String pic_square;
+	
     
     @Column(columnDefinition = "TEXT")
     @Constraints.Required public String description;
 
-    public MyEvent(Long eid, String name,String creator, DateTime start_time, DateTime end_time, String location, String venue, String description, String pic) {
+    public MyEvent(Long eid, String name,String creator, DateTime start_time, DateTime end_time, String location, String venue, String description, String pic, String pic_small, String pic_big, String pic_square) {
         this.eid = eid;
         this.name = name;
         this.creator = creator;
@@ -38,6 +42,9 @@ public class MyEvent extends Model implements JSONAware {
         this.venue = venue;
         this.description = description;
         this.pic = pic;
+		this.pic_small = pic_small;
+		this.pic_big = pic_big;
+		this.pic_square = pic_square;
     }
 
     public String toJSONString(){
@@ -50,6 +57,9 @@ public class MyEvent extends Model implements JSONAware {
         String end = (end_time != null) ? String.valueOf(end_time.getMillis()/1000) : "";   
         String jdescription = JSONObject.escape(description);
         String jpic = JSONObject.escape(pic);
+        String jpic_small = JSONObject.escape(pic_small);
+        String jpic_big = JSONObject.escape(pic_big);
+        String jpic_square = JSONObject.escape(pic_square);
         String jurl = JSONObject.escape("http://www.facebook.com/events/") + String.valueOf(eid);
         String jclassname = JSONObject.escape("");
 
@@ -63,6 +73,9 @@ public class MyEvent extends Model implements JSONAware {
             sb.append("\"" + "end" + "\""); sb.append(":"); sb.append("\"" + end + "\""); sb.append(",");
             sb.append("\"" + "description" + "\""); sb.append(":"); sb.append("\"" + jdescription + "\""); sb.append(",");
             sb.append("\"" + "pic" + "\""); sb.append(":"); sb.append("\"" + jpic + "\""); sb.append(",");
+            sb.append("\"" + "pic_small" + "\""); sb.append(":"); sb.append("\"" + jpic_small + "\""); sb.append(",");
+            sb.append("\"" + "pic_big" + "\""); sb.append(":"); sb.append("\"" + jpic_big + "\""); sb.append(",");
+            sb.append("\"" + "pic_square" + "\""); sb.append(":"); sb.append("\"" + jpic_square + "\""); sb.append(",");
             sb.append("\"" + "url" + "\""); sb.append(":"); sb.append("\"" + jurl + "\""); sb.append(",");
             sb.append("\"" + "className" + "\""); sb.append(":"); sb.append("\"" + jclassname + "\""); sb.append(",");
             sb.append("\"" + "editable" + "\""); sb.append(":"); sb.append("false");
