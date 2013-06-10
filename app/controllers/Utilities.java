@@ -45,7 +45,6 @@ import static controllers.FB.*;
  * The Seed class collects data from various sources on the web that will be saved to the database
  * in order to aid the scrapers.
 */
-
 public class Utilities extends Controller {
 
     private static DateTime parse_start_time(String start) { 
@@ -67,7 +66,7 @@ public class Utilities extends Controller {
         String location = event.has("location") ? event.getString("location") : "";
         String venue = event.has("venue") ? event.getString("venue") : "";
         String description = event.has("description") ? event.getString("description") : "";
-		String pic = event.has("pic") ? event.getString("pic") : "";
+        String pic = event.has("pic") ? event.getString("pic") : "";
 
         if (name.length() >=255 || creator.length() >= 255 || location.length() >= 255 || venue.length() >= 255) {
             System.out.println("error start");
@@ -109,7 +108,7 @@ public class Utilities extends Controller {
     }
 
     private static com.restfb.json.JsonObject venue_location(String venueID) {
-        FacebookClient facebookClient = new DefaultFacebookClient(ACCESS_TOKEN);
+        FacebookClient facebookClient = new DefaultFacebookClient(APP_ACCESS_TOKEN);
         com.restfb.json.JsonObject result = facebookClient.fetchObject( venueID, com.restfb.json.JsonObject.class);
         com.restfb.json.JsonObject location = result.getJsonObject("location");
         return location;
