@@ -2,18 +2,6 @@
 
 angular.module('nuPlannerApp').controller('MainCtrl', function ($scope) {
 
-    /*////////////////////////////////////////////////////
-
-    Main/Other Controller Logic
-
-    ////////////////////////////////////////////////////*/
-
-    /*////////////////////////////////////////////////////
-
-    Calendar Logic
-
-    ////////////////////////////////////////////////////*/
-
     $scope.eventSource = { 
       url: "/events", 
       currentTimezone: 'America/Chicago',
@@ -127,7 +115,3 @@ angular.module('nuPlannerApp').directive('enter', function() {
     });
   };
 });
-
-        // scope.$apply(function(s) {
-        //   s.$eval(attr.zKeypress);
-        // });

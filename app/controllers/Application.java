@@ -14,7 +14,6 @@ import org.json.simple.JSONValue;
 import org.apache.commons.io.FileUtils;
 import org.joda.time.DateTime;
 import com.avaje.ebean.ExpressionList;
-// import com.avaje.ebean.Query;
 
 public class Application extends Controller {
 

@@ -1,3 +1,5 @@
+heroku pg:reset DATABASE
+
 // Old Code
 
 // Method 1 (fetchConnection using Event.class):
