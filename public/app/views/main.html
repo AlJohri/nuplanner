@@ -19,8 +19,14 @@
                       <button class="btn btn-success" ng-click="changeView('month')">Month</button>
                       <button class="btn btn-info" ng-click="changeView('agendaWeek')">Week</button>
                       <button class="btn btn-info" ng-click="changeView('agendaDay')">Day</button>
+                      <button class="btn btn-info" ng-click="refetchEvents()">Refresh</button>
                   </div>
               </div>
+
+              <input type="text" id="search" ng-model="query" keyup="updateQuery()">
+
+              <!-- <div enter>test test test</div> -->
+              <!-- ui-event="{keyup: 'myFn($event)'}" -->
 
               <div class="calendar" id="myCalendar" ng-model="eventSources" calendar="myCalendar" config="uiConfig.calendar" ui-calendar="uiConfig.calendar"></div>
             </div>
@@ -35,7 +41,7 @@
               {{selected_event_end}} <br>
               {{selected_event_description}} <br>
               {{selected_event_pic}} <br>
-              <a href={{selected_event_url}}>{{selected_event_url}}</a>
+              <a href="{{selected_event_url}}">{{selected_event_url}}</a>
             </div>
 
           </div>

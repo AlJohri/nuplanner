@@ -8,15 +8,18 @@ angular.module('nuPlannerApp').controller('MainCtrl', function ($scope) {
 
     ////////////////////////////////////////////////////*/
 
-
-
     /*////////////////////////////////////////////////////
 
     Calendar Logic
 
     ////////////////////////////////////////////////////*/
 
-    $scope.eventSource = { url: "/events", currentTimezone: 'America/Chicago' };
+    $scope.eventSource = { 
+      url: "/events", 
+      currentTimezone: 'America/Chicago',
+      data: { query: '' }
+    };
+
     $scope.eventSources = [$scope.eventSource]; //$scope.events, $scope.eventSource, $scope.eventsF
 
     /* alert on eventClick */
@@ -70,6 +73,7 @@ angular.module('nuPlannerApp').controller('MainCtrl', function ($scope) {
     $scope.addEvent = function() { $scope.events.push({ title: 'Open Sesame', start: new Date(y, m, 28), end: new Date(y, m, 29) }); };
     $scope.remove = function(index) { $scope.events.splice(index,1);  };
     $scope.changeView = function(view) { $scope.myCalendar.fullCalendar('changeView',view); }; 
+    $scope.refetchEvents = function(view) { $scope.myCalendar.fullCalendar('refetchEvents'); }; 
     /* config object */
     $scope.uiConfig = {
       calendar:{
@@ -90,5 +94,30 @@ angular.module('nuPlannerApp').controller('MainCtrl', function ($scope) {
       }
     };
 
+    $scope.updateQuery = function() {
+      $scope.eventSource.data.query = $scope.query;
+      console.log($scope.eventSource.data);
+      $scope.myCalendar.fullCalendar('refetchEvents');
+    }
 
 });
+
+angular.module('nuPlannerApp').directive('keyup', function() {
+  return function(scope, element, attrs, ctrl) {
+    element.bind("keyup", function(event) {
+      scope.$apply(attrs.keyup)      
+    });
+  };
+});
+
+angular.module('nuPlannerApp').directive('enter', function() {
+  return function(scope, element, attrs) {
+    element.bind("mouseover", function() {
+      console.log("hello");
+    });
+  };
+});
+
+        // scope.$apply(function(s) {
+        //   s.$eval(attr.zKeypress);
+        // });
