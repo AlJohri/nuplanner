@@ -4,7 +4,7 @@ angular.module('nuPlannerApp').controller('MainCtrl', function ($scope) {
 
     /*////////////////////////////////////////////////////
 
-    Main
+    Main/Other Controller Logic
 
     ////////////////////////////////////////////////////*/
 
@@ -12,7 +12,7 @@ angular.module('nuPlannerApp').controller('MainCtrl', function ($scope) {
 
     /*////////////////////////////////////////////////////
 
-    Calendar
+    Calendar Logic
 
     ////////////////////////////////////////////////////*/
 
@@ -22,8 +22,16 @@ angular.module('nuPlannerApp').controller('MainCtrl', function ($scope) {
     /* alert on eventClick */
     $scope.alertOnEventClick = function( event, jsEvent, view ){
         $scope.$apply(function() {
-          if (event.url) { window.open(event.url); }
-          // https://support.google.com/calendar/answer/3033039
+            $scope.selected_event_id = event.id;
+            $scope.selected_event_title = event.title;
+            $scope.selected_event_allDay = event.allDay;
+            $scope.selected_event_creator = event.creator;
+            $scope.selected_event_start = event.start;            
+            $scope.selected_event_end = event.end;
+            $scope.selected_event_description = event.description;
+            $scope.selected_event_pic = event.pic;
+            $scope.selected_event_url = event.url;
+          
         });
         return false;
     };

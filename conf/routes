@@ -3,8 +3,6 @@ GET		/events						controllers.Application.events()
 GET		/seed						controllers.Seed.seed()
 GET		/scrape						controllers.Scrape.scrape()
 
-
-
 # Scrape Facebook Private
 GET		/scrape_fql					controllers.ScrapeFacebook.scrape_fql()
 GET		/scrape_graph				controllers.ScrapeFacebook.scrape_graph()
