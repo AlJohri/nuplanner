@@ -74,6 +74,26 @@ public class Utilities extends Controller {
         return creator;
     }
 
+    private static String getPicOrPicture(com.restfb.json.JsonObject event) {
+        String pic = "";
+
+        if (event.has("picture")) {
+            try {
+                JSONObject picture = new JSONObject(event.getString("picture"));
+				String dataString = picture.getString("data");
+				JSONObject data = new JSONObject(dataString);
+				pic = data.getString("url");
+            } catch (JSONException e) {
+                System.out.println(e.getMessage());
+            }
+        } else if (event.has("pic")) {
+            pic = event.getString("pic");
+        }
+
+        return pic;
+    }
+
+
     public static MyEvent createEvent(com.restfb.json.JsonObject event) {
 
         String str_eid = event.has("id") ? event.getString("id") : (event.has("eid") ? event.getString("eid") : "");
@@ -84,8 +104,10 @@ public class Utilities extends Controller {
         DateTime endtime = event.has("end_time") ? parse_end_time(event.getString("end_time")) : null;
         String location = event.has("location") ? event.getString("location") : "";
         String venue = event.has("venue") ? event.getString("venue") : "";
-        String description = event.has("description") ? event.getString("description") : "";
-        String pic = event.has("pic") ? event.getString("pic") : "";
+        String description = event.has("description") ? event.getString("description") : "";		
+		String pic = getPicOrPicture(event);
+		
+		
         String pic_small = event.has("pic_small") ? event.getString("pic_small") : "";
         String pic_big = event.has("pic_big") ? event.getString("pic_big") : "";
         String pic_square = event.has("pic_square") ? event.getString("pic_square") : "";
