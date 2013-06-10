@@ -46,7 +46,13 @@ public final class Facebook {
     /* Blocked Organizations */
     public static final String[] BLOCKED_ORGANIZATIONS = new String[] {
         "7268844551",       // Rotary International
-        "294833066685"
+        "294833066685",
+        "163623007048538",
+        "37873197144",
+        "331587493531436",
+        "410474245699160",
+        "18019562194",
+        "271418392986638"
     };
 
     /* Blocked Venues */
@@ -70,7 +76,10 @@ public final class Facebook {
         "115421351813697",  // Lake Street Church of Evanston
         "143964878955940",  // Lollie evanston
         "252037288213690",  // Ida Noyes Hall at the University of Chicago
-        "17179183149"       // The Art Institute of Chicago
+        "17179183149",      // The Art Institute of Chicago
+        "43871522761",
+        "35114506738",
+        "109977289040245"   // Wrigley Field
 
     };
 

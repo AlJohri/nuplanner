@@ -106,6 +106,7 @@ public class Utilities extends Controller {
                 event.save();
                 counter++;
                 System.out.println("[" + counter + "] " + event.eid + ": " + event.name);
+                // printProgBar(counter/600);
                 return true; 
             }
         } catch (Exception e) {
@@ -130,6 +131,8 @@ public class Utilities extends Controller {
 
         venue_street = venue_city = venue_state = venue_country = venue_zip = venue_latitude = venue_longitude = "";
         location_street = location_city = location_state = location_country = location_zip = location_latitude = location_longitude = "";
+
+        if ((event.description).contains("eventful.com")) return false;
 
         try {
 
@@ -176,7 +179,8 @@ public class Utilities extends Controller {
             String longitude = (!venue_latitude.equals("")) ? venue_latitude : location_country;
 
             // if(latitude,longitude is less than 1500 meters from center of NU) return true; // TEST 1: longitude, latitude
-            if (city.equalsIgnoreCase("evanston") || city.equalsIgnoreCase("chicago")) return true; // TEST 2: city
+            if (city.equalsIgnoreCase("evanston")) return true; // TEST 2: city
+            // city.equalsIgnoreCase("chicago") I'm temporarily removing Chicago
             // if (state.equalsIgnoreCase("Illinois")) return true; // TEST 3: state
             // if (country.equalsIgnoreCase("United States")) return true; // TEST 4: country
 
@@ -213,5 +217,23 @@ public class Utilities extends Controller {
 
         return eventList;
     }
+
+    private static void printProgBar(int percent){
+        StringBuilder bar = new StringBuilder("[");
+
+        for(int i = 0; i < 50; i++){
+            if( i < (percent/2)){
+                bar.append("=");
+            }else if( i == (percent/2)){
+                bar.append(">");
+            }else{
+                bar.append(" ");
+            }
+        }
+
+        bar.append("]   " + percent + "%     ");
+        System.out.print("\r" + bar.toString());
+    }
+
 
 }
