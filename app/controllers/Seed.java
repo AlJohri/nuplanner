@@ -33,6 +33,11 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public class Seed extends Controller {
 
+	/**
+	 * Calls seed_organiztions function 
+	 * This function is one called in routes by /seed url 
+	 * @return [success message]
+	 */
     public static Result seed() {
         seed_organizations();
         
@@ -43,9 +48,16 @@ public class Seed extends Controller {
         // http://maps.northwestern.edu/dialog/building_list/Evanston/
         // http://maps.northwestern.edu/dialog/building_list/Chicago/
     // }
-
+	/**
+	 * Get html pages for all organizations from northwestern collegiatelink
+	 * Parse these pages to get their facebook id 
+	 * Add these id's to graph url to get their facebook info
+	 * Parse this info to get necessary details of that organization
+	 * Save this info in database into My Organization table
+	 * @return [success message]
+	 */
     public static Result seed_organizations() {
-        String a="";
+    	String a="";
         for (int i=1;i<52;i++) {
             Document doc;
             Document doc1;
