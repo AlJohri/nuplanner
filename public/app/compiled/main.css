@@ -6596,7 +6596,19 @@ a.label:hover, a.badge:hover {
   position: fixed;
 }
 
-/* line 3, ../styles/main.scss */
+/* line 5, ../styles/main.scss */
 body {
-  background-color: #520063;
+  background-color: white;
+}
+
+/* line 9, ../styles/main.scss */
+.center {
+  float: none;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* line 11, ../styles/main.scss */
+#search {
+  margin-bottom: 20px;
 }

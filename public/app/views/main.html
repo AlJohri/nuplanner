@@ -2,18 +2,38 @@
 
   <section id="directives-calendar" ng-controller="MainCtrl">
 
-      <div class="page-header" style="color:white;">
+      <div class="navbar">
+        <div class="navbar-inner">
+          <a class="brand" href="#">nuPlanner</a>
+          <ul class="nav">
+            <li class="active"><a href="#">Home</a></li>
+            <li><a href="#">Link</a></li>
+            <li><a href="#">Link</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- 
+      <div class="page-header">
           <h1>Calendar</h1>
       </div>
+      -->
+
+
       <div class="alert-success calAlert"><h4>{{alertMessage}}</h4></div>
 
-
       <div class="well">
-          <div class="row-fluid">
-            <div class="span6">
 
-              <div class="btn-toolbar">
-                  <!-- <p class="pull-right lead"></p> -->
+          <div class="row-fluid">
+
+            <input type="text" placeholder="Search" class="search-query span12" id="search" ng-model="query" keyup="updateQuery()">
+
+            <div class="calendar" class="span12" id="myCalendar" ng-model="eventSources" calendar="myCalendar" config="uiConfig.calendar" ui-calendar="uiConfig.calendar"></div>
+
+
+            <div class="span12">
+
+<!--               <div class="btn-toolbar">
                   <div class="btn-group">
                       <button class="btn btn-info" ng-click="changeView('list')">List</button>
                       <button class="btn btn-success" ng-click="changeView('month')">Month</button>
@@ -21,28 +41,39 @@
                       <button class="btn btn-info" ng-click="changeView('agendaDay')">Day</button>
                       <button class="btn btn-info" ng-click="refetchEvents()">Refresh</button>
                   </div>
+              </div> -->
+
+
+            </div>
+
+          </div>
+
+          <div class="row-fluid">
+
+
+        <!-- Modal -->
+          <div id="eventModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+              <h3 id="myModalLabel">{{selected_event_title}}</h3>
+            </div>
+              <!--https://support.google.com/calendar/answer/3033039 add to calendar button-->
+              <div class="modal-body">
+                <!-- {{selected_event_id}} -->
+                <!-- {{selected_event_allDay}} <br> -->
+                <!-- {{selected_event_creator}} <br> -->
+                <!-- {{selected_event_start}} <br> -->
+                <!-- {{selected_event_end}} <br> -->
+                {{selected_event_description}} <br>
+                {{selected_event_pic}} <br>
+                <a href="{{selected_event_url}}">{{selected_event_url}}</a>
               </div>
-
-              <input type="text" id="search" ng-model="query" keyup="updateQuery()">
-
-              <!-- <div enter>test test test</div> -->
-              <!-- ui-event="{keyup: 'myFn($event)'}" -->
-
-              <div class="calendar" id="myCalendar" ng-model="eventSources" calendar="myCalendar" config="uiConfig.calendar" ui-calendar="uiConfig.calendar"></div>
+            <div class="modal-footer">
+              <button class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Close</button>
             </div>
+          </div>
 
-            <div class="span6" id="event">
-              <!--https://support.google.com/calendar/answer/3033039 add to calendar button--> 
-              {{selected_event_id}} <br>
-              {{selected_event_title}} <br>
-              {{selected_event_allDay}} <br>
-              {{selected_event_creator}} <br>
-              {{selected_event_start}} <br>
-              {{selected_event_end}} <br>
-              {{selected_event_description}} <br>
-              {{selected_event_pic}} <br>
-              <a href="{{selected_event_url}}">{{selected_event_url}}</a>
-            </div>
+
 
           </div>
       </div>

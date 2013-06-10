@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('nuPlannerApp', ['ui.calendar']).
+angular.module('nuPlannerApp', ['ui.calendar', 'ui.bootstrap']).
   config(function ($routeProvider) {
     $routeProvider
       .when('/', {

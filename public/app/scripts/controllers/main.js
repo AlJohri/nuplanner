@@ -22,7 +22,9 @@ angular.module('nuPlannerApp').controller('MainCtrl', function ($scope) {
             $scope.selected_event_description = event.description;
             $scope.selected_event_pic = event.pic;
             $scope.selected_event_url = event.url;
-          
+
+            $('#eventModal').modal();
+
         });
         return false;
     };
@@ -79,7 +81,7 @@ angular.module('nuPlannerApp').controller('MainCtrl', function ($scope) {
         editable: false,
         theme: false,
         header: {
-          left: '', // month basicWeek basicDay agendaWeek agendaDay
+          left: 'month, basicWeek, basicDay', // month basicWeek basicDay agendaWeek agendaDay
           center: 'title', // title
           right: 'today prev,next' // today prev,next
         },
