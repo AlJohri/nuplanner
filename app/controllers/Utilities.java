@@ -48,15 +48,24 @@ import static controllers.FB.*;
 public class Utilities extends Controller {
 
     private static Integer counter = 0;
-
+/**
+*Takes start time in string format as input
+*@return start time in DateTime format
+*/
     private static DateTime parse_start_time(String start) { 
         return (start!=null && !start.isEmpty() && start != "null") ? new DateTime().parse(start) : null; 
     }
-
+/**
+*Takes end time in string format as input
+*@return end time in DateTime format
+*/
     private static DateTime parse_end_time(String end) { 
         return (end!=null && !end.isEmpty() && end != "null") ? new DateTime().parse(end) : null; 
     }
-
+/**
+*For all events get if it has a owner or creator
+*@return Event Creator
+*/
     private static String getCreatorOrOwner(com.restfb.json.JsonObject event) {
         String creator = "";
 
@@ -73,7 +82,11 @@ public class Utilities extends Controller {
 
         return creator;
     }
-
+/**
+*Input Event
+*Parse event to get all its properties as in MyEvent Constructor
+*@return MyEvent constructor 
+*/
     public static MyEvent createEvent(com.restfb.json.JsonObject event) {
 
         String str_eid = event.has("id") ? event.getString("id") : (event.has("eid") ? event.getString("eid") : "");
@@ -102,6 +115,11 @@ public class Utilities extends Controller {
 
         return new MyEvent(eid, name, creator, starttime, endtime, location, venue, description, pic, pic_small, pic_big, pic_square);
     }
+/**
+*Input event
+*Save event in Database
+*@return true if added else false
+*/
 
     public static boolean saveOrUpdate(MyEvent event) {
         Long eid = event.eid;
@@ -119,6 +137,10 @@ public class Utilities extends Controller {
 
         return false;
     }
+/**
+*Input venueID
+*@return location
+*/
 
     private static com.restfb.json.JsonObject venue_location(String venueID) {
         FacebookClient facebookClient = new DefaultFacebookClient(APP_ACCESS_TOKEN);
@@ -126,7 +148,12 @@ public class Utilities extends Controller {
         com.restfb.json.JsonObject location = result.getJsonObject("location");
         return location;
     }
-
+/**
+*input event
+*Filter events based on some fixed blocked venues and organizations
+*Also Filter events based on their city
+*@return true if event is not filtered else false
+*/
     public static boolean filter_event(MyEvent event) {
 
         JSONObject venue;
@@ -194,7 +221,13 @@ public class Utilities extends Controller {
 
         return false;
     }
-
+/**
+*Input events list
+*For all events in list which are in json create MyEvent object
+*Filter events
+*add filtered events which are MyEvent objects to eventlist
+*@return eventlist
+*/
     public static List<MyEvent> save_events(List<com.restfb.json.JsonObject> events) {
         List<MyEvent> eventList = new ArrayList<MyEvent>();
 
@@ -207,7 +240,14 @@ public class Utilities extends Controller {
 
         return eventList;
     }
-
+/**
+*Input events array
+*For all events in array convert them to jsonObject
+*For all events in list which are in json create MyEvent object
+*Filter events
+*add filtered events which are MyEvent objects to eventlist
+*@return eventlist
+*/
     public static List<MyEvent> save_events(com.restfb.json.JsonArray events) {
         List<MyEvent> eventList = new ArrayList<MyEvent>();
 
@@ -221,6 +261,10 @@ public class Utilities extends Controller {
 
         return eventList;
     }
+/**
+*Input percent
+*based on percent build a string
+*/
 
     private static void printProgBar(int percent){
         StringBuilder bar = new StringBuilder("[");
