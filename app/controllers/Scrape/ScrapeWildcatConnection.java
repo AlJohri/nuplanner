@@ -27,11 +27,11 @@ import com.google.gson.*;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
- * The ScrapeWildcatConnection class scrapes the events within WildcatConnection
+ * The ScrapeWildcatConnection class scrapes events within WildcatConnection
  * and stores them to the database.
+ * @author Al Johri
 */
-
-public class ScrapeWildcatConnection extends Controller {
+public class ScrapeWildcatConnection extends Scrape {
 
     public static Result scrape_wildcatconnection() {
         String json = "{}";

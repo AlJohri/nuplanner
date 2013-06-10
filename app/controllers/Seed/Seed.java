@@ -28,14 +28,16 @@ import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * The Seed class collects data from various sources on the web that will be saved to the database
- * in order to aid the scrapers.
+ * in order to aid scrapers.
+ * @author Sai Praneeth
 */
 
 public class Seed extends Controller {
 
 	/**
-	 * Calls seed_organiztions function 
-	 * This function is one called in routes by /seed url 
+	 * Calls all seed methods. Currently just seed_organizations().
+     * <p>
+	 * This controller is called by the /seed url
 	 * @return Return success message.
 	 */
     public static Result seed() {

@@ -47,6 +47,8 @@ import static controllers.FB.*;
 */
 public class Utilities extends Controller {
 
+    private static Integer counter = 0;
+
     private static DateTime parse_start_time(String start) { 
         return (start!=null && !start.isEmpty() && start != "null") ? new DateTime().parse(start) : null; 
     }
@@ -55,12 +57,29 @@ public class Utilities extends Controller {
         return (end!=null && !end.isEmpty() && end != "null") ? new DateTime().parse(end) : null; 
     }
 
+    private static String getCreatorOrOwner(com.restfb.json.JsonObject event) {
+        String creator = "";
+
+        if (event.has("owner")) {
+            try {
+                JSONObject owner = new JSONObject(event.getString("owner"));
+                creator = owner.has("id") ? owner.get("id").toString() : "";
+            } catch (JSONException e) {
+                System.out.println(e.getMessage());
+            }
+        } else if (event.has("creator")) {
+            creator = event.getString("creator");
+        }
+
+        return creator;
+    }
+
     public static MyEvent createEvent(com.restfb.json.JsonObject event) {
 
         String str_eid = event.has("id") ? event.getString("id") : (event.has("eid") ? event.getString("eid") : "");
         Long eid = Long.valueOf(str_eid).longValue();
         String name = event.has("name") ? event.getString("name") : "";
-        String creator = event.has("owner") ? event.getString("owner") : (event.has("creator") ? event.getString("creator") : "");
+        String creator = getCreatorOrOwner(event);
         DateTime starttime = event.has("start_time") ? parse_start_time(event.getString("start_time")) : null;
         DateTime endtime = event.has("end_time") ? parse_end_time(event.getString("end_time")) : null;
         String location = event.has("location") ? event.getString("location") : "";
@@ -85,14 +104,15 @@ public class Utilities extends Controller {
     }
 
     public static boolean saveOrUpdate(MyEvent event) {
+        Long eid = event.eid;
         try {
-            Long eid = event.eid;
-
             if (MyEvent.findLong.byId(eid)==null) { 
-                event.save(); 
+                event.save();
+                counter++;
+                System.out.println("[" + counter + "] " + event.eid + ": " + event.name);
+                // printProgBar(counter/600);
                 return true; 
             }
-
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
@@ -116,10 +136,12 @@ public class Utilities extends Controller {
         venue_street = venue_city = venue_state = venue_country = venue_zip = venue_latitude = venue_longitude = "";
         location_street = location_city = location_state = location_country = location_zip = location_latitude = location_longitude = "";
 
+        if ((event.description).contains("eventful.com")) return false;
+
         try {
 
             if ( ((event.venue).equals("")) || ((event.venue).isEmpty()) || ((event.venue).equals("[]"))) {
-                System.out.println(event.toJSONString());
+                // System.out.println(event.toJSONString());
                 venue = null; // find some sort of filter for events with no venue?
                 return false;
             }
@@ -161,7 +183,8 @@ public class Utilities extends Controller {
             String longitude = (!venue_latitude.equals("")) ? venue_latitude : location_country;
 
             // if(latitude,longitude is less than 1500 meters from center of NU) return true; // TEST 1: longitude, latitude
-            if (city.equalsIgnoreCase("evanston") || city.equalsIgnoreCase("chicago")) return true; // TEST 2: city
+            if (city.equalsIgnoreCase("evanston")) return true; // TEST 2: city
+            // city.equalsIgnoreCase("chicago") I'm temporarily removing Chicago
             // if (state.equalsIgnoreCase("Illinois")) return true; // TEST 3: state
             // if (country.equalsIgnoreCase("United States")) return true; // TEST 4: country
 
@@ -198,5 +221,23 @@ public class Utilities extends Controller {
 
         return eventList;
     }
+
+    private static void printProgBar(int percent){
+        StringBuilder bar = new StringBuilder("[");
+
+        for(int i = 0; i < 50; i++){
+            if( i < (percent/2)){
+                bar.append("=");
+            }else if( i == (percent/2)){
+                bar.append(">");
+            }else{
+                bar.append(" ");
+            }
+        }
+
+        bar.append("]   " + percent + "%     ");
+        System.out.print("\r" + bar.toString());
+    }
+
 
 }

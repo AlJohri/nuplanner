@@ -28,10 +28,15 @@ import com.restfb.FacebookClient.*;
 import com.restfb.json.*;
 
 /* FB Constants and Utilities */
-import static controllers.FB.*;
+import static controllers.Facebook.*;
 import static controllers.Utilities.*;
 
-public class ScrapeFacebook extends Controller {
+/**
+ * The ScrapeFacebook class scrapes events from Facebook using the Graph API and
+ * Facebook Query Langauge. It stores the resulting events to the database.
+ * @author Al Johri
+ */
+public class ScrapeFacebook extends Scrape {
 
     /**
      * Scrapes events from Facebook using the Facebook Graph API. It searches for events
