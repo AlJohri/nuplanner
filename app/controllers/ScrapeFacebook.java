@@ -105,7 +105,7 @@ public class ScrapeFacebook extends Controller {
  
     /**
      * Scrape Locations uses data already in the MyEvent table to search for events.
-     * It uses the getLocations function in Utilities.java to find a list of all
+     * It uses the getAllEventLocations function in MyEvent.java to find a list of all
      * locations where events currently reside based on the events in the database.
      * It then uses the Facebook Graph API to perform a text based query of these
      * locations. This is a powerful function and grabs a myriad of events. However,
@@ -115,7 +115,7 @@ public class ScrapeFacebook extends Controller {
      */
      public static Result scrape_locations() {
         List<MyEvent> locationEvents = new ArrayList<MyEvent>();
-        ArrayList<String> locations = getLocations();
+        ArrayList<String> locations = MyEvent.getAllEventLocations();
         for (int i = 0; i < locations.size(); i++) {
             JsonObject result = facebook_graph_query(APP_ACCESS_TOKEN, locations.get(i), 
                 GRAPH_SEARCH_TYPE, GRAPH_EVENT_FIELDS, "", "", GRAPH_LIMIT);

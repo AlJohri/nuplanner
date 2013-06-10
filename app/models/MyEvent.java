@@ -72,6 +72,17 @@ public class MyEvent extends Model implements JSONAware {
         return sb.toString();
     }
 
+    public static ArrayList getAllEventLocations() {
+        ArrayList<String> locations = new ArrayList<String>();
+        List<MyEvent> events = MyEvent.find.all();
+        for (MyEvent event:events) { 
+            if (event.location != null && !event.location.isEmpty()) {
+                locations.add(event.location);    
+            }
+        }
+        return locations;
+    }
+
     // http://www.avaje.org/static/javadoc/pub/com/avaje/ebean/ExpressionList.html
     public static Finder<String,MyEvent> find = new Finder<String,MyEvent>( String.class, MyEvent.class );
     public static Finder<Long,MyEvent> findLong = new Finder<Long,MyEvent>( Long.class, MyEvent.class );

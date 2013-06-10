@@ -80,17 +80,6 @@ public class Utilities extends Controller {
         return new MyEvent(eid, name, creator, starttime, endtime, location, venue, description, pic);
     }
 
-    public static ArrayList getLocations() {
-        ArrayList<String> locations = new ArrayList<String>();
-        List<MyEvent> events = MyEvent.find.all();
-        for (MyEvent event:events) { 
-            if (event.location != null && !event.location.isEmpty()) {
-                locations.add(event.location);    
-            }
-        }
-        return locations;
-    }
-
     public static boolean saveOrUpdate(MyEvent event) {
         try {
             Long eid = event.eid;
@@ -112,7 +101,7 @@ public class Utilities extends Controller {
         com.restfb.json.JsonObject result = facebookClient.fetchObject( venueID, com.restfb.json.JsonObject.class);
         com.restfb.json.JsonObject location = result.getJsonObject("location");
         return location;
-    }    
+    }
 
     public static boolean filter_event(MyEvent event) {
 
@@ -205,22 +194,5 @@ public class Utilities extends Controller {
 
         return eventList;
     }
-
-    public static List<com.restfb.json.JsonObject> facebook_fql_query(String token, String query) {
-        FacebookClient facebookClient = new DefaultFacebookClient(token);
-        return facebookClient.executeFqlQuery(query, com.restfb.json.JsonObject.class);
-    }
-
-    public static com.restfb.json.JsonObject facebook_graph_query(String token, String q, String type, String fields, String center, String distance, String limit) {
-        FacebookClient facebookClient = new DefaultFacebookClient(token);
-        return facebookClient.fetchObject( "search", com.restfb.json.JsonObject.class,
-            Parameter.with("q", q),
-            Parameter.with("type", type),
-            Parameter.with("fields", fields),
-            Parameter.with("center", center),
-            Parameter.with("distance", distance),
-            Parameter.with("limit", limit)
-        );
-    }    
 
 }

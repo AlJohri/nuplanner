@@ -1,9 +1,7 @@
 package controllers
 
 import views._
-
 import java.io._
-
 import play.Logger
 import play.api._
 import play.api.libs.ws._

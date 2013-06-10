@@ -1,5 +1,11 @@
 package controllers;
 
+/* RestFB */
+import com.restfb.*;
+import com.restfb.FacebookClient.*;
+import com.restfb.json.*;
+import com.restfb.types.Event;
+
 public final class FB {  
 
     /* Facebook App Access Token */
@@ -52,5 +58,22 @@ public final class FB {
         "143964878955940",
         "252037288213690"
     };
+
+    public static List<com.restfb.json.JsonObject> facebook_fql_query(String token, String query) {
+        FacebookClient facebookClient = new DefaultFacebookClient(token);
+        return facebookClient.executeFqlQuery(query, com.restfb.json.JsonObject.class);
+    }
+
+    public static com.restfb.json.JsonObject facebook_graph_query(String token, String q, String type, String fields, String center, String distance, String limit) {
+        FacebookClient facebookClient = new DefaultFacebookClient(token);
+        return facebookClient.fetchObject( "search", com.restfb.json.JsonObject.class,
+            Parameter.with("q", q),
+            Parameter.with("type", type),
+            Parameter.with("fields", fields),
+            Parameter.with("center", center),
+            Parameter.with("distance", distance),
+            Parameter.with("limit", limit)
+        );
+    }
         
 }

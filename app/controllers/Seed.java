@@ -36,7 +36,7 @@ public class Seed extends Controller {
 	/**
 	 * Calls seed_organiztions function 
 	 * This function is one called in routes by /seed url 
-	 * @return [success message]
+	 * @return Return success message.
 	 */
     public static Result seed() {
         seed_organizations();
@@ -44,17 +44,24 @@ public class Seed extends Controller {
         return ok("Seed complete!");
     }
 
-    // seed_locations() {
-        // http://maps.northwestern.edu/dialog/building_list/Evanston/
-        // http://maps.northwestern.edu/dialog/building_list/Chicago/
-    // }
+    /**
+     * Get list of buildings at Northwestern from maps.northwestern.edu.
+     * Evanston: http://maps.northwestern.edu/dialog/building_list/Evanston/
+     * Chicago: http://maps.northwestern.edu/dialog/building_list/Chicago/
+     * TODO: implement this function
+     * @return Return success message.
+     */
+    public static Result seed_locations() {
+        return ok("done");
+    }
+    
 	/**
 	 * Get html pages for all organizations from northwestern collegiatelink
 	 * Parse these pages to get their facebook id 
 	 * Add these id's to graph url to get their facebook info
 	 * Parse this info to get necessary details of that organization
 	 * Save this info in database into My Organization table
-	 * @return [success message]
+	 * @return  Return success message.
 	 */
     public static Result seed_organizations() {
     	String a="";
