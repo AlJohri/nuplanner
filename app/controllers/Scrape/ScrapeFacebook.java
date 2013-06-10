@@ -31,6 +31,11 @@ import com.restfb.json.*;
 import static controllers.Facebook.*;
 import static controllers.Utilities.*;
 
+/**
+ * The ScrapeFacebook class scrapes events from Facebook using the Graph API and
+ * Facebook Query Langauge. It stores the resulting events to the database.
+ * @author Al Johri
+ */
 public class ScrapeFacebook extends Scrape {
 
     /**

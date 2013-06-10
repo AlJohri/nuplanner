@@ -25,6 +25,8 @@ public class Application extends Controller {
      * This controller adheres to the specifications laid out by fullCalendar, the javascript
      * Calendar used in the view. 
      * fullCalendar: http://arshaw.com/fullcalendar/docs/event_data/events_json_feed/
+     * <p>
+     * This controller is called by the /events url
      * @return Return a JSON string of events matching the input parameters.
      */
     public static Result events() {

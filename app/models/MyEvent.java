@@ -86,5 +86,4 @@ public class MyEvent extends Model implements JSONAware {
     // http://www.avaje.org/static/javadoc/pub/com/avaje/ebean/ExpressionList.html
     public static Finder<String,MyEvent> find = new Finder<String,MyEvent>( String.class, MyEvent.class );
     public static Finder<Long,MyEvent> findLong = new Finder<Long,MyEvent>( Long.class, MyEvent.class );
-    public static Finder<DateTime,MyEvent> findDate = new Finder<DateTime,MyEvent>( DateTime.class, MyEvent.class );
 }
