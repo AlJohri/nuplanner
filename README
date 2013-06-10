@@ -5,4 +5,4 @@ Controllers: app/controllers
 Models: app/models
 View: public/angular/app
 
-The angular app can be run seperate from the play app using `grunt server` in confunction with `play run`.
+The angular app can be run separate from the play app using `grunt server` in confunction with `play run`.
