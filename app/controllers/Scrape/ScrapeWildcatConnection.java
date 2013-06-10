@@ -31,7 +31,7 @@ import java.util.concurrent.atomic.AtomicReference;
  * and stores them to the database.
 */
 
-public class ScrapeWildcatConnection extends Controller {
+public class ScrapeWildcatConnection extends Scrape {
 
     public static Result scrape_wildcatconnection() {
         String json = "{}";

@@ -8,7 +8,7 @@ import com.restfb.FacebookClient.*;
 import com.restfb.json.*;
 import com.restfb.types.Event;
 
-public final class FB {  
+public final class Facebook {  
 
     /* Facebook App Access Token */
     public static final String APP_ACCESS_TOKEN = "524073037656113|l1aTC3FhsPHJEeRZfWB9vk70nAk";
