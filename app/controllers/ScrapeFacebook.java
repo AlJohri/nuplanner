@@ -60,8 +60,27 @@ public class ScrapeFacebook extends Controller {
 
     /**
      * Scrapes events from Facebook using the Facebook Query Language (FQL). It searches
-     * for events using an FQL_QUERY defined in FB.java. This query 
-     * @return [description]
+     * for events using the defined FQL_QUERY.
+     * <p> 
+     * The FQL_QUERY searches for events that are created by Facebook Pages.
+     * It filters these events based on pages whose location is within CENTER_RADIUS
+     * meters from (CENTER_LATITUDE, CENTER_LONGITUDE).
+     * <p>
+     * As stated above, this query only searches for events that are created by a page.
+     * The event_member table in FQL contains uids and page_ids of, as the name suggests, 
+     * members of events. The logic behind the query is that if a page is a member of an
+     * event, the page is the creator the event.
+     * Most pages have a location associated with them. If the location is within 
+     * CENTER_RADIUS meters from (CENTER_LATITUDE, CENTER_LONGITUDE) the event will be
+     * returned.
+     * <p>
+     * However, one major pitfall is international/national organizations that have their
+     * headquarters within this radius. The page resides here, but the actual event
+     * may be in Washinton, DC or another country. Some examples of these are SAE and
+     * Rotary International. There is no obvious solution for filtering with these events,
+     * especially if they don't have a listed venue. The filter_events function in Utilities.java
+     * explores this in greater detail.
+     * @return Return a JSON string of all scraped events.
      */
     public static Result scrape_fql() {
 
@@ -70,11 +89,12 @@ public class ScrapeFacebook extends Controller {
 
         String FQL_QUERY =
             "SELECT " + FQL_EVENT_FIELDS + " FROM " + FQL_EVENT_TABLE + " WHERE eid IN " +
-                    "(SELECT " + FQL_EVENT_MEMBER_FIELDS + " FROM " + FQL_EVENT_MEMBER_TABLE + " WHERE uid IN " +
-                                            "(SELECT " + FQL_PLACE_FIELDS + " FROM " + 
-                                                         FQL_PLACE_TABLE + " WHERE " + FQL_DISTANCE_QUERY + " " + 
-                                             FQL_LIMIT + ") " +
+                    "(SELECT " + FQL_EVENT_MEMBER_FIELDS + " FROM " + 
+                        FQL_EVENT_MEMBER_TABLE + " WHERE uid IN " +
+                            "(SELECT " + FQL_PLACE_FIELDS + " FROM " + 
+                                    FQL_PLACE_TABLE + " WHERE " + FQL_DISTANCE_QUERY + " " + 
                             FQL_LIMIT + ") " +
+                    FQL_LIMIT + ") " +
             FQL_ORDER + " " + FQL_LIMIT;
 
         List<JsonObject> events = facebook_fql_query(APP_ACCESS_TOKEN, FQL_QUERY);
@@ -83,6 +103,16 @@ public class ScrapeFacebook extends Controller {
         return ok( JSONValue.toJSONString(eventList) );
     }
  
+    /**
+     * Scrape Locations uses data already in the MyEvent table to search for events.
+     * It uses the getLocations function in Utilities.java to find a list of all
+     * locations where events currently reside based on the events in the database.
+     * It then uses the Facebook Graph API to perform a text based query of these
+     * locations. This is a powerful function and grabs a myriad of events. However,
+     * filtering is extremly important as the majority of these events will be outside
+     * of the city/state/country.
+     * @return Return a JSON string of all scraped events.
+     */
      public static Result scrape_locations() {
         List<MyEvent> locationEvents = new ArrayList<MyEvent>();
         ArrayList<String> locations = getLocations();
@@ -97,6 +127,10 @@ public class ScrapeFacebook extends Controller {
         return ok( JSONValue.toJSONString(locationEvents) );
     }
 
+    /**
+     * [scrape_organizations description]
+     * @return [description]
+     */
     public static Result scrape_organizations() {
 
         String FQL_ORGANIZATIONS_QUERY = "SELECT " + FQL_EVENT_FIELDS + " FROM " + 
