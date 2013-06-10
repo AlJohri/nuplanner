@@ -3,63 +3,46 @@ package controllers;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
-
 import play.*;
 import play.mvc.*;
 import play.data.*;
 import play.libs.Json;
 import play.data.Form;
-// http://www.playframework.com/documentation/api/2.0/java/index.html
-
 import models.*;
-
 import org.json.*;
 import org.json.simple.JSONValue;
-
 import org.apache.commons.io.FileUtils;
-
 import org.joda.time.DateTime;
-
-// http://www.playframework.com/documentation/2.1.1/JavaJsonRequests
-// import org.codehaus.jackson.JsonNode;
-// import org.codehaus.jackson.node.ObjectNode;
-// import play.mvc.BodyParser;
-
 import com.avaje.ebean.ExpressionList;
+// import com.avaje.ebean.Query;
 
-// http://www.playframework.com/documentation/2.1.1/JavaActions
-// http://stackoverflow.com/questions/14843365/get-request-parameter-with-play-framework
-// http://stackoverflow.com/questions/9808348/request-params-is-gone-in-play-framework-2-0
 public class Application extends Controller {
 
 	// http://arshaw.com/fullcalendar/docs/event_data/events_json_feed/
 	public static Result events() {
 		String start_string = request().getQueryString("start");
 		String end_string = request().getQueryString("end");
+		String query = request().getQueryString("query");
 
-		ExpressionList<MyEvent> events = MyEvent.findDate.where();
+		ExpressionList<MyEvent> events = MyEvent.find.where();
 
 		if (start_string != null) {
-			DateTime start= new DateTime(Long.parseLong(start_string) * 1000);
+			DateTime start = new DateTime(Long.parseLong(start_string) * 1000);
 			events = events.gt("start_time", start);
 		}
-		if (end_string != null){
+		if (end_string != null) {
 			DateTime end = new DateTime(Long.parseLong(end_string) * 1000);
 			events = events.lt("end_time", end);
+		}
+		if (query != null) {
+			events = events.ilike("name", "%"+query+"%");
 		}
 
 		List<MyEvent> eventList = events.findList();
 		eventList = (start_string == null && end_string == null) ? MyEvent.find.all() : eventList;
-		
-        //System.out.println(eventList.toString());
-		// Iterator<MyEvent> itr = eventList.iterator();
-		// while (itr.hasNext()) {
-			// System.out.println(itr.next().name); // itr.next()
-		// }
 
-		String jsonText = JSONValue.toJSONString(eventList);
+		return ok( JSONValue.toJSONString(eventList) );
 
-		return ok( jsonText );
 	}
 
 }

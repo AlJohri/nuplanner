@@ -70,9 +70,19 @@ angular.module('nuPlannerApp').controller('MainCtrl', function ($scope) {
       }
     };
     
-    $scope.addEvent = function() { $scope.events.push({ title: 'Open Sesame', start: new Date(y, m, 28), end: new Date(y, m, 29) }); };
-    $scope.remove = function(index) { $scope.events.splice(index,1);  };
-    $scope.changeView = function(view) { $scope.myCalendar.fullCalendar('changeView',view); }; 
+    $scope.addEvent = function() { 
+      $scope.events.push({ title: 'Open Sesame', start: new Date(y, m, 28), end: new Date(y, m, 29) }); 
+    };
+
+    $scope.remove = function(index) { 
+      $scope.events.splice(index,1);  
+    };
+
+    $scope.changeView = function(view) { 
+      $scope.myCalendar.fullCalendar('changeView',view); 
+      $scope.myCalendar.fullCalendar('refetchEvents');
+    }; 
+
     $scope.refetchEvents = function(view) { $scope.myCalendar.fullCalendar('refetchEvents'); }; 
     /* config object */
     $scope.uiConfig = {

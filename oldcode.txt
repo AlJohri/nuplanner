@@ -219,3 +219,19 @@ public class FqlEvent {
 		return String.format("%s (%d)", name, eid);
 	}
 }
+
+// http://www.playframework.com/documentation/api/2.0/java/index.html
+// http://www.playframework.com/documentation/2.1.1/JavaJsonRequests
+// import org.codehaus.jackson.JsonNode;
+// import org.codehaus.jackson.node.ObjectNode;
+// import play.mvc.BodyParser;
+// http://www.playframework.com/documentation/2.1.1/JavaActions
+// http://stackoverflow.com/questions/14843365/get-request-parameter-with-play-framework
+// http://stackoverflow.com/questions/9808348/request-params-is-gone-in-play-framework-2-0
+
+
+        //System.out.println(eventList.toString());
+		// Iterator<MyEvent> itr = eventList.iterator();
+		// while (itr.hasNext()) {
+			// System.out.println(itr.next().name); // itr.next()
+		// }
