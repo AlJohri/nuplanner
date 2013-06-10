@@ -11,11 +11,11 @@ import com.avaje.ebean.config.dbplatform.*;
 public class MyServerConfigStartup implements ServerConfigStartup {
     @Override
     public void onStart(ServerConfig config) {
-	    // final ServerConfig config = new ServerConfig();
-	    final PostgresPlatform postgresPlatform = new PostgresPlatform();
-	    postgresPlatform.getDbIdentity().setIdType(IdType.IDENTITY);
-	    postgresPlatform.getDbIdentity().setSupportsIdentity(true);
-	    config.setDatabasePlatform(postgresPlatform);
+        // final ServerConfig config = new ServerConfig();
+        final PostgresPlatform postgresPlatform = new PostgresPlatform();
+        postgresPlatform.getDbIdentity().setIdType(IdType.IDENTITY);
+        postgresPlatform.getDbIdentity().setSupportsIdentity(true);
+        config.setDatabasePlatform(postgresPlatform);
         // serverConfig.add(new BeanPersistListener() { });
     }
 }

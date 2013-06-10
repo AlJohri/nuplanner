@@ -13,13 +13,6 @@
         </div>
       </div>
 
-      <!-- 
-      <div class="page-header">
-          <h1>Calendar</h1>
-      </div>
-      -->
-
-
       <div class="alert-success calAlert"><h4>{{alertMessage}}</h4></div>
 
       <div class="well">
@@ -29,22 +22,6 @@
             <input type="text" placeholder="Search" class="search-query span12" id="search" ng-model="query" keyup="updateQuery()">
 
             <div class="calendar" class="span12" id="myCalendar" ng-model="eventSources" calendar="myCalendar" config="uiConfig.calendar" ui-calendar="uiConfig.calendar"></div>
-
-
-            <div class="span12">
-
-<!--               <div class="btn-toolbar">
-                  <div class="btn-group">
-                      <button class="btn btn-info" ng-click="changeView('list')">List</button>
-                      <button class="btn btn-success" ng-click="changeView('month')">Month</button>
-                      <button class="btn btn-info" ng-click="changeView('agendaWeek')">Week</button>
-                      <button class="btn btn-info" ng-click="changeView('agendaDay')">Day</button>
-                      <button class="btn btn-info" ng-click="refetchEvents()">Refresh</button>
-                  </div>
-              </div> -->
-
-
-            </div>
 
           </div>
 

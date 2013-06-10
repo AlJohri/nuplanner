@@ -3,7 +3,8 @@ package controllers;
 public final class FB {  
 
     /* Facebook App Access Token */
-    public static final String ACCESS_TOKEN = "524073037656113|l1aTC3FhsPHJEeRZfWB9vk70nAk";
+    public static final String APP_ACCESS_TOKEN = "524073037656113|l1aTC3FhsPHJEeRZfWB9vk70nAk";
+    public static final String USER_ACCESS_TOKEN = "CAAHcpEMZB8DEBANQkZAyhJCXEYnAn2UW9paEZC7VWGJCb9a1ouGismLu8xKfCZCZBdtAl3Ld4iVC6u2HaXHqmknogy4RMuMswUMqc17PKSwAt4UmQoqDT4RIHKQaeHpnoXjXkCWTFlx7fNKKvDLUaauyS3KIuFsvziJaCphDuCgZDZD";    
 
     /* Coordinate Constants */
     public static final String CENTER_LATITUDE = "42.054581";
@@ -21,17 +22,6 @@ public final class FB {
     // FQL LIMIT and ORDER
     public static final String FQL_LIMIT = "LIMIT 51000";
     public static final String FQL_ORDER = "ORDER BY start_time ASC";
-    // FQL DISTANCE QUERY
-    public static final String FQL_DISTANCE_QUERY = "distance(latitude, longitude, '" + CENTER_LATITUDE + "', '" + CENTER_LONGITUDE + "') < " + CENTER_RADIUS;
-
-    public static final String FQL_QUERY =
-            "SELECT " + FQL_EVENT_FIELDS + " FROM " + FQL_EVENT_TABLE + " WHERE eid IN " +
-                "(SELECT " + FQL_EVENT_MEMBER_FIELDS + " FROM " + FQL_EVENT_MEMBER_TABLE + " WHERE uid IN " +
-                    "(SELECT " + FQL_PLACE_FIELDS + " FROM " + FQL_PLACE_TABLE + " WHERE " + FQL_DISTANCE_QUERY + " " + FQL_LIMIT + ") " +
-                FQL_LIMIT + ") " +
-            FQL_ORDER + " " + FQL_LIMIT;
-
-    public static final String FQL_ORGANIZATIONS_QUERY = "SELECT " + FQL_EVENT_FIELDS + " FROM " + FQL_EVENT_TABLE + " WHERE creator = ";
 
     public static final String GRAPH_EVENT_FIELDS = "id,name,owner,description,start_time,end_time,location,venue,privacy,updated_time,picture,ticket_uri";
     public static final String GRAPH_SEARCH_TYPE = "event";

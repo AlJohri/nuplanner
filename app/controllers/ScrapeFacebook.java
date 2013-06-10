@@ -38,15 +38,46 @@ import static controllers.Utilities.*;
 
 public class ScrapeFacebook extends Controller {
 
+    /**
+     * Scrapes events from Facebook using the Facebook Graph API. It searches for events
+     * radially outward from predefined center coordinates with a predefined radius.
+     * <p>
+     * This method requires a USER_ACCESS_TOKEN as opposed to the standard APP_ACCESS_TOKEN.
+     * Thus, this method can only be run upon user authentication. Thus, this method is 
+     * currently not being used in the "scrape sequence," the sequence of functions run to 
+     * scrape all events (defined in Scrape.java).
+     * <p>
+     * TODO: Enable this function after implementing Facebook User Authentication.
+     * @return Return a JSON string of all scraped events.
+     */
     public static Result scrape_graph() {
-        String USER_TOKEN = "CAAHcpEMZB8DEBANQkZAyhJCXEYnAn2UW9paEZC7VWGJCb9a1ouGismLu8xKfCZCZBdtAl3Ld4iVC6u2HaXHqmknogy4RMuMswUMqc17PKSwAt4UmQoqDT4RIHKQaeHpnoXjXkCWTFlx7fNKKvDLUaauyS3KIuFsvziJaCphDuCgZDZD";
-        JsonObject result = facebook_graph_query(USER_TOKEN, "*", GRAPH_SEARCH_TYPE, GRAPH_EVENT_FIELDS, CENTER_LATITUDE + "," + CENTER_LONGITUDE, CENTER_RADIUS, GRAPH_LIMIT);
+        JsonObject result = facebook_graph_query(USER_ACCESS_TOKEN, "*", GRAPH_SEARCH_TYPE, 
+            GRAPH_EVENT_FIELDS, CENTER_LATITUDE + "," + CENTER_LONGITUDE, CENTER_RADIUS, GRAPH_LIMIT);
         JsonArray events = result.getJsonArray("data");
-        return ok(events.toString());
+        List<MyEvent> eventList = save_events(events);
+        return ok( JSONValue.toJSONString(eventList) );
     }
 
+    /**
+     * Scrapes events from Facebook using the Facebook Query Language (FQL). It searches
+     * for events using an FQL_QUERY defined in FB.java. This query 
+     * @return [description]
+     */
     public static Result scrape_fql() {
-        List<JsonObject> events = facebook_fql_query(ACCESS_TOKEN, FQL_QUERY);
+
+        String FQL_DISTANCE_QUERY = "distance(latitude, longitude, '" + 
+            CENTER_LATITUDE + "', '" + CENTER_LONGITUDE + "') " + "< " + CENTER_RADIUS;
+
+        String FQL_QUERY =
+            "SELECT " + FQL_EVENT_FIELDS + " FROM " + FQL_EVENT_TABLE + " WHERE eid IN " +
+                    "(SELECT " + FQL_EVENT_MEMBER_FIELDS + " FROM " + FQL_EVENT_MEMBER_TABLE + " WHERE uid IN " +
+                                            "(SELECT " + FQL_PLACE_FIELDS + " FROM " + 
+                                                         FQL_PLACE_TABLE + " WHERE " + FQL_DISTANCE_QUERY + " " + 
+                                             FQL_LIMIT + ") " +
+                            FQL_LIMIT + ") " +
+            FQL_ORDER + " " + FQL_LIMIT;
+
+        List<JsonObject> events = facebook_fql_query(APP_ACCESS_TOKEN, FQL_QUERY);
         List<MyEvent> eventList = save_events(events);
 
         return ok( JSONValue.toJSONString(eventList) );
@@ -56,7 +87,8 @@ public class ScrapeFacebook extends Controller {
         List<MyEvent> locationEvents = new ArrayList<MyEvent>();
         ArrayList<String> locations = getLocations();
         for (int i = 0; i < locations.size(); i++) {
-            JsonObject result = facebook_graph_query(ACCESS_TOKEN, locations.get(i), GRAPH_SEARCH_TYPE, GRAPH_EVENT_FIELDS, "", "", GRAPH_LIMIT);
+            JsonObject result = facebook_graph_query(APP_ACCESS_TOKEN, locations.get(i), 
+                GRAPH_SEARCH_TYPE, GRAPH_EVENT_FIELDS, "", "", GRAPH_LIMIT);
             JsonArray single_location_events = result.getJsonArray("data");
             List<MyEvent> eventList = save_events(single_location_events);
             locationEvents.addAll(eventList);
@@ -66,11 +98,16 @@ public class ScrapeFacebook extends Controller {
     }
 
     public static Result scrape_organizations() {
+
+        String FQL_ORGANIZATIONS_QUERY = "SELECT " + FQL_EVENT_FIELDS + " FROM " + 
+                                            FQL_EVENT_TABLE + " WHERE creator = ";
+
         List<MyEvent> organizationEvents = new ArrayList<MyEvent>();
         List<MyOrganization> organizations = MyOrganization.find.all();
 
         for(MyOrganization organization:organizations) {
-            List<JsonObject> events = facebook_fql_query(ACCESS_TOKEN, FQL_ORGANIZATIONS_QUERY + organization.fbid + " " + FQL_LIMIT);
+            List<JsonObject> events = facebook_fql_query(APP_ACCESS_TOKEN, 
+                FQL_ORGANIZATIONS_QUERY + organization.fbid + " " + FQL_LIMIT);
             List<MyEvent> eventList = save_events(events);
             organizationEvents.addAll(eventList);
         }

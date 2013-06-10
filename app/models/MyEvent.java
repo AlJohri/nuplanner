@@ -2,14 +2,10 @@ package models;
 
 import java.util.*;
 import javax.persistence.*;
-
-// http://www.avaje.org/static/javadoc/pub/
 import play.db.ebean.*;
 import play.data.format.*;
 import play.data.validation.*;
-
 import org.joda.time.DateTime;
-
 import org.json.*;
 import org.json.simple.JSONValue;
 import org.json.simple.JSONObject;
@@ -26,9 +22,9 @@ public class MyEvent extends Model implements JSONAware {
 
     public DateTime start_time;
     public DateTime end_time;
-	
-	public String pic;
-	
+    
+    public String pic;
+    
     @Column(columnDefinition = "TEXT")
     @Constraints.Required public String description;
 
@@ -41,79 +37,35 @@ public class MyEvent extends Model implements JSONAware {
         this.location = location;
         this.venue = venue;
         this.description = description;
-		this.pic = pic;
+        this.pic = pic;
     }
 
     public String toJSONString(){
         StringBuffer sb = new StringBuffer();
 
+        String jeid = String.valueOf(eid);
+        String jtitle = JSONObject.escape(name);
+        String jcreator = JSONObject.escape(creator);
+        String start = (start_time != null) ? String.valueOf(start_time.getMillis()/1000) : "";        
+        String end = (end_time != null) ? String.valueOf(end_time.getMillis()/1000) : "";   
+        String jdescription = JSONObject.escape(description);
+        String jpic = JSONObject.escape(pic);
+        String jurl = JSONObject.escape("http://www.facebook.com/events/") + String.valueOf(eid);
+        String jclassname = JSONObject.escape("");
+
         sb.append("{");
 
-        sb.append("\"" + JSONObject.escape("id") + "\"");
-        sb.append(":");
-        sb.append("\"" + String.valueOf(eid) + "\"");
-
-        sb.append(",");
-
-        sb.append("\"" + JSONObject.escape("title") + "\"");
-        sb.append(":");
-        sb.append("\"" + JSONObject.escape(name) + "\"");
-
-        sb.append(",");
-
-        sb.append("\"" + JSONObject.escape("allDay") + "\"");
-        sb.append(":");
-        sb.append("false");
-
-        sb.append(",");
-
-        sb.append("\"" + JSONObject.escape("creator") + "\"");
-        sb.append(":");
-        sb.append("\"" + JSONObject.escape(creator) + "\"");
-
-        sb.append(",");
-
-        sb.append("\"" + JSONObject.escape("start") + "\"");
-        sb.append(":");
-        String start = (start_time != null) ? String.valueOf(start_time.getMillis()/1000) : "";
-        sb.append("\"" + start + "\"");
-
-        sb.append(",");
-
-        sb.append("\"" + JSONObject.escape("end") + "\"");
-        sb.append(":");
-        String end = (end_time != null) ? String.valueOf(end_time.getMillis()/1000) : "";
-        sb.append("\"" + end + "\"");
-		
-        sb.append(",");
-
-        sb.append("\"" + JSONObject.escape("description") + "\"");
-        sb.append(":");
-        sb.append("\"" + JSONObject.escape(description) + "\"");
-		
-        sb.append(",");
-
-        sb.append("\"" + JSONObject.escape("pic") + "\"");
-        sb.append(":");
-        sb.append("\"" + JSONObject.escape(pic) + "\"");
-
-        sb.append(",");
-
-        sb.append("\"" + JSONObject.escape("url") + "\"");
-        sb.append(":");
-        sb.append("\"" + JSONObject.escape("http://www.facebook.com/events/") + String.valueOf(eid) + "\"");
-
-        sb.append(",");
-
-        sb.append("\"" + JSONObject.escape("className") + "\"");
-        sb.append(":");
-        sb.append("\"" + JSONObject.escape("") + "\"");
-
-        sb.append(",");
-
-        sb.append("\"" + JSONObject.escape("editable") + "\"");
-        sb.append(":");
-        sb.append("false");
+            sb.append("\"" + "id" + "\""); sb.append(":"); sb.append("\"" + jeid + "\""); sb.append(",");
+            sb.append("\"" + "title" + "\""); sb.append(":"); sb.append("\"" + jtitle + "\""); sb.append(",");
+            sb.append("\"" + "allDay" + "\""); sb.append(":"); sb.append("false"); sb.append(",");
+            sb.append("\"" + "creator" + "\""); sb.append(":"); sb.append("\"" + jcreator + "\""); sb.append(",");
+            sb.append("\"" + "start" + "\""); sb.append(":"); sb.append("\"" + start + "\""); sb.append(",");
+            sb.append("\"" + "end" + "\""); sb.append(":"); sb.append("\"" + end + "\""); sb.append(",");
+            sb.append("\"" + "description" + "\""); sb.append(":"); sb.append("\"" + jdescription + "\""); sb.append(",");
+            sb.append("\"" + "pic" + "\""); sb.append(":"); sb.append("\"" + jpic + "\""); sb.append(",");
+            sb.append("\"" + "url" + "\""); sb.append(":"); sb.append("\"" + jurl + "\""); sb.append(",");
+            sb.append("\"" + "className" + "\""); sb.append(":"); sb.append("\"" + jclassname + "\""); sb.append(",");
+            sb.append("\"" + "editable" + "\""); sb.append(":"); sb.append("false");
 
         sb.append("}");
 

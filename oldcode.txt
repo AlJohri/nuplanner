@@ -237,3 +237,13 @@ public class FqlEvent {
 		// while (itr.hasNext()) {
 			// System.out.println(itr.next().name); // itr.next()
 		// }
+
+		<!--               <div class="btn-toolbar">
+		                  <div class="btn-group">
+		                      <button class="btn btn-info" ng-click="changeView('list')">List</button>
+		                      <button class="btn btn-success" ng-click="changeView('month')">Month</button>
+		                      <button class="btn btn-info" ng-click="changeView('agendaWeek')">Week</button>
+		                      <button class="btn btn-info" ng-click="changeView('agendaDay')">Day</button>
+		                      <button class="btn btn-info" ng-click="refetchEvents()">Refresh</button>
+		                  </div>
+		              </div> -->		
