@@ -17,7 +17,16 @@ import com.avaje.ebean.ExpressionList;
 
 public class Application extends Controller {
 
-    // http://arshaw.com/fullcalendar/docs/event_data/events_json_feed/
+    /**
+     * The events controllers grabs a list of events from the database based on three parameters:
+     * start, end, and query. The start and end parameters are unixtimestamps (in seconds) while
+     * the query paramter is a string used to filter the events.
+     * <p>
+     * This controller adheres to the specifications laid out by fullCalendar, the javascript
+     * Calendar used in the view. 
+     * fullCalendar: http://arshaw.com/fullcalendar/docs/event_data/events_json_feed/
+     * @return Return a JSON string of events matching the input parameters.
+     */
     public static Result events() {
         String start_string = request().getQueryString("start");
         String end_string = request().getQueryString("end");

@@ -19,10 +19,6 @@ import play.db.ebean.*;
 import models.*;
 import views.html.*;
 
-/* DateTime */
-import org.joda.time.format.*;
-import org.joda.time.DateTime;
-
 /* JSON */
 import org.json.simple.JSONValue;
 
@@ -30,9 +26,8 @@ import org.json.simple.JSONValue;
 import com.restfb.*;
 import com.restfb.FacebookClient.*;
 import com.restfb.json.*;
-import com.restfb.types.Event;
 
-/* Facebook Constants */
+/* FB Constants and Utilities */
 import static controllers.FB.*;
 import static controllers.Utilities.*;
 
@@ -102,7 +97,34 @@ public class ScrapeFacebook extends Controller {
 
         return ok( JSONValue.toJSONString(eventList) );
     }
- 
+
+    /**
+     * Scrapes organizations using seed data in the MyOrganization model. It searches for events
+     * using an FQL query that finds all events created by a specific organization.
+     * <p>
+     * For some reason, the majority (if not all) of events found using this method are from
+     * past years. However, the locations, venues, and other data that result are valuable
+     * for other functions.
+     * @return Return a JSON string of all scraped events.
+     */
+    public static Result scrape_organizations() {
+
+        String FQL_ORGANIZATIONS_QUERY = "SELECT " + FQL_EVENT_FIELDS + " FROM " + 
+                                            FQL_EVENT_TABLE + " WHERE creator = ";
+
+        List<MyEvent> organizationEvents = new ArrayList<MyEvent>();
+        List<MyOrganization> organizations = MyOrganization.find.all();
+
+        for(MyOrganization organization:organizations) {
+            List<JsonObject> events = facebook_fql_query(APP_ACCESS_TOKEN, 
+                FQL_ORGANIZATIONS_QUERY + organization.fbid + " " + FQL_LIMIT);
+            List<MyEvent> eventList = save_events(events);
+            organizationEvents.addAll(eventList);
+        }
+
+        return ok( JSONValue.toJSONString(organizationEvents) );
+    }
+
     /**
      * Scrape Locations uses data already in the MyEvent table to search for events.
      * It uses the getAllEventLocations function in MyEvent.java to find a list of all
@@ -125,28 +147,6 @@ public class ScrapeFacebook extends Controller {
         }
 
         return ok( JSONValue.toJSONString(locationEvents) );
-    }
-
-    /**
-     * [scrape_organizations description]
-     * @return [description]
-     */
-    public static Result scrape_organizations() {
-
-        String FQL_ORGANIZATIONS_QUERY = "SELECT " + FQL_EVENT_FIELDS + " FROM " + 
-                                            FQL_EVENT_TABLE + " WHERE creator = ";
-
-        List<MyEvent> organizationEvents = new ArrayList<MyEvent>();
-        List<MyOrganization> organizations = MyOrganization.find.all();
-
-        for(MyOrganization organization:organizations) {
-            List<JsonObject> events = facebook_fql_query(APP_ACCESS_TOKEN, 
-                FQL_ORGANIZATIONS_QUERY + organization.fbid + " " + FQL_LIMIT);
-            List<MyEvent> eventList = save_events(events);
-            organizationEvents.addAll(eventList);
-        }
-
-        return ok( JSONValue.toJSONString(organizationEvents) );
     }
 
 }

@@ -1,18 +1,18 @@
-GET		/							            controllers.StaticFile.html(file = "angular/app/index.html")
-GET		/events						        controllers.Application.events()
-GET		/seed						          controllers.Seed.seed()
-GET		/scrape						        controllers.Scrape.scrape()
+GET     /                                 controllers.StaticFile.html(file = "public/angular/app/index.html")
+GET     /events                           controllers.Application.events()
+GET     /seed                             controllers.Seed.seed()
+GET     /scrape                           controllers.Scrape.scrape()
 
 # Scrape Facebook Private
-GET		/scrape_fql					      controllers.ScrapeFacebook.scrape_fql()
-GET		/scrape_graph				      controllers.ScrapeFacebook.scrape_graph()
-GET		/scrape_locations			    controllers.ScrapeFacebook.scrape_locations()
-GET		/scrape_organizations	    controllers.ScrapeFacebook.scrape_organizations()
+GET     /scrape_fql                       controllers.ScrapeFacebook.scrape_fql()
+GET     /scrape_graph                     controllers.ScrapeFacebook.scrape_graph()
+GET     /scrape_locations                 controllers.ScrapeFacebook.scrape_locations()
+GET     /scrape_organizations             controllers.ScrapeFacebook.scrape_organizations()
 
 # Scrape Wildcat Connection Private
-GET		/scrape_wildcatconnection	controllers.ScrapeWildcatConnection.scrape_wildcatconnection()
+GET     /scrape_wildcatconnection         controllers.ScrapeWildcatConnection.scrape_wildcatconnection()
 
 # Seed Organizations Private
-GET		/seed_organizations			  controllers.Seed.seed_organizations()
+GET     /seed_organizations               controllers.Seed.seed_organizations()
 
-GET   /*file						        controllers.Assets.at(path="/angular/app", file)
+GET     /*file                            controllers.Assets.at(path="/public/angular/app", file)

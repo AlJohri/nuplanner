@@ -1,4 +1,8 @@
-This is your new Play 2.1 application
+nuPlanner
 =====================================
 
-This file will be packaged with your application, when using `play dist`.
+Controllers: app/controllers
+Models: app/models
+View: public/angular/app
+
+The angular app can be run seperate from the play app using `grunt server` in confunction with `play run`.
