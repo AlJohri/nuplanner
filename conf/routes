@@ -1,9 +1,11 @@
 GET     /                                 controllers.StaticFile.html(file = "public/angular/app/index.html")
 
-GET		/report							  controllers.Application.report()
+GET     /report                           controllers.Application.report()
 GET     /javadoc                          controllers.Assets.at(path="/public", file="nu-planner-backend.pdf")
 GET     /jsdoc                            controllers.Assets.at(path="/public", file="nu-planner-frontend.pdf")
-GET     /uml                              controllers.Assets.at(path="/public", file="graph1.png")
+GET     /uml-controllers                  controllers.Assets.at(path="/public", file="controllers.png")
+GET     /uml-models                       controllers.Assets.at(path="/public", file="models.png")
+GET     /uml-facebook                     controllers.Assets.at(path="/public", file="facebook.png")
 
 GET     /events                           controllers.Application.events()
 GET     /seed                             controllers.seed.Seed.seed()
