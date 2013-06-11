@@ -6,7 +6,8 @@
 // obviously an encapsulation of the Twitter BootStrap framework. The 
 // $routeProvider sets the root URL of the application ("/") to use the 
 // "views/main.html" view with the "MainCtrl" controller. 
-angular.module('nuPlannerApp', ['ui.calendar', 'ui.bootstrap']).config(function ($routeProvider) {
+angular.module('nuPlannerApp', ['ui.calendar', 'ui.bootstrap']).config(function ($locationProvider, $routeProvider) {
+	$locationProvider.html5Mode(true);
 	$routeProvider
 	.when('/', {
 		templateUrl: 'views/main.html',
