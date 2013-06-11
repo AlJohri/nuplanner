@@ -42,7 +42,7 @@ public class Application extends Controller {
         }
         if (end_string != null) {
             DateTime end = new DateTime(Long.parseLong(end_string) * 1000);
-            events = events.lt("end_time", end);
+            events = events.lt("start_time", end);
         }
         if (query != null) {
             events = events.ilike("name", "%"+query+"%");
