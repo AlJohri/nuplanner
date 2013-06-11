@@ -1,5 +1,6 @@
 GET     /                                 controllers.StaticFile.html(file = "public/angular/app/index.html")
 
+GET		/report							  controllers.Application.report()
 GET     /javadoc                          controllers.Assets.at(path="/public", file="nu-planner-backend.pdf")
 GET     /jsdoc                            controllers.Assets.at(path="/public", file="nu-planner-frontend.pdf")
 GET     /uml                              controllers.Assets.at(path="/public", file="graph1.png")
