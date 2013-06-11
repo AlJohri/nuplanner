@@ -15,35 +15,49 @@ import com.restfb.types.Event;
  */
 public final class Facebook {
 
-    /* Facebook App Access Token */
+    /**
+     *  Facebook App Access Tokens
+     */
     public static final String APP_ACCESS_TOKEN = "524073037656113|l1aTC3FhsPHJEeRZfWB9vk70nAk";
     public static final String USER_ACCESS_TOKEN = "CAAHcpEMZB8DEBANQkZAyhJCXEYnAn2UW9paEZC7VWGJCb9a1ouGismLu8xKfCZCZBdtAl3Ld4iVC6u2HaXHqmknogy4RMuMswUMqc17PKSwAt4UmQoqDT4RIHKQaeHpnoXjXkCWTFlx7fNKKvDLUaauyS3KIuFsvziJaCphDuCgZDZD";    
 
-    /* Coordinate Constants */
+    /**
+     *  Coordinate Constants 
+     */
     public static final String CENTER_LATITUDE = "42.054581";
     public static final String CENTER_LONGITUDE = "-87.677192";
     public static final String CENTER_RADIUS = "1000";    
 
-    /* FQL Fields */
+    /**
+     *  FQL Event,Event Member and Place Fields 
+     */
     public static final String FQL_EVENT_FIELDS = "eid, name, creator, host, start_time, end_time, location, venue, description, pic, pic_big, pic_cover, pic_small, pic_square, timezone, update_time, all_members_count, attending_count, declined_count, unsure_count, not_replied_count";
     public static final String FQL_EVENT_MEMBER_FIELDS = "eid";
     public static final String FQL_PLACE_FIELDS = "page_id";
 
-    /* FQL Tables */
+    /**
+     *  FQL Eevnt,Event Member and Place Tables 
+     */
     public static final String FQL_EVENT_TABLE = "event";
     public static final String FQL_EVENT_MEMBER_TABLE = "event_member";
     public static final String FQL_PLACE_TABLE = "place";
 
-    /*FQL LIMIT and ORDER */
+    /**
+     * FQL LIMIT and ORDER 
+     */
     public static final String FQL_LIMIT = "LIMIT 51000";
     public static final String FQL_ORDER = "ORDER BY start_time ASC";
 
-    /* Graph Fields */
+    /**
+     *  Graph Event Fields,search type and limit
+     */
     public static final String GRAPH_EVENT_FIELDS = "id,name,owner,description,start_time,end_time,location,venue,privacy,updated_time,picture,ticket_uri";
     public static final String GRAPH_SEARCH_TYPE = "event";
     public static final String GRAPH_LIMIT = "5000";
 
-    /* Blocked Organizations */
+    /**
+     *  Blocked Organizations
+     */
     public static final String[] BLOCKED_ORGANIZATIONS = new String[] {
         "7268844551",       // Rotary International
         "294833066685",
@@ -55,7 +69,9 @@ public final class Facebook {
         "271418392986638"
     };
 
-    /* Blocked Venues */
+    /**
+     *  Blocked Venues
+     */
     public static final String[] BLOCKED_VENUES = new String[] {
         "17070917171",      // Actors Gymnasium
         "356690111071371",  // 27 Live
@@ -87,6 +103,7 @@ public final class Facebook {
      * [facebook_fql_query description]
      * @param  token [description]
      * @param  query [description]
+     * Executes given FQL query
      * @return       [description]
      */
     public static List<com.restfb.json.JsonObject> facebook_fql_query(String token, String query) {
@@ -103,6 +120,7 @@ public final class Facebook {
      * @param  center   [description]
      * @param  distance [description]
      * @param  limit    [description]
+     * Execute graph query with given parameters
      * @return          [description]
      */
     public static com.restfb.json.JsonObject facebook_graph_query(String token, String q, String type, String fields, String center, String distance, String limit) {
