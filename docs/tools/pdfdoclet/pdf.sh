@@ -7,7 +7,7 @@
 # Set the JAVA_HOME variable correctly !!
 export JAVA_HOME=`/usr/libexec/java_home -v 1.7`
 JARS=pdfdoclet-1.0.2-all.jar
-PATH=$JAVA_HOME/bin
+PATH=$JAVA_HOME/bin:$PATH
 DOCLET=com.tarsec.javadoc.pdfdoclet.PDFDoclet
 PACKAGES="models controllers"
 export JAVA_HOME PATH DOCLET JARS PACKAGES
