@@ -25,9 +25,6 @@ import org.json.*; // json
 import org.json.simple.JSONValue;
 import com.google.gson.*;
 
-
-import java.util.concurrent.atomic.AtomicReference;
-
 /**
  * The ScrapeWildcatConnection class scrapes events within WildcatConnection
  * and stores them to the database.

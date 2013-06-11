@@ -29,7 +29,7 @@ import com.restfb.json.*;
 
 
 /* FB Constants and Utilities */
-import static controllers.utilities.Facebook.*;
+import static controllers.facebook.Facebook.*;
 import static controllers.utilities.Utilities.*;
 
 /**

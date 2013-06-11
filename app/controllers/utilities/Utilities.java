@@ -39,7 +39,7 @@ import com.restfb.json.*;
 import com.restfb.types.Event;
 
 /* Facebook Constants */
-import static controllers.utilities.Facebook.*;
+import static controllers.facebook.Facebook.*;
 
 /**
  * The Utilities class.
