@@ -1,0 +1,47 @@
+<!DOCTYPE html><html lang="en"><head><title>app/controllers/scrape/Scrape</title></head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"><meta name="groc-relative-root" content="../../../"><meta name="groc-document-path" content="app/controllers/scrape/Scrape"><meta name="groc-project-path" content="/Users/atul/Dropbox/Development/nu-planner/app/controllers/scrape/Scrape.java"><link rel="stylesheet" type="text/css" media="all" href="../../../assets/style.css"><script type="text/javascript" src="../../../assets/behavior.js"></script><body><div id="meta"><div class="file-path">/Users/atul/Dropbox/Development/nu-planner/app/controllers/scrape/Scrape.java</div></div><div id="document"><div class="segment"><div class="code"><div class="wrapper"><span class="kn">package</span> <span class="n">controllers</span><span class="o">.</span><span class="na">scrape</span><span class="o">;</span>
+
+<span class="cm">/* General Java */</span>
+<span class="kn">import</span> <span class="nn">java.io.File</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.io.IOException</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.*</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.io.BufferedReader</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.io.IOException</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.io.InputStream</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.io.InputStreamReader</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.net.URL</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.nio.charset.Charset</span><span class="o">;</span>
+
+
+<span class="cm">/* Play Frameowork */</span>
+<span class="kn">import</span> <span class="nn">play.*</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">play.mvc.*</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">play.data.*</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">play.db.ebean.*</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">models.*</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">views.html.*</span><span class="o">;</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * This class serves as a wrapper for ScrapeFacebook and ScrapeWildcatConnection classes.</span>
+<span class="cm"> * @author Al Johri</span>
+<span class="cm"> * @version 0.1</span>
+<span class="cm"> */</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Scrape</span> <span class="kd">extends</span> <span class="n">Controller</span> <span class="o">{</span>
+
+  <span class="cm">/**</span>
+<span class="cm">   * This method runs smaller scrape methods from the Scrape classes&#39;s children</span>
+<span class="cm">   * in the necessary order to get the best final results.</span>
+<span class="cm">   * &lt;p&gt;</span>
+<span class="cm">   * ScrapeFacebook.scrape_locations() must be run last because it uses previously</span>
+<span class="cm">   * scraped events to generate its queries.</span>
+<span class="cm">   * &lt;p&gt;</span>
+<span class="cm">   * This controller is called by the /scrape url </span>
+<span class="cm">   * @return Return success message.</span>
+<span class="cm">   */</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">Result</span> <span class="nf">scrape</span><span class="o">()</span> <span class="o">{</span>
+        <span class="n">Result</span> <span class="n">fql</span> <span class="o">=</span> <span class="n">ScrapeFacebook</span><span class="o">.</span><span class="na">scrape_fql</span><span class="o">();</span>
+        <span class="n">Result</span> <span class="n">organizations</span> <span class="o">=</span> <span class="n">ScrapeFacebook</span><span class="o">.</span><span class="na">scrape_organizations</span><span class="o">();</span>
+        <span class="n">Result</span> <span class="n">locations</span> <span class="o">=</span> <span class="n">ScrapeFacebook</span><span class="o">.</span><span class="na">scrape_locations</span><span class="o">();</span></div></div></div><div class="segment"><div class="comments"><div class="wrapper"><p>Result graph = ScrapeFacebook.scrape<em>graph();
+Result wildcat</em>connection = ScrapeWildcatConnection.scrape_wildcatconnection();</p></div></div><div class="code"><div class="wrapper">        <span class="k">return</span> <span class="nf">ok</span><span class="o">(</span><span class="s">&quot;done scraping!&quot;</span><span class="o">);</span>
+    <span class="o">}</span>
+
+<span class="o">}</span></div></div></div></div></body></html>

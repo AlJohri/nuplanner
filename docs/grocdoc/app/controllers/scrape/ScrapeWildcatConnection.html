@@ -1,0 +1,67 @@
+<!DOCTYPE html><html lang="en"><head><title>app/controllers/scrape/ScrapeWildcatConnection</title></head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"><meta name="groc-relative-root" content="../../../"><meta name="groc-document-path" content="app/controllers/scrape/ScrapeWildcatConnection"><meta name="groc-project-path" content="/Users/atul/Dropbox/Development/nu-planner/app/controllers/scrape/ScrapeWildcatConnection.java"><link rel="stylesheet" type="text/css" media="all" href="../../../assets/style.css"><script type="text/javascript" src="../../../assets/behavior.js"></script><body><div id="meta"><div class="file-path">/Users/atul/Dropbox/Development/nu-planner/app/controllers/scrape/ScrapeWildcatConnection.java</div></div><div id="document"><div class="segment"><div class="code"><div class="wrapper"><span class="kn">package</span> <span class="n">controllers</span><span class="o">.</span><span class="na">scrape</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">java.io.File</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.io.IOException</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.*</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">play.*</span><span class="o">;</span> <span class="c1">// Play Framework</span>
+<span class="kn">import</span> <span class="nn">play.mvc.*</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">play.data.*</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">play.db.ebean.*</span><span class="o">;</span> <span class="c1">// http://www.avaje.org/ebean/introquery.html</span>
+<span class="kn">import</span> <span class="nn">models.*</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">views.html.*</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.joda.time.format.*</span><span class="o">;</span> <span class="c1">// DateTimeFormatter http://joda-time.sourceforge.net/apidocs/</span>
+<span class="kn">import</span> <span class="nn">org.joda.time.DateTime</span><span class="o">;</span> <span class="c1">// http://joda-time.sourceforge.net/api-release/index.html</span>
+<span class="kn">import</span> <span class="nn">org.jsoup.*</span><span class="o">;</span> <span class="c1">// http://jsoup.org/apidocs/</span>
+<span class="kn">import</span> <span class="nn">org.jsoup.Connection.Method</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.jsoup.nodes.*</span><span class="o">;</span> <span class="c1">// Document, Element</span>
+<span class="kn">import</span> <span class="nn">org.jsoup.select.Elements</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.io.BufferedReader</span><span class="o">;</span> <span class="c1">// java i/o</span>
+<span class="kn">import</span> <span class="nn">java.io.IOException</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.io.InputStream</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.io.InputStreamReader</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.net.URL</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.nio.charset.Charset</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.json.*</span><span class="o">;</span> <span class="c1">// json</span>
+<span class="kn">import</span> <span class="nn">org.json.simple.JSONValue</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">com.google.gson.*</span><span class="o">;</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * The ScrapeWildcatConnection class scrapes events within WildcatConnection</span>
+<span class="cm"> * and stores them to the database.</span>
+<span class="cm"> * @author Al Johri</span>
+<span class="cm">*/</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">ScrapeWildcatConnection</span> <span class="kd">extends</span> <span class="n">Scrape</span> <span class="o">{</span>
+  <span class="cm">/**</span>
+<span class="cm">   * connects to northwestern.collegiatelink.net/events</span>
+<span class="cm">   * extracts all the data from this link</span>
+<span class="cm">   * Store the data as Json objects</span>
+<span class="cm">   * @return json objects</span>
+<span class="cm">   */</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">Result</span> <span class="nf">scrape_wildcatconnection</span><span class="o">()</span> <span class="o">{</span>
+        <span class="n">String</span> <span class="n">json</span> <span class="o">=</span> <span class="s">&quot;{}&quot;</span><span class="o">;</span>
+        <span class="k">try</span> <span class="o">{</span>
+            <span class="n">org</span><span class="o">.</span><span class="na">jsoup</span><span class="o">.</span><span class="na">Connection</span> <span class="n">conn</span><span class="o">;</span> <span class="n">org</span><span class="o">.</span><span class="na">jsoup</span><span class="o">.</span><span class="na">Connection</span><span class="o">.</span><span class="na">Response</span> <span class="n">res</span><span class="o">;</span>
+
+            <span class="n">conn</span> <span class="o">=</span> <span class="n">Jsoup</span><span class="o">.</span><span class="na">connect</span><span class="o">(</span><span class="s">&quot;https://northwestern.collegiatelink.net/events&quot;</span><span class="o">);</span>
+            <span class="n">conn</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="na">data</span><span class="o">(</span><span class="s">&quot;view&quot;</span><span class="o">,</span> <span class="s">&quot;calendar&quot;</span><span class="o">,</span> <span class="s">&quot;CurrentMonth&quot;</span><span class="o">,</span> <span class="s">&quot;5&quot;</span><span class="o">,</span> <span class="s">&quot;CurrentYear&quot;</span><span class="o">,</span> <span class="s">&quot;2013&quot;</span><span class="o">,</span> <span class="s">&quot;CurrentPage&quot;</span><span class="o">,</span> <span class="s">&quot;1&quot;</span><span class="o">);</span>
+            <span class="n">res</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="na">method</span><span class="o">(</span><span class="n">Method</span><span class="o">.</span><span class="na">POST</span><span class="o">).</span><span class="na">ignoreContentType</span><span class="o">(</span><span class="kc">true</span><span class="o">).</span><span class="na">execute</span><span class="o">();</span>
+            <span class="n">json</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="na">body</span><span class="o">();</span>
+
+            <span class="n">com</span><span class="o">.</span><span class="na">google</span><span class="o">.</span><span class="na">gson</span><span class="o">.</span><span class="na">JsonElement</span> <span class="n">jelement</span> <span class="o">=</span> <span class="k">new</span> <span class="n">JsonParser</span><span class="o">().</span><span class="na">parse</span><span class="o">(</span><span class="n">json</span><span class="o">);</span>
+            <span class="n">com</span><span class="o">.</span><span class="na">google</span><span class="o">.</span><span class="na">gson</span><span class="o">.</span><span class="na">JsonObject</span> <span class="n">jobject</span> <span class="o">=</span> <span class="n">jelement</span><span class="o">.</span><span class="na">getAsJsonObject</span><span class="o">();</span>
+            <span class="n">com</span><span class="o">.</span><span class="na">google</span><span class="o">.</span><span class="na">gson</span><span class="o">.</span><span class="na">JsonArray</span> <span class="n">jarray</span> <span class="o">=</span> <span class="n">jobject</span><span class="o">.</span><span class="na">getAsJsonArray</span><span class="o">(</span><span class="s">&quot;Events&quot;</span><span class="o">);</span>
+
+            <span class="k">for</span> <span class="o">(</span><span class="n">com</span><span class="o">.</span><span class="na">google</span><span class="o">.</span><span class="na">gson</span><span class="o">.</span><span class="na">JsonElement</span> <span class="n">object</span> <span class="o">:</span> <span class="n">jarray</span><span class="o">)</span> <span class="o">{</span>
+                <span class="n">com</span><span class="o">.</span><span class="na">google</span><span class="o">.</span><span class="na">gson</span><span class="o">.</span><span class="na">JsonObject</span> <span class="n">element</span> <span class="o">=</span> <span class="n">object</span><span class="o">.</span><span class="na">getAsJsonObject</span><span class="o">();</span>
+                <span class="n">String</span> <span class="n">result</span> <span class="o">=</span> <span class="n">element</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="s">&quot;Name&quot;</span><span class="o">).</span><span class="na">toString</span><span class="o">();</span>
+                <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">result</span><span class="o">);</span>
+            <span class="o">}</span>
+
+        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">IOException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="nf">ok</span><span class="o">(</span><span class="n">json</span><span class="o">);</span>
+    <span class="o">}</span>
+
+<span class="o">}</span></div></div></div></div></body></html>

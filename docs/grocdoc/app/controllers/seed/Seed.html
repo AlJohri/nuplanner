@@ -1,0 +1,130 @@
+<!DOCTYPE html><html lang="en"><head><title>app/controllers/seed/Seed</title></head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"><meta name="groc-relative-root" content="../../../"><meta name="groc-document-path" content="app/controllers/seed/Seed"><meta name="groc-project-path" content="/Users/atul/Dropbox/Development/nu-planner/app/controllers/seed/Seed.java"><link rel="stylesheet" type="text/css" media="all" href="../../../assets/style.css"><script type="text/javascript" src="../../../assets/behavior.js"></script><body><div id="meta"><div class="file-path">/Users/atul/Dropbox/Development/nu-planner/app/controllers/seed/Seed.java</div></div><div id="document"><div class="segment"><div class="code"><div class="wrapper"><span class="kn">package</span> <span class="n">controllers</span><span class="o">.</span><span class="na">seed</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">java.io.File</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.io.IOException</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.*</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">play.*</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">play.mvc.*</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">play.data.*</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">play.db.ebean.*</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">models.*</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">views.html.*</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.joda.time.format.*</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.joda.time.DateTime</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.jsoup.*</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.jsoup.Connection.Method</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.jsoup.nodes.*</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.jsoup.select.Elements</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.io.BufferedReader</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.io.IOException</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.io.InputStream</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.io.InputStreamReader</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.net.URL</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.nio.charset.Charset</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.json.*</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.json.simple.JSONValue</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">com.google.gson.*</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.concurrent.atomic.AtomicReference</span><span class="o">;</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * The Seed class collects data from various sources on the web that will be saved to the database</span>
+<span class="cm"> * in order to aid scrapers.</span>
+<span class="cm"> * @author Sai Praneeth</span>
+<span class="cm">*/</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Seed</span> <span class="kd">extends</span> <span class="n">Controller</span> <span class="o">{</span>
+
+  <span class="cm">/**</span>
+<span class="cm">   * Calls all seed methods. Currently just seed_organizations().</span>
+<span class="cm">     * &lt;p&gt;</span>
+<span class="cm">   * This controller is called by the /seed url</span>
+<span class="cm">   * @return Return success message.</span>
+<span class="cm">   */</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">Result</span> <span class="nf">seed</span><span class="o">()</span> <span class="o">{</span>
+        <span class="n">seed_organizations</span><span class="o">();</span>
+        
+        <span class="k">return</span> <span class="nf">ok</span><span class="o">(</span><span class="s">&quot;Seed complete!&quot;</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Get list of buildings at Northwestern from maps.northwestern.edu.</span>
+<span class="cm">     * Evanston: http://maps.northwestern.edu/dialog/building_list/Evanston/</span>
+<span class="cm">     * Chicago: http://maps.northwestern.edu/dialog/building_list/Chicago/</span>
+<span class="cm">     * TODO: implement this function</span>
+<span class="cm">     * @return Return success message.</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">Result</span> <span class="nf">seed_locations</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="nf">ok</span><span class="o">(</span><span class="s">&quot;done&quot;</span><span class="o">);</span>
+    <span class="o">}</span>
+    
+  <span class="cm">/**</span>
+<span class="cm">   * Get html pages for all organizations from northwestern collegiatelink</span>
+<span class="cm">   * Parse these pages to get their facebook id </span>
+<span class="cm">   * Add these id&#39;s to graph url to get their facebook info</span>
+<span class="cm">   * Parse this info to get necessary details of that organization</span>
+<span class="cm">   * Save this info in database into My Organization table</span>
+<span class="cm">   * @return  Return success message.</span>
+<span class="cm">   */</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">Result</span> <span class="nf">seed_organizations</span><span class="o">()</span> <span class="o">{</span>
+      <span class="n">String</span> <span class="n">a</span><span class="o">=</span><span class="s">&quot;&quot;</span><span class="o">;</span>
+        <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="o">;</span><span class="n">i</span><span class="o">&lt;</span><span class="mi">52</span><span class="o">;</span><span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+            <span class="n">Document</span> <span class="n">doc</span><span class="o">;</span>
+            <span class="n">Document</span> <span class="n">doc1</span><span class="o">;</span>
+            <span class="n">JSONObject</span> <span class="n">json</span><span class="o">;</span>
+            <span class="k">try</span> <span class="o">{</span>
+                <span class="n">String</span><span class="o">[]</span> <span class="n">name</span> <span class="o">=</span>  <span class="k">new</span> <span class="n">String</span><span class="o">[</span><span class="mi">100</span><span class="o">];</span>
+                <span class="n">String</span><span class="o">[]</span> <span class="n">name1</span> <span class="o">=</span> <span class="k">new</span> <span class="n">String</span><span class="o">[</span><span class="mi">100</span><span class="o">];</span>
+                <span class="n">String</span><span class="o">[]</span> <span class="n">name2</span> <span class="o">=</span> <span class="k">new</span> <span class="n">String</span><span class="o">[</span><span class="mi">100</span><span class="o">];</span>
+                <span class="kt">int</span><span class="o">[]</span> <span class="n">id</span> <span class="o">=</span><span class="k">new</span> <span class="kt">int</span><span class="o">[</span><span class="mi">100</span><span class="o">];</span>
+                <span class="n">doc</span> <span class="o">=</span> <span class="n">Jsoup</span><span class="o">.</span><span class="na">connect</span><span class="o">(</span><span class="s">&quot;https://northwestern.collegiatelink.net/organizations?SearchType=None&amp;SelectedCategoryId=0&amp;CurrentPage=&quot;</span><span class="o">+</span> <span class="n">i</span><span class="o">).</span><span class="na">get</span><span class="o">();</span>
+                <span class="n">Element</span> <span class="n">sa</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="na">getElementById</span><span class="o">(</span><span class="s">&quot;results&quot;</span><span class="o">);</span>
+                <span class="n">Elements</span> <span class="n">sai</span> <span class="o">=</span> <span class="n">sa</span><span class="o">.</span><span class="na">getElementsByTag</span><span class="o">(</span><span class="s">&quot;h5&quot;</span><span class="o">);</span>
+                <span class="kt">int</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span>
+                <span class="k">for</span><span class="o">(</span><span class="n">Element</span> <span class="nl">e:</span><span class="n">sai</span><span class="o">)</span> <span class="o">{</span>
+                    <span class="n">Element</span> <span class="n">f</span> <span class="o">=</span> <span class="n">e</span><span class="o">.</span><span class="na">child</span><span class="o">(</span><span class="mi">0</span><span class="o">);</span>
+                    <span class="n">Document</span> <span class="n">doc2</span><span class="o">=</span><span class="n">Jsoup</span><span class="o">.</span><span class="na">connect</span><span class="o">(</span><span class="s">&quot;https://northwestern.collegiatelink.net&quot;</span> <span class="o">+</span> <span class="n">f</span><span class="o">.</span><span class="na">attr</span><span class="o">(</span><span class="s">&quot;href&quot;</span><span class="o">)).</span><span class="na">get</span><span class="o">();</span>
+                    <span class="n">Elements</span> <span class="n">fb</span><span class="o">=</span><span class="n">doc2</span><span class="o">.</span><span class="na">select</span><span class="o">(</span><span class="s">&quot;a[class*=icon-social facebook]&quot;</span><span class="o">);</span>
+                    <span class="k">for</span> <span class="o">(</span><span class="n">Element</span> <span class="nl">g:</span><span class="n">fb</span><span class="o">)</span> <span class="o">{</span>
+                        <span class="k">if</span><span class="o">((</span><span class="n">g</span><span class="o">.</span><span class="na">attr</span><span class="o">(</span><span class="s">&quot;href&quot;</span><span class="o">).</span><span class="na">length</span><span class="o">()!=</span><span class="mi">4</span><span class="o">))</span> <span class="o">{</span>
+                            <span class="n">name</span><span class="o">[</span><span class="n">j</span><span class="o">]=</span><span class="n">g</span><span class="o">.</span><span class="na">attr</span><span class="o">(</span><span class="s">&quot;href&quot;</span><span class="o">);</span><span class="c1">//facebook link</span>
+                            <span class="n">id</span><span class="o">[</span><span class="n">j</span><span class="o">]=</span><span class="n">name</span><span class="o">[</span><span class="n">j</span><span class="o">].</span><span class="na">lastIndexOf</span><span class="o">(</span><span class="s">&quot;/&quot;</span><span class="o">);</span>
+                            <span class="n">name1</span><span class="o">[</span><span class="n">j</span><span class="o">]=</span><span class="n">name</span><span class="o">[</span><span class="n">j</span><span class="o">].</span><span class="na">substring</span><span class="o">(</span><span class="n">id</span><span class="o">[</span><span class="n">j</span><span class="o">]+</span><span class="mi">1</span><span class="o">);</span><span class="c1">//last string after / and groups end with a / in fb link</span>
+                            <span class="k">if</span> <span class="o">(!</span><span class="n">name1</span><span class="o">[</span><span class="n">j</span><span class="o">].</span><span class="na">isEmpty</span><span class="o">())</span> <span class="o">{</span>
+                                <span class="n">name2</span><span class="o">[</span><span class="n">j</span><span class="o">]=</span><span class="s">&quot;https://graph.facebook.com/&quot;</span><span class="o">+</span><span class="n">name1</span><span class="o">[</span><span class="n">j</span><span class="o">];</span><span class="c1">//graph url</span>
+                                <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">name2</span><span class="o">[</span><span class="n">j</span><span class="o">]);</span>
+                                <span class="n">InputStream</span> <span class="n">is</span> <span class="o">=</span><span class="k">new</span> <span class="n">URL</span><span class="o">(</span><span class="n">name2</span><span class="o">[</span><span class="n">j</span><span class="o">]).</span><span class="na">openStream</span><span class="o">();</span>
+                                <span class="k">try</span> <span class="o">{</span>
+                                    <span class="n">BufferedReader</span> <span class="n">rd</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BufferedReader</span><span class="o">(</span><span class="k">new</span> <span class="n">InputStreamReader</span><span class="o">(</span><span class="n">is</span><span class="o">,</span> <span class="n">Charset</span><span class="o">.</span><span class="na">forName</span><span class="o">(</span><span class="s">&quot;UTF-8&quot;</span><span class="o">)));</span>
+                                    <span class="n">StringBuilder</span> <span class="n">sb</span> <span class="o">=</span> <span class="k">new</span> <span class="n">StringBuilder</span><span class="o">();</span>
+                                    <span class="kt">int</span> <span class="n">cp</span><span class="o">;</span>
+                                    <span class="k">while</span><span class="o">((</span><span class="n">cp</span><span class="o">=</span><span class="n">rd</span><span class="o">.</span><span class="na">read</span><span class="o">())!=-</span><span class="mi">1</span><span class="o">)</span>
+                                        <span class="n">sb</span><span class="o">.</span><span class="na">append</span><span class="o">((</span><span class="kt">char</span><span class="o">)</span><span class="n">cp</span><span class="o">);</span>
+                                    <span class="n">String</span> <span class="n">jsontext</span><span class="o">=</span><span class="n">sb</span><span class="o">.</span><span class="na">toString</span><span class="o">();</span>
+                                    <span class="k">try</span> <span class="o">{</span>
+                                        <span class="n">json</span> <span class="o">=</span> <span class="k">new</span> <span class="n">JSONObject</span><span class="o">(</span><span class="n">jsontext</span><span class="o">);</span>
+                                         <span class="n">a</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="s">&quot;id&quot;</span><span class="o">).</span><span class="na">toString</span><span class="o">();</span>
+                                         <span class="n">Long</span> <span class="n">fbid</span> <span class="o">=</span> <span class="n">Long</span><span class="o">.</span><span class="na">valueOf</span><span class="o">(</span><span class="n">a</span><span class="o">).</span><span class="na">longValue</span><span class="o">();</span>
+                                         <span class="n">String</span> <span class="n">fbname</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="na">has</span><span class="o">(</span><span class="s">&quot;name&quot;</span><span class="o">)</span> <span class="o">?</span> <span class="n">json</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="s">&quot;name&quot;</span><span class="o">).</span><span class="na">toString</span><span class="o">()</span> <span class="o">:</span> <span class="s">&quot;&quot;</span><span class="o">;</span>
+                                         <span class="n">String</span> <span class="n">location</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="na">has</span><span class="o">(</span><span class="s">&quot;location&quot;</span><span class="o">)</span> <span class="o">?</span> <span class="n">json</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="s">&quot;location&quot;</span><span class="o">).</span><span class="na">toString</span><span class="o">()</span> <span class="o">:</span> <span class="s">&quot;&quot;</span><span class="o">;</span>
+                                         <span class="n">String</span> <span class="n">link</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="na">has</span><span class="o">(</span><span class="s">&quot;link&quot;</span><span class="o">)</span> <span class="o">?</span> <span class="n">json</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="s">&quot;link&quot;</span><span class="o">).</span><span class="na">toString</span><span class="o">()</span> <span class="o">:</span> <span class="s">&quot;&quot;</span><span class="o">;</span>
+                                         <span class="n">String</span> <span class="n">description</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="na">has</span><span class="o">(</span><span class="s">&quot;description&quot;</span><span class="o">)</span> <span class="o">?</span> <span class="n">json</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="s">&quot;description&quot;</span><span class="o">).</span><span class="na">toString</span><span class="o">()</span> <span class="o">:</span> <span class="s">&quot;&quot;</span><span class="o">;</span>
+                                         <span class="k">if</span> <span class="o">(</span><span class="n">MyOrganization</span><span class="o">.</span><span class="na">findLong</span><span class="o">.</span><span class="na">byId</span><span class="o">(</span><span class="n">fbid</span><span class="o">)</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="k">new</span> <span class="n">MyOrganization</span><span class="o">(</span><span class="n">fbid</span><span class="o">,</span> <span class="n">fbname</span><span class="o">,</span> <span class="n">location</span><span class="o">,</span> <span class="n">link</span><span class="o">,</span> <span class="n">description</span><span class="o">).</span><span class="na">save</span><span class="o">();</span>
+                                    <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">JSONException</span> <span class="n">e1</span><span class="o">)</span> <span class="o">{</span>
+                                        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">e1</span><span class="o">.</span><span class="na">getMessage</span><span class="o">());</span>
+                                    <span class="o">}</span>
+                                <span class="o">}</span>
+                                <span class="k">finally</span> <span class="o">{</span> 
+                                    <span class="n">is</span><span class="o">.</span><span class="na">close</span><span class="o">();</span> 
+                                <span class="o">}</span>
+                                <span class="n">j</span><span class="o">++;</span>
+                            <span class="o">}</span>
+                        <span class="o">}</span>
+                    <span class="o">}</span>
+                <span class="o">}</span>
+            <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">IOException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+                <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">e</span><span class="o">.</span><span class="na">getMessage</span><span class="o">());</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="nf">ok</span><span class="o">(</span><span class="s">&quot;done&quot;</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span></div></div></div></div></body></html>

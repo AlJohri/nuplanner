@@ -1,0 +1,158 @@
+<!DOCTYPE html><html lang="en"><head><title>app/controllers/scrape/ScrapeFacebook</title></head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"><meta name="groc-relative-root" content="../../../"><meta name="groc-document-path" content="app/controllers/scrape/ScrapeFacebook"><meta name="groc-project-path" content="/Users/atul/Dropbox/Development/nu-planner/app/controllers/scrape/ScrapeFacebook.java"><link rel="stylesheet" type="text/css" media="all" href="../../../assets/style.css"><script type="text/javascript" src="../../../assets/behavior.js"></script><body><div id="meta"><div class="file-path">/Users/atul/Dropbox/Development/nu-planner/app/controllers/scrape/ScrapeFacebook.java</div></div><div id="document"><div class="segment"><div class="code"><div class="wrapper"><span class="kn">package</span> <span class="n">controllers</span><span class="o">.</span><span class="na">scrape</span><span class="o">;</span>
+
+<span class="cm">/* General Java */</span>
+<span class="kn">import</span> <span class="nn">java.io.File</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.io.IOException</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.*</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.io.BufferedReader</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.io.IOException</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.io.InputStream</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.io.InputStreamReader</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.net.URL</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.nio.charset.Charset</span><span class="o">;</span>
+
+<span class="cm">/* Play Frameowork */</span>
+<span class="kn">import</span> <span class="nn">play.*</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">play.mvc.*</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">play.data.*</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">play.db.ebean.*</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">models.*</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">views.html.*</span><span class="o">;</span>
+
+<span class="cm">/* JSON */</span>
+<span class="kn">import</span> <span class="nn">org.json.simple.JSONValue</span><span class="o">;</span>
+
+<span class="cm">/* RestFB */</span>
+<span class="kn">import</span> <span class="nn">com.restfb.*</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">com.restfb.FacebookClient.*</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">com.restfb.json.*</span><span class="o">;</span>
+
+
+<span class="cm">/* FB Constants and Utilities */</span>
+<span class="kn">import</span> <span class="nn">static</span> <span class="n">controllers</span><span class="o">.</span><span class="na">facebook</span><span class="o">.</span><span class="na">Facebook</span><span class="o">.*;</span>
+<span class="kn">import</span> <span class="nn">static</span> <span class="n">controllers</span><span class="o">.</span><span class="na">utilities</span><span class="o">.</span><span class="na">Utilities</span><span class="o">.*;</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * The ScrapeFacebook class scrapes events from Facebook using the Graph API and</span>
+<span class="cm"> * Facebook Query Langauge. It stores the resulting events to the database.</span>
+<span class="cm"> * @author Al Johri</span>
+<span class="cm"> */</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">ScrapeFacebook</span> <span class="kd">extends</span> <span class="n">Scrape</span> <span class="o">{</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Scrapes events from Facebook using the Facebook Graph API. It searches for events</span>
+<span class="cm">     * radially outward from predefined center coordinates with a predefined radius.</span>
+<span class="cm">     * &lt;p&gt;</span>
+<span class="cm">     * This method requires a USER_ACCESS_TOKEN as opposed to the standard APP_ACCESS_TOKEN.</span>
+<span class="cm">     * Thus, this method can only be run upon user authentication. Thus, this method is </span>
+<span class="cm">     * currently not being used in the &quot;scrape sequence,&quot; the sequence of functions run to </span>
+<span class="cm">     * scrape all events (defined in Scrape.java).</span>
+<span class="cm">     * &lt;p&gt;</span>
+<span class="cm">     * TODO: Enable this function after implementing Facebook User Authentication.</span>
+<span class="cm">     * @return Return a JSON string of all scraped events.</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">Result</span> <span class="nf">scrape_graph</span><span class="o">()</span> <span class="o">{</span>
+        <span class="n">JsonObject</span> <span class="n">result</span> <span class="o">=</span> <span class="n">facebook_graph_query</span><span class="o">(</span><span class="n">USER_ACCESS_TOKEN</span><span class="o">,</span> <span class="s">&quot;*&quot;</span><span class="o">,</span> <span class="n">GRAPH_SEARCH_TYPE</span><span class="o">,</span> 
+            <span class="n">GRAPH_EVENT_FIELDS</span><span class="o">,</span> <span class="n">CENTER_LATITUDE</span> <span class="o">+</span> <span class="s">&quot;,&quot;</span> <span class="o">+</span> <span class="n">CENTER_LONGITUDE</span><span class="o">,</span> <span class="n">CENTER_RADIUS</span><span class="o">,</span> <span class="n">GRAPH_LIMIT</span><span class="o">);</span>
+        <span class="n">JsonArray</span> <span class="n">events</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="na">getJsonArray</span><span class="o">(</span><span class="s">&quot;data&quot;</span><span class="o">);</span>
+        <span class="n">List</span><span class="o">&lt;</span><span class="n">MyEvent</span><span class="o">&gt;</span> <span class="n">eventList</span> <span class="o">=</span> <span class="n">save_events</span><span class="o">(</span><span class="n">events</span><span class="o">);</span>
+        <span class="k">return</span> <span class="nf">ok</span><span class="o">(</span> <span class="n">JSONValue</span><span class="o">.</span><span class="na">toJSONString</span><span class="o">(</span><span class="n">eventList</span><span class="o">)</span> <span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Scrapes events from Facebook using the Facebook Query Language (FQL). It searches</span>
+<span class="cm">     * for events using the defined FQL_QUERY.</span>
+<span class="cm">     * &lt;p&gt; </span>
+<span class="cm">     * The FQL_QUERY searches for events that are created by Facebook Pages.</span>
+<span class="cm">     * It filters these events based on pages whose location is within CENTER_RADIUS</span>
+<span class="cm">     * meters from (CENTER_LATITUDE, CENTER_LONGITUDE).</span>
+<span class="cm">     * &lt;p&gt;</span>
+<span class="cm">     * As stated above, this query only searches for events that are created by a page.</span>
+<span class="cm">     * The event_member table in FQL contains uids and page_ids of, as the name suggests, </span>
+<span class="cm">     * members of events. The logic behind the query is that if a page is a member of an</span>
+<span class="cm">     * event, the page is the creator the event.</span>
+<span class="cm">     * Most pages have a location associated with them. If the location is within </span>
+<span class="cm">     * CENTER_RADIUS meters from (CENTER_LATITUDE, CENTER_LONGITUDE) the event will be</span>
+<span class="cm">     * returned.</span>
+<span class="cm">     * &lt;p&gt;</span>
+<span class="cm">     * However, one major pitfall is international/national organizations that have their</span>
+<span class="cm">     * headquarters within this radius. The page resides here, but the actual event</span>
+<span class="cm">     * may be in Washinton, DC or another country. Some examples of these are SAE and</span>
+<span class="cm">     * Rotary International. There is no obvious solution for filtering with these events,</span>
+<span class="cm">     * especially if they don&#39;t have a listed venue. The filter_events function in Utilities.java</span>
+<span class="cm">     * explores this in greater detail.</span>
+<span class="cm">     * @return Return a JSON string of all scraped events.</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">Result</span> <span class="nf">scrape_fql</span><span class="o">()</span> <span class="o">{</span>
+
+        <span class="n">String</span> <span class="n">FQL_DISTANCE_QUERY</span> <span class="o">=</span> <span class="s">&quot;distance(latitude, longitude, &#39;&quot;</span> <span class="o">+</span> 
+            <span class="n">CENTER_LATITUDE</span> <span class="o">+</span> <span class="s">&quot;&#39;, &#39;&quot;</span> <span class="o">+</span> <span class="n">CENTER_LONGITUDE</span> <span class="o">+</span> <span class="s">&quot;&#39;) &quot;</span> <span class="o">+</span> <span class="s">&quot;&lt; &quot;</span> <span class="o">+</span> <span class="n">CENTER_RADIUS</span><span class="o">;</span>
+
+        <span class="n">String</span> <span class="n">FQL_QUERY</span> <span class="o">=</span>
+            <span class="s">&quot;SELECT &quot;</span> <span class="o">+</span> <span class="n">FQL_EVENT_FIELDS</span> <span class="o">+</span> <span class="s">&quot; FROM &quot;</span> <span class="o">+</span> <span class="n">FQL_EVENT_TABLE</span> <span class="o">+</span> <span class="s">&quot; WHERE eid IN &quot;</span> <span class="o">+</span>
+                    <span class="s">&quot;(SELECT &quot;</span> <span class="o">+</span> <span class="n">FQL_EVENT_MEMBER_FIELDS</span> <span class="o">+</span> <span class="s">&quot; FROM &quot;</span> <span class="o">+</span> 
+                        <span class="n">FQL_EVENT_MEMBER_TABLE</span> <span class="o">+</span> <span class="s">&quot; WHERE uid IN &quot;</span> <span class="o">+</span>
+                            <span class="s">&quot;(SELECT &quot;</span> <span class="o">+</span> <span class="n">FQL_PLACE_FIELDS</span> <span class="o">+</span> <span class="s">&quot; FROM &quot;</span> <span class="o">+</span> 
+                                    <span class="n">FQL_PLACE_TABLE</span> <span class="o">+</span> <span class="s">&quot; WHERE &quot;</span> <span class="o">+</span> <span class="n">FQL_DISTANCE_QUERY</span> <span class="o">+</span> <span class="s">&quot; &quot;</span> <span class="o">+</span> 
+                            <span class="n">FQL_LIMIT</span> <span class="o">+</span> <span class="s">&quot;) &quot;</span> <span class="o">+</span>
+                    <span class="n">FQL_LIMIT</span> <span class="o">+</span> <span class="s">&quot;) &quot;</span> <span class="o">+</span>
+            <span class="n">FQL_ORDER</span> <span class="o">+</span> <span class="s">&quot; &quot;</span> <span class="o">+</span> <span class="n">FQL_LIMIT</span><span class="o">;</span>
+
+        <span class="n">List</span><span class="o">&lt;</span><span class="n">JsonObject</span><span class="o">&gt;</span> <span class="n">events</span> <span class="o">=</span> <span class="n">facebook_fql_query</span><span class="o">(</span><span class="n">APP_ACCESS_TOKEN</span><span class="o">,</span> <span class="n">FQL_QUERY</span><span class="o">);</span>
+        <span class="n">List</span><span class="o">&lt;</span><span class="n">MyEvent</span><span class="o">&gt;</span> <span class="n">eventList</span> <span class="o">=</span> <span class="n">save_events</span><span class="o">(</span><span class="n">events</span><span class="o">);</span>
+
+        <span class="k">return</span> <span class="nf">ok</span><span class="o">(</span> <span class="n">JSONValue</span><span class="o">.</span><span class="na">toJSONString</span><span class="o">(</span><span class="n">eventList</span><span class="o">)</span> <span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Scrapes organizations using seed data in the MyOrganization model. It searches for events</span>
+<span class="cm">     * using an FQL query that finds all events created by a specific organization.</span>
+<span class="cm">     * &lt;p&gt;</span>
+<span class="cm">     * For some reason, the majority (if not all) of events found using this method are from</span>
+<span class="cm">     * past years. However, the locations, venues, and other data that result are valuable</span>
+<span class="cm">     * for other functions.</span>
+<span class="cm">     * @return Return a JSON string of all scraped events.</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">Result</span> <span class="nf">scrape_organizations</span><span class="o">()</span> <span class="o">{</span>
+
+        <span class="n">String</span> <span class="n">FQL_ORGANIZATIONS_QUERY</span> <span class="o">=</span> <span class="s">&quot;SELECT &quot;</span> <span class="o">+</span> <span class="n">FQL_EVENT_FIELDS</span> <span class="o">+</span> <span class="s">&quot; FROM &quot;</span> <span class="o">+</span> 
+                                            <span class="n">FQL_EVENT_TABLE</span> <span class="o">+</span> <span class="s">&quot; WHERE creator = &quot;</span><span class="o">;</span>
+
+        <span class="n">List</span><span class="o">&lt;</span><span class="n">MyEvent</span><span class="o">&gt;</span> <span class="n">organizationEvents</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">MyEvent</span><span class="o">&gt;();</span>
+        <span class="n">List</span><span class="o">&lt;</span><span class="n">MyOrganization</span><span class="o">&gt;</span> <span class="n">organizations</span> <span class="o">=</span> <span class="n">MyOrganization</span><span class="o">.</span><span class="na">find</span><span class="o">.</span><span class="na">all</span><span class="o">();</span>
+
+        <span class="k">for</span><span class="o">(</span><span class="n">MyOrganization</span> <span class="nl">organization:</span><span class="n">organizations</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">List</span><span class="o">&lt;</span><span class="n">JsonObject</span><span class="o">&gt;</span> <span class="n">events</span> <span class="o">=</span> <span class="n">facebook_fql_query</span><span class="o">(</span><span class="n">APP_ACCESS_TOKEN</span><span class="o">,</span> 
+                <span class="n">FQL_ORGANIZATIONS_QUERY</span> <span class="o">+</span> <span class="n">organization</span><span class="o">.</span><span class="na">fbid</span> <span class="o">+</span> <span class="s">&quot; &quot;</span> <span class="o">+</span> <span class="n">FQL_LIMIT</span><span class="o">);</span>
+            <span class="n">List</span><span class="o">&lt;</span><span class="n">MyEvent</span><span class="o">&gt;</span> <span class="n">eventList</span> <span class="o">=</span> <span class="n">save_events</span><span class="o">(</span><span class="n">events</span><span class="o">);</span>
+            <span class="n">organizationEvents</span><span class="o">.</span><span class="na">addAll</span><span class="o">(</span><span class="n">eventList</span><span class="o">);</span>
+        <span class="o">}</span>
+
+        <span class="k">return</span> <span class="nf">ok</span><span class="o">(</span> <span class="n">JSONValue</span><span class="o">.</span><span class="na">toJSONString</span><span class="o">(</span><span class="n">organizationEvents</span><span class="o">)</span> <span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Scrape Locations uses data already in the MyEvent table to search for events.</span>
+<span class="cm">     * It uses the getAllEventLocations function in MyEvent.java to find a list of all</span>
+<span class="cm">     * locations where events currently reside based on the events in the database.</span>
+<span class="cm">     * It then uses the Facebook Graph API to perform a text based query of these</span>
+<span class="cm">     * locations. This is a powerful function and grabs a myriad of events. However,</span>
+<span class="cm">     * filtering is extremly important as the majority of these events will be outside</span>
+<span class="cm">     * of the city/state/country.</span>
+<span class="cm">     * @return Return a JSON string of all scraped events.</span>
+<span class="cm">     */</span>
+     <span class="kd">public</span> <span class="kd">static</span> <span class="n">Result</span> <span class="nf">scrape_locations</span><span class="o">()</span> <span class="o">{</span>
+        <span class="n">List</span><span class="o">&lt;</span><span class="n">MyEvent</span><span class="o">&gt;</span> <span class="n">locationEvents</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">MyEvent</span><span class="o">&gt;();</span>
+        <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">locations</span> <span class="o">=</span> <span class="n">MyEvent</span><span class="o">.</span><span class="na">getAllEventLocations</span><span class="o">();</span>
+        <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">locations</span><span class="o">.</span><span class="na">size</span><span class="o">();</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+            <span class="n">JsonObject</span> <span class="n">result</span> <span class="o">=</span> <span class="n">facebook_graph_query</span><span class="o">(</span><span class="n">APP_ACCESS_TOKEN</span><span class="o">,</span> <span class="n">locations</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">i</span><span class="o">),</span> 
+                <span class="n">GRAPH_SEARCH_TYPE</span><span class="o">,</span> <span class="n">GRAPH_EVENT_FIELDS</span><span class="o">,</span> <span class="s">&quot;&quot;</span><span class="o">,</span> <span class="s">&quot;&quot;</span><span class="o">,</span> <span class="n">GRAPH_LIMIT</span><span class="o">);</span>
+            <span class="n">JsonArray</span> <span class="n">single_location_events</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="na">getJsonArray</span><span class="o">(</span><span class="s">&quot;data&quot;</span><span class="o">);</span>
+            <span class="n">List</span><span class="o">&lt;</span><span class="n">MyEvent</span><span class="o">&gt;</span> <span class="n">eventList</span> <span class="o">=</span> <span class="n">save_events</span><span class="o">(</span><span class="n">single_location_events</span><span class="o">);</span>
+            <span class="n">locationEvents</span><span class="o">.</span><span class="na">addAll</span><span class="o">(</span><span class="n">eventList</span><span class="o">);</span>
+        <span class="o">}</span>
+
+        <span class="k">return</span> <span class="nf">ok</span><span class="o">(</span> <span class="n">JSONValue</span><span class="o">.</span><span class="na">toJSONString</span><span class="o">(</span><span class="n">locationEvents</span><span class="o">)</span> <span class="o">);</span>
+    <span class="o">}</span>
+
+<span class="o">}</span></div></div></div></div></body></html>

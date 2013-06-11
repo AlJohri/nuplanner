@@ -1,0 +1,79 @@
+<!DOCTYPE html><html lang="en"><head><title>public/angular/app/scripts/app</title></head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"><meta name="groc-relative-root" content="../../../../"><meta name="groc-document-path" content="public/angular/app/scripts/app"><meta name="groc-project-path" content="/Users/atul/Dropbox/Development/nu-planner/public/angular/app/scripts/app.js"><link rel="stylesheet" type="text/css" media="all" href="../../../../assets/style.css"><script type="text/javascript" src="../../../../assets/behavior.js"></script><body><div id="meta"><div class="file-path">/Users/atul/Dropbox/Development/nu-planner/public/angular/app/scripts/app.js</div></div><div id="document"><div class="segment"><div class="comments"><div class="wrapper"><h2 id="angular-js-application">Angular JS Application</h2>
+
+<p>Set up AngularJS Application named "nuPlannerApp" with dependencies 
+"ui.calendar" and "ui.bootstrap", part of the angular-ui suite. The 
+ui.calendar is an encapsulation of FullCalendar while ui.boostrap is 
+obviously an encapsulation of the Twitter BootStrap framework. The 
+$routeProvider sets the root URL of the application ("/") to use the 
+"views/main.html" view with the "MainCtrl" controller. </p></div></div><div class="code"><div class="wrapper"><span class="nx">angular</span><span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="s1">&#39;nuPlannerApp&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;ui.calendar&#39;</span><span class="p">,</span> <span class="s1">&#39;ui.bootstrap&#39;</span><span class="p">]).</span><span class="nx">config</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">$locationProvider</span><span class="p">,</span> <span class="nx">$routeProvider</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">$locationProvider</span><span class="p">.</span><span class="nx">html5Mode</span><span class="p">(</span><span class="kc">true</span><span class="p">);</span>
+  <span class="nx">$routeProvider</span>
+  <span class="p">.</span><span class="nx">when</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">,</span> <span class="p">{</span>
+    <span class="nx">templateUrl</span><span class="o">:</span> <span class="s1">&#39;views/main.html&#39;</span><span class="p">,</span>
+    <span class="nx">controller</span><span class="o">:</span> <span class="s1">&#39;MainCtrl&#39;</span>
+  <span class="p">})</span>
+  <span class="p">.</span><span class="nx">otherwise</span><span class="p">({</span> <span class="nx">redirectTo</span><span class="o">:</span> <span class="s1">&#39;/&#39;</span> <span class="p">});</span>
+<span class="p">});</span></div></div></div><div class="segment"><div class="comments"><div class="wrapper"><h2 id="angular-js-controller">Angular JS Controller</h2>
+
+<p>Create an AngularJS Controller named "MainCtrl". This controller handles all 
+functionaly within the Main view of the application (views/main.html). </p></div></div><div class="code"><div class="wrapper"><span class="nx">angular</span><span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="s1">&#39;nuPlannerApp&#39;</span><span class="p">).</span><span class="nx">controller</span><span class="p">(</span><span class="s1">&#39;MainCtrl&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">$scope</span><span class="p">)</span> <span class="p">{</span></div></div></div><div class="segment"><div class="comments"><div class="wrapper"><p>The eventSource variable connects to the Play Framework's controller "/events" which 
+provides a JSON feed of events with parameters to filter. Within ui.calendar (FullCalendar)
+two internal parameters are added to the "/events" URL. These are "start" and "end". The two
+parameters are unixtimestamps and change based on the current view's start and end dates
+(e.g. week, month, day). A third parameter, query is added to allow text based filtering of 
+events based using the title.</p></div></div><div class="code"><div class="wrapper">  <span class="nx">$scope</span><span class="p">.</span><span class="nx">eventSource</span> <span class="o">=</span> <span class="p">{</span>  <span class="nx">url</span><span class="o">:</span> <span class="s2">&quot;/events&quot;</span><span class="p">,</span> <span class="nx">currentTimezone</span><span class="o">:</span> <span class="s1">&#39;America/Chicago&#39;</span><span class="p">,</span> <span class="nx">data</span><span class="o">:</span> <span class="p">{</span> <span class="nx">query</span><span class="o">:</span> <span class="s1">&#39;&#39;</span> <span class="p">}</span> <span class="p">};</span></div></div></div><div class="segment"><div class="comments"><div class="wrapper"><p>Since FullCalendar can use multiple eventSources, the eventSources variable adds the 
+eventSource above to the array of eventSources that will be linked to FullCalendar. </p></div></div><div class="code"><div class="wrapper">    <span class="nx">$scope</span><span class="p">.</span><span class="nx">eventSources</span> <span class="o">=</span> <span class="p">[</span><span class="nx">$scope</span><span class="p">.</span><span class="nx">eventSource</span><span class="p">];</span></div></div></div><div class="segment"><div class="comments"><div class="wrapper"><p>This function changes a set of variables within the $scope that represent the selected event
+and its attributes. It then shows displays the modal for the clicked Event.</p></div></div><div class="code"><div class="wrapper">    <span class="nx">$scope</span><span class="p">.</span><span class="nx">alertOnEventClick</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">event</span><span class="p">,</span> <span class="nx">jsEvent</span><span class="p">,</span> <span class="nx">view</span> <span class="p">)</span> <span class="p">{</span>
+      <span class="nx">$scope</span><span class="p">.</span><span class="nx">$apply</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nx">$scope</span><span class="p">.</span><span class="nx">selected_event_id</span> <span class="o">=</span> <span class="nx">event</span><span class="p">.</span><span class="nx">id</span><span class="p">;</span>
+        <span class="nx">$scope</span><span class="p">.</span><span class="nx">selected_event_title</span> <span class="o">=</span> <span class="nx">event</span><span class="p">.</span><span class="nx">title</span><span class="p">;</span>
+        <span class="nx">$scope</span><span class="p">.</span><span class="nx">selected_event_creator</span> <span class="o">=</span> <span class="nx">event</span><span class="p">.</span><span class="nx">creator</span><span class="p">;</span>
+        <span class="nx">$scope</span><span class="p">.</span><span class="nx">selected_event_start</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Date</span><span class="p">(</span><span class="nx">event</span><span class="p">.</span><span class="nx">start</span><span class="p">).</span><span class="nx">toLocaleString</span><span class="p">();</span>
+        <span class="nx">$scope</span><span class="p">.</span><span class="nx">selected_event_end</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Date</span><span class="p">(</span><span class="nx">event</span><span class="p">.</span><span class="nx">end</span><span class="p">).</span><span class="nx">toLocaleString</span><span class="p">();</span>
+        <span class="nx">$scope</span><span class="p">.</span><span class="nx">selected_event_description</span> <span class="o">=</span> <span class="nx">event</span><span class="p">.</span><span class="nx">description</span><span class="p">;</span>
+        <span class="nx">$scope</span><span class="p">.</span><span class="nx">selected_event_url</span> <span class="o">=</span> <span class="nx">event</span><span class="p">.</span><span class="nx">url</span><span class="p">;</span>
+          <span class="k">if</span> <span class="p">(</span><span class="nx">event</span><span class="p">.</span><span class="nx">pic_big</span><span class="o">!=</span><span class="s2">&quot;&quot;</span><span class="p">)</span> 
+            <span class="nx">$scope</span><span class="p">.</span><span class="nx">selected_event_pic</span> <span class="o">=</span> <span class="nx">event</span><span class="p">.</span><span class="nx">pic_big</span><span class="p">;</span>
+          <span class="k">else</span> 
+            <span class="nx">$scope</span><span class="p">.</span><span class="nx">selected_event_pic</span> <span class="o">=</span> <span class="nx">event</span><span class="p">.</span><span class="nx">pic</span><span class="p">;</span>
+          </div></div></div><div class="segment"><div class="comments"><div class="wrapper"><p>$scope.selected<em>event</em>allDay = event.allDay;</p></div></div><div class="code"><div class="wrapper">        
+        <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#eventModal&#39;</span><span class="p">).</span><span class="nx">modal</span><span class="p">();</span>
+      <span class="p">});</span>
+      <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
+    <span class="p">};</span></div></div></div><div class="segment"><div class="comments"><div class="wrapper"><p>This variable sets the configuration options for ui.calendar (FullCalendar).
+The left side of the calendar has buttons for month, week, and day.
+The center has the title. And lastly, the right side has buttons to navigate
+the weeks and return back to the current day.</p>
+
+<p>Many of the events currently do not have corresponding functions because they
+are not needed. The eventClick handler however is functional.</p></div></div><div class="code"><div class="wrapper">    <span class="nx">$scope</span><span class="p">.</span><span class="nx">uiConfig</span> <span class="o">=</span> <span class="p">{</span>
+      <span class="nx">calendar</span><span class="o">:</span> <span class="p">{</span>
+          <span class="nx">height</span><span class="o">:</span> <span class="mi">500</span><span class="p">,</span>
+          <span class="nx">editable</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+          <span class="nx">header</span><span class="o">:</span> <span class="p">{</span>
+            <span class="nx">left</span><span class="o">:</span> <span class="s1">&#39;month, basicWeek, basicDay&#39;</span><span class="p">,</span>
+            <span class="nx">center</span><span class="o">:</span> <span class="s1">&#39;title&#39;</span><span class="p">,</span>
+            <span class="nx">right</span><span class="o">:</span> <span class="s1">&#39;today prev,next&#39;</span>
+          <span class="p">},</span>
+      <span class="nx">defaultView</span><span class="o">:</span> <span class="s1">&#39;basicWeek&#39;</span><span class="p">,</span>
+      <span class="nx">aspectRatio</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+      <span class="nx">eventClick</span><span class="o">:</span> <span class="nx">$scope</span><span class="p">.</span><span class="nx">alertOnEventClick</span>
+    <span class="p">}</span>
+  <span class="p">};</span></div></div></div><div class="segment"><div class="comments"><div class="wrapper"><p>This function enables text based filtering by updateing the eventSource's query parameter
+to the current query variable in the scope. It then refetches the events with the new or 
+changed parameter.</p></div></div><div class="code"><div class="wrapper">  <span class="nx">$scope</span><span class="p">.</span><span class="nx">updateQuery</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">$scope</span><span class="p">.</span><span class="nx">eventSource</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">query</span> <span class="o">=</span> <span class="nx">$scope</span><span class="p">.</span><span class="nx">query</span><span class="p">;</span>
+    <span class="nx">$scope</span><span class="p">.</span><span class="nx">myCalendar</span><span class="p">.</span><span class="nx">fullCalendar</span><span class="p">(</span><span class="s1">&#39;refetchEvents&#39;</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">});</span></div></div></div><div class="segment"><div class="comments"><div class="wrapper"><h2 id="angular-js-directive">Angular JS Directive</h2>
+
+<p>Creates an AngularJS directive named "keyup". As the name suggests, this directive,
+when applied as an attribute to an element, bind's the element's keyup event.
+When the keyup event is fired the function listed as an attribute to the keyup function
+in the HTML is used. In this application, that function is "updateQuery".</p></div></div><div class="code"><div class="wrapper"><span class="nx">angular</span><span class="p">.</span><span class="nx">module</span><span class="p">(</span><span class="s1">&#39;nuPlannerApp&#39;</span><span class="p">).</span><span class="nx">directive</span><span class="p">(</span><span class="s1">&#39;keyup&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="kd">function</span><span class="p">(</span><span class="nx">scope</span><span class="p">,</span> <span class="nx">element</span><span class="p">,</span> <span class="nx">attrs</span><span class="p">,</span> <span class="nx">ctrl</span><span class="p">)</span> <span class="p">{</span> 
+    <span class="nx">element</span><span class="p">.</span><span class="nx">bind</span><span class="p">(</span><span class="s2">&quot;keyup&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span> 
+      <span class="nx">scope</span><span class="p">.</span><span class="nx">$apply</span><span class="p">(</span><span class="nx">attrs</span><span class="p">.</span><span class="nx">keyup</span><span class="p">)</span> 
+    <span class="p">});</span>
+  <span class="p">};</span>
+<span class="p">});</span></div></div></div></div></body></html>

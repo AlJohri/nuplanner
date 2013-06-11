@@ -1,0 +1,138 @@
+<!DOCTYPE html><html lang="en"><head><title>app/controllers/facebook/Facebook</title></head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"><meta name="groc-relative-root" content="../../../"><meta name="groc-document-path" content="app/controllers/facebook/Facebook"><meta name="groc-project-path" content="/Users/atul/Dropbox/Development/nu-planner/app/controllers/facebook/Facebook.java"><link rel="stylesheet" type="text/css" media="all" href="../../../assets/style.css"><script type="text/javascript" src="../../../assets/behavior.js"></script><body><div id="meta"><div class="file-path">/Users/atul/Dropbox/Development/nu-planner/app/controllers/facebook/Facebook.java</div></div><div id="document"><div class="segment"><div class="code"><div class="wrapper"><span class="kn">package</span> <span class="n">controllers</span><span class="o">.</span><span class="na">facebook</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">java.util.*</span><span class="o">;</span>
+
+<span class="cm">/* RestFB */</span>
+<span class="kn">import</span> <span class="nn">com.restfb.*</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">com.restfb.FacebookClient.*</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">com.restfb.json.*</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">com.restfb.types.Event</span><span class="o">;</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * The Facebook class contains ACCESS_TOKENS, FQL query fragments, graph query fragments, and </span>
+<span class="cm"> * helper functions to encapsulate the RestFB query methods.</span>
+<span class="cm"> * @author Al Johri</span>
+<span class="cm"> */</span>
+<span class="kd">public</span> <span class="kd">final</span> <span class="kd">class</span> <span class="nc">Facebook</span> <span class="o">{</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     *  Facebook App Access Tokens</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">APP_ACCESS_TOKEN</span> <span class="o">=</span> <span class="s">&quot;524073037656113|l1aTC3FhsPHJEeRZfWB9vk70nAk&quot;</span><span class="o">;</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">USER_ACCESS_TOKEN</span> <span class="o">=</span> <span class="s">&quot;CAAHcpEMZB8DEBANQkZAyhJCXEYnAn2UW9paEZC7VWGJCb9a1ouGismLu8xKfCZCZBdtAl3Ld4iVC6u2HaXHqmknogy4RMuMswUMqc17PKSwAt4UmQoqDT4RIHKQaeHpnoXjXkCWTFlx7fNKKvDLUaauyS3KIuFsvziJaCphDuCgZDZD&quot;</span><span class="o">;</span>    
+
+    <span class="cm">/**</span>
+<span class="cm">     *  Coordinate Constants </span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">CENTER_LATITUDE</span> <span class="o">=</span> <span class="s">&quot;42.054581&quot;</span><span class="o">;</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">CENTER_LONGITUDE</span> <span class="o">=</span> <span class="s">&quot;-87.677192&quot;</span><span class="o">;</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">CENTER_RADIUS</span> <span class="o">=</span> <span class="s">&quot;1000&quot;</span><span class="o">;</span>    
+
+    <span class="cm">/**</span>
+<span class="cm">     *  FQL Event,Event Member and Place Fields </span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">FQL_EVENT_FIELDS</span> <span class="o">=</span> <span class="s">&quot;eid, name, creator, host, start_time, end_time, location, venue, description, pic, pic_big, pic_cover, pic_small, pic_square, timezone, update_time, all_members_count, attending_count, declined_count, unsure_count, not_replied_count&quot;</span><span class="o">;</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">FQL_EVENT_MEMBER_FIELDS</span> <span class="o">=</span> <span class="s">&quot;eid&quot;</span><span class="o">;</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">FQL_PLACE_FIELDS</span> <span class="o">=</span> <span class="s">&quot;page_id&quot;</span><span class="o">;</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     *  FQL Eevnt,Event Member and Place Tables </span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">FQL_EVENT_TABLE</span> <span class="o">=</span> <span class="s">&quot;event&quot;</span><span class="o">;</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">FQL_EVENT_MEMBER_TABLE</span> <span class="o">=</span> <span class="s">&quot;event_member&quot;</span><span class="o">;</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">FQL_PLACE_TABLE</span> <span class="o">=</span> <span class="s">&quot;place&quot;</span><span class="o">;</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * FQL LIMIT and ORDER </span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">FQL_LIMIT</span> <span class="o">=</span> <span class="s">&quot;LIMIT 51000&quot;</span><span class="o">;</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">FQL_ORDER</span> <span class="o">=</span> <span class="s">&quot;ORDER BY start_time ASC&quot;</span><span class="o">;</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     *  Graph Event Fields,search type and limit</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">GRAPH_EVENT_FIELDS</span> <span class="o">=</span> <span class="s">&quot;id,name,owner,description,start_time,end_time,location,venue,privacy,updated_time,picture,ticket_uri&quot;</span><span class="o">;</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">GRAPH_SEARCH_TYPE</span> <span class="o">=</span> <span class="s">&quot;event&quot;</span><span class="o">;</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">GRAPH_LIMIT</span> <span class="o">=</span> <span class="s">&quot;5000&quot;</span><span class="o">;</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     *  Blocked Organizations</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">String</span><span class="o">[]</span> <span class="n">BLOCKED_ORGANIZATIONS</span> <span class="o">=</span> <span class="k">new</span> <span class="n">String</span><span class="o">[]</span> <span class="o">{</span>
+        <span class="s">&quot;7268844551&quot;</span><span class="o">,</span>       <span class="c1">// Rotary International</span>
+        <span class="s">&quot;294833066685&quot;</span><span class="o">,</span>
+        <span class="s">&quot;163623007048538&quot;</span><span class="o">,</span>
+        <span class="s">&quot;37873197144&quot;</span><span class="o">,</span>
+        <span class="s">&quot;331587493531436&quot;</span><span class="o">,</span>
+        <span class="s">&quot;410474245699160&quot;</span><span class="o">,</span>
+        <span class="s">&quot;18019562194&quot;</span><span class="o">,</span>
+        <span class="s">&quot;271418392986638&quot;</span>
+    <span class="o">};</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     *  Blocked Venues</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">String</span><span class="o">[]</span> <span class="n">BLOCKED_VENUES</span> <span class="o">=</span> <span class="k">new</span> <span class="n">String</span><span class="o">[]</span> <span class="o">{</span>
+        <span class="s">&quot;17070917171&quot;</span><span class="o">,</span>      <span class="c1">// Actors Gymnasium</span>
+        <span class="s">&quot;356690111071371&quot;</span><span class="o">,</span>  <span class="c1">// 27 Live</span>
+        <span class="s">&quot;430645200319091&quot;</span><span class="o">,</span>  <span class="c1">// World of Beer - Evanston</span>
+        <span class="s">&quot;265779566799135&quot;</span><span class="o">,</span>  <span class="c1">// Chicago Northshore Kinetics</span>
+        <span class="s">&quot;120569982856&quot;</span><span class="o">,</span>     <span class="c1">// Harvest Mission Community Church of Chicago</span>
+        <span class="s">&quot;155288914484855&quot;</span><span class="o">,</span>  <span class="c1">// Lululemon Athletica Evanston</span>
+        <span class="s">&quot;161587597298994&quot;</span><span class="o">,</span>  <span class="c1">// Gather</span>
+        <span class="s">&quot;132449680200187&quot;</span><span class="o">,</span>  <span class="c1">// The Smokehouse</span>
+        <span class="s">&quot;253108394915&quot;</span><span class="o">,</span>     <span class="c1">// Kapnick Business Institutions</span>
+        <span class="s">&quot;110184922344060&quot;</span><span class="o">,</span>  <span class="c1">// Washington, District of Columbia</span>
+        <span class="s">&quot;115288991957781&quot;</span><span class="o">,</span>  <span class="c1">// Chemistry of Life Processes Institute (CLP)</span>
+        <span class="s">&quot;143834612313652&quot;</span><span class="o">,</span>  <span class="c1">// Wilmette Golf Club</span>
+        <span class="s">&quot;111268432255671&quot;</span><span class="o">,</span>  <span class="c1">// Grateful Yoga of Evanston</span>
+        <span class="s">&quot;44661328399&quot;</span><span class="o">,</span>      <span class="c1">// Evanston Art Center</span>
+        <span class="s">&quot;442292685838282&quot;</span><span class="o">,</span>  <span class="c1">// Feast &amp; Imbibe</span>
+        <span class="s">&quot;110432202311659&quot;</span><span class="o">,</span>  <span class="c1">// Lisbon, Portugal</span>
+        <span class="s">&quot;115421351813697&quot;</span><span class="o">,</span>  <span class="c1">// Lake Street Church of Evanston</span>
+        <span class="s">&quot;143964878955940&quot;</span><span class="o">,</span>  <span class="c1">// Lollie evanston</span>
+        <span class="s">&quot;252037288213690&quot;</span><span class="o">,</span>  <span class="c1">// Ida Noyes Hall at the University of Chicago</span>
+        <span class="s">&quot;17179183149&quot;</span><span class="o">,</span>      <span class="c1">// The Art Institute of Chicago</span>
+        <span class="s">&quot;43871522761&quot;</span><span class="o">,</span>
+        <span class="s">&quot;35114506738&quot;</span><span class="o">,</span>
+        <span class="s">&quot;109977289040245&quot;</span>   <span class="c1">// Wrigley Field</span>
+
+    <span class="o">};</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * [facebook_fql_query description]</span>
+<span class="cm">     * @param  token [description]</span>
+<span class="cm">     * @param  query [description]</span>
+<span class="cm">     * Executes given FQL query</span>
+<span class="cm">     * @return       [description]</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">com</span><span class="o">.</span><span class="na">restfb</span><span class="o">.</span><span class="na">json</span><span class="o">.</span><span class="na">JsonObject</span><span class="o">&gt;</span> <span class="nf">facebook_fql_query</span><span class="o">(</span><span class="n">String</span> <span class="n">token</span><span class="o">,</span> <span class="n">String</span> <span class="n">query</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">FacebookClient</span> <span class="n">facebookClient</span> <span class="o">=</span> <span class="k">new</span> <span class="n">DefaultFacebookClient</span><span class="o">(</span><span class="n">token</span><span class="o">);</span>
+        <span class="k">return</span> <span class="n">facebookClient</span><span class="o">.</span><span class="na">executeFqlQuery</span><span class="o">(</span><span class="n">query</span><span class="o">,</span> <span class="n">com</span><span class="o">.</span><span class="na">restfb</span><span class="o">.</span><span class="na">json</span><span class="o">.</span><span class="na">JsonObject</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * [facebook_graph_query description]</span>
+<span class="cm">     * @param  token    [description]</span>
+<span class="cm">     * @param  q        [description]</span>
+<span class="cm">     * @param  type     [description]</span>
+<span class="cm">     * @param  fields   [description]</span>
+<span class="cm">     * @param  center   [description]</span>
+<span class="cm">     * @param  distance [description]</span>
+<span class="cm">     * @param  limit    [description]</span>
+<span class="cm">     * Execute graph query with given parameters</span>
+<span class="cm">     * @return          [description]</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">com</span><span class="o">.</span><span class="na">restfb</span><span class="o">.</span><span class="na">json</span><span class="o">.</span><span class="na">JsonObject</span> <span class="nf">facebook_graph_query</span><span class="o">(</span><span class="n">String</span> <span class="n">token</span><span class="o">,</span> <span class="n">String</span> <span class="n">q</span><span class="o">,</span> <span class="n">String</span> <span class="n">type</span><span class="o">,</span> <span class="n">String</span> <span class="n">fields</span><span class="o">,</span> <span class="n">String</span> <span class="n">center</span><span class="o">,</span> <span class="n">String</span> <span class="n">distance</span><span class="o">,</span> <span class="n">String</span> <span class="n">limit</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">FacebookClient</span> <span class="n">facebookClient</span> <span class="o">=</span> <span class="k">new</span> <span class="n">DefaultFacebookClient</span><span class="o">(</span><span class="n">token</span><span class="o">);</span>
+        <span class="k">return</span> <span class="n">facebookClient</span><span class="o">.</span><span class="na">fetchObject</span><span class="o">(</span> <span class="s">&quot;search&quot;</span><span class="o">,</span> <span class="n">com</span><span class="o">.</span><span class="na">restfb</span><span class="o">.</span><span class="na">json</span><span class="o">.</span><span class="na">JsonObject</span><span class="o">.</span><span class="na">class</span><span class="o">,</span>
+            <span class="n">Parameter</span><span class="o">.</span><span class="na">with</span><span class="o">(</span><span class="s">&quot;q&quot;</span><span class="o">,</span> <span class="n">q</span><span class="o">),</span>
+            <span class="n">Parameter</span><span class="o">.</span><span class="na">with</span><span class="o">(</span><span class="s">&quot;type&quot;</span><span class="o">,</span> <span class="n">type</span><span class="o">),</span>
+            <span class="n">Parameter</span><span class="o">.</span><span class="na">with</span><span class="o">(</span><span class="s">&quot;fields&quot;</span><span class="o">,</span> <span class="n">fields</span><span class="o">),</span>
+            <span class="n">Parameter</span><span class="o">.</span><span class="na">with</span><span class="o">(</span><span class="s">&quot;center&quot;</span><span class="o">,</span> <span class="n">center</span><span class="o">),</span>
+            <span class="n">Parameter</span><span class="o">.</span><span class="na">with</span><span class="o">(</span><span class="s">&quot;distance&quot;</span><span class="o">,</span> <span class="n">distance</span><span class="o">),</span>
+            <span class="n">Parameter</span><span class="o">.</span><span class="na">with</span><span class="o">(</span><span class="s">&quot;limit&quot;</span><span class="o">,</span> <span class="n">limit</span><span class="o">)</span>
+        <span class="o">);</span>
+    <span class="o">}</span>
+        
+<span class="o">}</span></div></div></div></div></body></html>

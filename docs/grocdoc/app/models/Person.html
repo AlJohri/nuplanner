@@ -1,0 +1,20 @@
+<!DOCTYPE html><html lang="en"><head><title>app/models/Person</title></head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0"><meta name="groc-relative-root" content="../../"><meta name="groc-document-path" content="app/models/Person"><meta name="groc-project-path" content="/Users/atul/Dropbox/Development/nu-planner/app/models/Person.java"><link rel="stylesheet" type="text/css" media="all" href="../../assets/style.css"><script type="text/javascript" src="../../assets/behavior.js"></script><body><div id="meta"><div class="file-path">/Users/atul/Dropbox/Development/nu-planner/app/models/Person.java</div></div><div id="document"><div class="segment"><div class="code"><div class="wrapper"><span class="kn">package</span> <span class="n">models</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">java.util.*</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">javax.persistence.*</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">play.db.ebean.*</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">play.data.format.*</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">play.data.validation.*</span><span class="o">;</span>
+
+<span class="nd">@MappedSuperclass</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Person</span> <span class="kd">extends</span> <span class="n">Model</span> <span class="o">{</span>
+    
+    <span class="nd">@Id</span> <span class="kd">public</span> <span class="n">Long</span> <span class="n">id</span><span class="o">;</span>
+    <span class="nd">@Constraints.Required</span> <span class="kd">public</span> <span class="n">String</span> <span class="n">name</span><span class="o">;</span>
+    <span class="kd">public</span> <span class="nf">Person</span><span class="o">(</span><span class="n">String</span> <span class="n">name</span><span class="o">)</span> <span class="o">{</span> 
+        <span class="k">this</span><span class="o">.</span><span class="na">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">;</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;person constructor&quot;</span><span class="o">);</span>
+    <span class="o">}</span>
+ 
+<span class="o">}</span></div></div></div></div></body></html>
