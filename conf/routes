@@ -2,7 +2,7 @@ GET     /                                 controllers.StaticFile.html(file = "pu
 
 GET     /javadoc                          controllers.Assets.at(path="/public", file="nu-planner-backend.pdf")
 GET     /jsdoc                            controllers.Assets.at(path="/public", file="nu-planner-frontend.pdf")
-GET     /uml                              controllers.Assets.at(path="/public", file="graph.png")
+GET     /uml                              controllers.Assets.at(path="/public", file="graph1.png")
 
 GET     /events                           controllers.Application.events()
 GET     /seed                             controllers.seed.Seed.seed()
