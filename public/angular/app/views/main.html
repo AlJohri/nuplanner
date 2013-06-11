@@ -36,14 +36,17 @@
             </div>
               <!--https://support.google.com/calendar/answer/3033039 add to calendar button-->
               <div class="modal-body">
-                <!-- {{selected_event_id}} -->
-                <!-- {{selected_event_allDay}} <br> -->
-                <!-- {{selected_event_creator}} <br> -->
-                <!-- {{selected_event_start}} <br> -->
-                <!-- {{selected_event_end}} <br> -->
-                {{selected_event_description}} <br>
-                {{selected_event_pic}} <br>
-                <a href="{{selected_event_url}}">{{selected_event_url}}</a>
+                <div style="float:left; margin-right: 5px; margin-bottom: 5px;">
+                  <img ng-src="{{selected_event_pic}}" width="100px"></img>
+                </div>
+                <div style="">
+                  <p>{{selected_event_description}}</p>
+                  <p>
+                    <b>Start: </b>{{selected_event_start}} <br>
+                    <b>End: </b>{{selected_event_end}}
+                  </p>
+                  <a href="{{selected_event_url}}">{{selected_event_url}}</a>
+                </div>
               </div>
             <div class="modal-footer">
               <button class="btn btn-primary" data-dismiss="modal" aria-hidden="true">Close</button>

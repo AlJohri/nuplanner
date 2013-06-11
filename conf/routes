@@ -1,7 +1,8 @@
 GET     /                                 controllers.StaticFile.html(file = "public/angular/app/index.html")
-GET     /javadoc                          controllers.StaticFile.html(file = "public/nu-planner-backend.pdf")
-GET     /jsdoc                            controllers.StaticFile.html(file = "public/nu-planner-frontend.pdf")
-GET     /uml                              controllers.StaticFile.html(file = "public/graph.png")
+
+GET     /javadoc                          controllers.Assets.at(path="/public", file="nu-planner-backend.pdf")
+GET     /jsdoc                            controllers.Assets.at(path="/public", file="nu-planner-frontend.pdf")
+GET     /uml                              controllers.Assets.at(path="/public", file="graph.png")
 
 GET     /events                           controllers.Application.events()
 GET     /seed                             controllers.seed.Seed.seed()
