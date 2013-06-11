@@ -9,7 +9,7 @@ export JAVA_HOME=`/usr/libexec/java_home -v 1.7`
 JARS=pdfdoclet-1.0.2-all.jar
 PATH=$JAVA_HOME/bin:$PATH
 DOCLET=com.tarsec.javadoc.pdfdoclet.PDFDoclet
-PACKAGES="models controllers"
+PACKAGES="models controllers controllers.utilities controllers.scrape controllers.seed controllers.facebook"
 export JAVA_HOME PATH DOCLET JARS PACKAGES
 
 javadoc -doclet $DOCLET -docletpath $JARS -pdf ../../nu-planner-backend.pdf -config nu-planner.properties -sourcepath ../../../app $PACKAGES
