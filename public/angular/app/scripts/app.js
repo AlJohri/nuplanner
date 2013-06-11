@@ -73,7 +73,7 @@ angular.module('nuPlannerApp').controller('MainCtrl', function ($scope) {
 	          center: 'title',
 	          right: 'today prev,next'
       		},
-			defaultView: 'month',
+			defaultView: 'basicWeek',
 			aspectRatio: 1,
 			eventClick: $scope.alertOnEventClick
 		}
