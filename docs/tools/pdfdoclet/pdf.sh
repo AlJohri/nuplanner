@@ -16,6 +16,6 @@ PACKAGES="controllers models"
 
 export JAVA_HOME PATH DOCLET JARS PACKAGES
 
-# javadoc -doclet $DOCLET -docletpath $JARS -pdf nu-planner.pdf -config nu-planner.properties -private -sourcepath ../ $PACKAGES
+javadoc -doclet $DOCLET -docletpath $JARS -pdf ../../nu-planner-backend.pdf -config nu-planner.properties -sourcepath ../../../app $PACKAGES
 
-javadoc -doclet $DOCLET -docletpath $JARS -pdf ../nu-planner.pdf -config nu-planner.properties -sourcepath ../../app $PACKAGES
+cp ../../nu-planner-backend.pdf ../../../public/nu-planner-backend.pdf

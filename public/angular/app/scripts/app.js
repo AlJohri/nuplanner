@@ -1,12 +1,11 @@
-'use strict';
-
-/**
- * Set up AngularJS Application named "nuPlannerApp". Dependencies are "ui.calendar" and  
- * "ui.bootstrap". Part of the angular-ui suite. The ui.calendar is an encapsulation of 
- * FullCalendar while ui.boostrap is obviously an encapsulation of the Twitter BootStrap
- * framework. The $routeProvider sets the root URL of the application ("/") to use the 
- * "views/main.html" view with the "MainCtrl" controller.
- */
+// Angular JS Application
+// ----------------------
+// Set up AngularJS Application named "nuPlannerApp" with dependencies 
+// "ui.calendar" and "ui.bootstrap", part of the angular-ui suite. The 
+// ui.calendar is an encapsulation of FullCalendar while ui.boostrap is 
+// obviously an encapsulation of the Twitter BootStrap framework. The 
+// $routeProvider sets the root URL of the application ("/") to use the 
+// "views/main.html" view with the "MainCtrl" controller. 
 angular.module('nuPlannerApp', ['ui.calendar', 'ui.bootstrap']).config(function ($routeProvider) {
 	$routeProvider
 	.when('/', {
@@ -16,10 +15,11 @@ angular.module('nuPlannerApp', ['ui.calendar', 'ui.bootstrap']).config(function 
 	.otherwise({ redirectTo: '/' });
 });
 
-/**
- * Create an AngularJS Controller named "MainCtrl". This controller handles all functionaly within
- * the Main view of the application (views/main.html).
- */
+
+// Angular JS Controller
+// ----------------------
+// Create an AngularJS Controller named "MainCtrl". This controller handles all 
+// functionaly within the Main view of the application (views/main.html). 
 angular.module('nuPlannerApp').controller('MainCtrl', function ($scope) {
 
 	// The eventSource variable connects to the Play Framework's controller "/events" which 
@@ -45,15 +45,24 @@ angular.module('nuPlannerApp').controller('MainCtrl', function ($scope) {
     		$scope.selected_event_start = event.start;            
     		$scope.selected_event_end = event.end;
     		$scope.selected_event_description = event.description;
-    		$scope.selected_event_pic = event.pic;
     		$scope.selected_event_url = event.url;
-
+        	if (event.pic_big!=NULL) 
+        		$scope.selected_event_pic = event.pic_big;
+        	else 
+        		$scope.selected_event_pic = event.pic;
+        
     		$('#eventModal').modal();
     	});
     	return false;
     };
 
-    // This variable sets the 
+    // This variable sets the configuration options for ui.calendar (FullCalendar).
+    // The left side of the calendar has buttons for month, week, and day.
+    // The center has the title. And lastly, the right side has buttons to navigate
+    // the weeks and return back to the current day.
+    // 
+    // Many of the events currently do not have corresponding functions because they
+    // are not needed. The eventClick handler however is functional.
     $scope.uiConfig = {
     	calendar: {
 	        height: 500,
@@ -64,7 +73,7 @@ angular.module('nuPlannerApp').controller('MainCtrl', function ($scope) {
 	          center: 'title',
 	          right: 'today prev,next'
       		},
-			defaultView: 'month',
+			defaultView: 'week',
 			aspectRatio: 1,
 			dayClick: $scope.alertOnDayClick,
 			eventDrop: $scope.alertOnDrop,
@@ -75,25 +84,21 @@ angular.module('nuPlannerApp').controller('MainCtrl', function ($scope) {
 
 	// This function enables text based filtering by updateing the eventSource's query parameter
 	// to the current query variable in the scope. It then refetches the events with the new or 
-	// changed parameter. The updateQuery function, as one can see in the "keyup" directive below,
-	// is run everytime the user types in the inputbox.
+	// changed parameter.
 	$scope.updateQuery = function() {
 		$scope.eventSource.data.query = $scope.query;
 		$scope.myCalendar.fullCalendar('refetchEvents');
 	}
-
 });
 
-/**
- * Creates an AngularJS directive named "keyup". As the name suggests, this directive,
- * when applied as an attribute to an element, bind's the element's keyup event.
- * When the keyup event is fired the function listed as an attribute to the keyup function
- * in the HTML is used. In this application, that function is "updateQuery".
- */
+// Angular JS Directive
+// ----------------------
+// Creates an AngularJS directive named "keyup". As the name suggests, this directive,
+// when applied as an attribute to an element, bind's the element's keyup event.
+// When the keyup event is fired the function listed as an attribute to the keyup function
+// in the HTML is used. In this application, that function is "updateQuery".
 angular.module('nuPlannerApp').directive('keyup', function() {
-	return function(scope, element, attrs, ctrl) {
-		element.bind("keyup", function(event) {
-			scope.$apply(attrs.keyup)      
-		});
+	return function(scope, element, attrs, ctrl) { 
+    element.bind("keyup", function(event) { scope.$apply(attrs.keyup) });
 	};
 });

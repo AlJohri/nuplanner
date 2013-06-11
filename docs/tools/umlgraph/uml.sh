@@ -11,7 +11,8 @@ export JAVA_HOME PATH DOCLET JARS PACKAGES
 
 echo $PATH
 
-java -classpath $PATH $DOCLET -sourcepath ../../app $PACKAGES -attributes -operations -types
-dot -Tpng -ograph.png graph.dot
+java -classpath $PATH $DOCLET -sourcepath ../../../app $PACKAGES -attributes -operations -types
+dot -Tpng -o ../../graph.png graph.dot
 rm graph.dot
-open graph.png
+
+cp ../../graph.png ../../../public/graph.png
