@@ -31,6 +31,12 @@ import com.google.gson.*;
  * @author Al Johri
 */
 public class ScrapeWildcatConnection extends Scrape {
+	/**
+	 * connects to northwestern.collegiatelink.net/events
+	 * extracts all the data from this link
+	 * Store the data as Json objects
+	 * @return json objects
+	 */
 
     public static Result scrape_wildcatconnection() {
         String json = "{}";

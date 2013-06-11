@@ -10,19 +10,44 @@ import org.json.*;
 import org.json.simple.JSONValue;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONAware;
-
+/**
+ * Class for events
+ * @author Colin
+ *
+ */
 @Entity
 public class MyEvent extends Model implements JSONAware {
+	/**
+	 * Event ID
+	 */
     @Id public Long eid;
+	/**
+	 * Event Name
+	 */
     @Constraints.Required public String name;
+	/**
+	 * Event Creator
+	 */
     @Constraints.Required public String creator;
-
+	/**
+	 * Event Location
+	 */
     public String location;
+	/**
+	 * Event Venue
+	 */
     public String venue;
-
+	/**
+	 * Event Start Time
+	 */
     public DateTime start_time;
+	/**
+	 * Event End Time
+	 */
     public DateTime end_time;
-    
+	/**
+	 * Event Picture
+	 */
     public String pic;
     public String pic_small;
     public String pic_big;
@@ -30,8 +55,13 @@ public class MyEvent extends Model implements JSONAware {
 	
     
     @Column(columnDefinition = "TEXT")
+	/**
+	 * Event Description
+	 */
     @Constraints.Required public String description;
-
+	/**
+	 * Event Constructor
+	 */
     public MyEvent(Long eid, String name,String creator, DateTime start_time, DateTime end_time, String location, String venue, String description, String pic, String pic_small, String pic_big, String pic_square) {
         this.eid = eid;
         this.name = name;
@@ -46,7 +76,9 @@ public class MyEvent extends Model implements JSONAware {
 		this.pic_big = pic_big;
 		this.pic_square = pic_square;
     }
-
+    /**
+     * Converts json objects to string
+     */
     public String toJSONString(){
         StringBuffer sb = new StringBuffer();
 
@@ -84,7 +116,10 @@ public class MyEvent extends Model implements JSONAware {
 
         return sb.toString();
     }
-
+    /**
+     * Gets locations of all events
+     * @return locations
+     */
     public static ArrayList getAllEventLocations() {
         ArrayList<String> locations = new ArrayList<String>();
         List<MyEvent> events = MyEvent.find.all();
@@ -97,6 +132,9 @@ public class MyEvent extends Model implements JSONAware {
     }
 
     // http://www.avaje.org/static/javadoc/pub/com/avaje/ebean/ExpressionList.html
+    /**
+     * For finding events based on parameter
+     */
     public static Finder<String,MyEvent> find = new Finder<String,MyEvent>( String.class, MyEvent.class );
     public static Finder<Long,MyEvent> findLong = new Finder<Long,MyEvent>( Long.class, MyEvent.class );
 }
