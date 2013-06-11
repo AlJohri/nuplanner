@@ -14,7 +14,7 @@ dot -Tpng -o ../../$OUTPUT graph.dot; rm graph.dot
 cp ../../$OUTPUT ../../../public/$OUTPUT
 
 PACKAGES="controllers.scrape controllers.seed controllers.utilities"
-OUTPUT="controller.png"
+OUTPUT="controllers.png"
 java -classpath $PATH $DOCLET -sourcepath ../../../app $PACKAGES -attributes -operations -types
 perl -pi -e 's/<any>/any/g' graph.dot
 dot -Tpng -o ../../$OUTPUT graph.dot; rm graph.dot
