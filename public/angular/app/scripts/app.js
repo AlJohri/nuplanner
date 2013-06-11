@@ -40,16 +40,17 @@ angular.module('nuPlannerApp').controller('MainCtrl', function ($scope) {
     	$scope.$apply(function() {
     		$scope.selected_event_id = event.id;
     		$scope.selected_event_title = event.title;
-    		$scope.selected_event_allDay = event.allDay;
     		$scope.selected_event_creator = event.creator;
-    		$scope.selected_event_start = event.start;            
-    		$scope.selected_event_end = event.end;
+    		$scope.selected_event_start = new Date(event.start).toLocaleString();
+    		$scope.selected_event_end = new Date(event.end).toLocaleString();
     		$scope.selected_event_description = event.description;
     		$scope.selected_event_url = event.url;
-        	if (event.pic_big!=NULL) 
+        	if (event.pic_big!="") 
         		$scope.selected_event_pic = event.pic_big;
         	else 
         		$scope.selected_event_pic = event.pic;
+        	
+			// $scope.selected_event_allDay = event.allDay;
         
     		$('#eventModal').modal();
     	});
@@ -67,17 +68,13 @@ angular.module('nuPlannerApp').controller('MainCtrl', function ($scope) {
     	calendar: {
 	        height: 500,
 	        editable: false,
-	        theme: false,
 	        header: {
 	          left: 'month, basicWeek, basicDay',
 	          center: 'title',
 	          right: 'today prev,next'
       		},
-			defaultView: 'week',
+			defaultView: 'month',
 			aspectRatio: 1,
-			dayClick: $scope.alertOnDayClick,
-			eventDrop: $scope.alertOnDrop,
-			eventResize: $scope.alertOnResize,
 			eventClick: $scope.alertOnEventClick
 		}
 	};
@@ -99,6 +96,8 @@ angular.module('nuPlannerApp').controller('MainCtrl', function ($scope) {
 // in the HTML is used. In this application, that function is "updateQuery".
 angular.module('nuPlannerApp').directive('keyup', function() {
 	return function(scope, element, attrs, ctrl) { 
-    element.bind("keyup", function(event) { scope.$apply(attrs.keyup) });
+    element.bind("keyup", function(event) { 
+    	scope.$apply(attrs.keyup) 
+    });
 	};
 });
