@@ -44,7 +44,8 @@ angular.module('nuPlannerApp').controller('MainCtrl', function ($scope) {
     		$scope.selected_event_creator = event.creator;
     		$scope.selected_event_start = new Date(event.start).toLocaleString();
     		$scope.selected_event_end = new Date(event.end).toLocaleString();
-    		$scope.selected_event_description = event.description;
+            var clean_event_description = $('<div/>').text(event.description).html(); // escape HTML
+    		$scope.selected_event_description = clean_event_description.replace(/\n/g, '<br>');
     		$scope.selected_event_url = event.url;
         	if (event.pic_big!="") 
         		$scope.selected_event_pic = event.pic_big;

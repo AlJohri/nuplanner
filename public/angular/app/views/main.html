@@ -44,7 +44,7 @@
                   <img ng-src="{{selected_event_pic}}" width="100px"></img>
                 </div>
                 <div style="">
-                  <p>{{selected_event_description}}</p>
+                  <p ng-bind-html-unsafe="selected_event_description"></p>
                   <p>
                     <b>Start: </b>{{selected_event_start}} <br>
                     <b>End: </b>{{selected_event_end}}
