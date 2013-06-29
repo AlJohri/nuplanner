@@ -10,6 +10,10 @@
             <li><a href="#">Link</a></li>
             <li><a href="#">Link</a></li>
           </ul>
+          <label class="checkbox pull-right multi-day-checkbox">
+            <input type="checkbox" value="" ng-model="allowMultiDay" ng-change="toggleMultiDay()" />
+            Display multi-day events
+          </label>
         </div>
       </div>
 
@@ -40,7 +44,7 @@
                   <img ng-src="{{selected_event_pic}}" width="100px"></img>
                 </div>
                 <div style="">
-                  <p>{{selected_event_description}}</p>
+                  <p ng-bind-html-unsafe="selected_event_description"></p>
                   <p>
                     <b>Start: </b>{{selected_event_start}} <br>
                     <b>End: </b>{{selected_event_end}}

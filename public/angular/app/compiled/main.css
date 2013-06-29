@@ -6602,13 +6602,18 @@ body {
 }
 
 /* line 9, ../styles/main.scss */
+.multi-day-checkbox {
+  margin-top: 10px;
+}
+
+/* line 13, ../styles/main.scss */
 .center {
   float: none;
   margin-left: auto;
   margin-right: auto;
 }
 
-/* line 11, ../styles/main.scss */
+/* line 15, ../styles/main.scss */
 #search {
   margin-bottom: 20px;
 }

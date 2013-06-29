@@ -29,7 +29,7 @@ angular.module('nuPlannerApp').controller('MainCtrl', function ($scope) {
 	// parameters are unixtimestamps and change based on the current view's start and end dates
 	// (e.g. week, month, day). A third parameter, query is added to allow text based filtering of 
 	// events based using the title.
-	$scope.eventSource = {  url: "/events", currentTimezone: 'America/Chicago', data: { query: '' } };
+	$scope.eventSource = {  url: "/events", currentTimezone: 'America/Chicago', data: { query: '', allowMultiDay: false } };
 
 	// Since FullCalendar can use multiple eventSources, the eventSources variable adds the 
 	// eventSource above to the array of eventSources that will be linked to FullCalendar. 
@@ -44,7 +44,8 @@ angular.module('nuPlannerApp').controller('MainCtrl', function ($scope) {
     		$scope.selected_event_creator = event.creator;
     		$scope.selected_event_start = new Date(event.start).toLocaleString();
     		$scope.selected_event_end = new Date(event.end).toLocaleString();
-    		$scope.selected_event_description = event.description;
+            var clean_event_description = $('<div/>').text(event.description).html(); // escape HTML
+    		$scope.selected_event_description = clean_event_description.replace(/\n/g, '<br>');
     		$scope.selected_event_url = event.url;
         	if (event.pic_big!="") 
         		$scope.selected_event_pic = event.pic_big;
@@ -87,6 +88,12 @@ angular.module('nuPlannerApp').controller('MainCtrl', function ($scope) {
 		$scope.eventSource.data.query = $scope.query;
 		$scope.myCalendar.fullCalendar('refetchEvents');
 	}
+
+    // Display or hide events that last more than a day
+    $scope.toggleMultiDay = function() {
+		$scope.eventSource.data.allowMultiDay = $scope.allowMultiDay;
+		$scope.myCalendar.fullCalendar('refetchEvents');
+    }
 });
 
 // Angular JS Directive
