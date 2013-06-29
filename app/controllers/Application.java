@@ -13,6 +13,7 @@ import org.json.*;
 import org.json.simple.JSONValue;
 import org.apache.commons.io.FileUtils;
 import org.joda.time.DateTime;
+import org.joda.time.Days;
 import com.avaje.ebean.*;
 
 public class Application extends Controller {
@@ -33,6 +34,7 @@ public class Application extends Controller {
         String start_string = request().getQueryString("start");
         String end_string = request().getQueryString("end");
         String filter = request().getQueryString("query");
+        String allow_multi_day = request().getQueryString("allowMultiDay");
 
         DateTime start, end;
         /* if (start_string != null) */ start = new DateTime(Long.parseLong(start_string) * 1000);
@@ -45,8 +47,22 @@ public class Application extends Controller {
                 Expr.ilike("name", "%"+filter+"%")
             )
         );
+
+        List<MyEvent> eventList;
+
+        if (Boolean.valueOf(allow_multi_day)) {
+            eventList = query.findList();
+        } else {
+            // exclude events lasting longer than a day
+            List<MyEvent> startList = query.findList();
+            eventList = new ArrayList<MyEvent>();
+            for (MyEvent event : startList) {
+                if (Days.daysBetween(event.start_time, event.end_time).getDays() < 1) {
+                    eventList.add(event);
+                }
+            }
+        }
         
-        List<MyEvent> eventList = query.findList();
         eventList = (start_string == null && end_string == null) ? MyEvent.find.all() : eventList;
 
         return ok( JSONValue.toJSONString(eventList) );
